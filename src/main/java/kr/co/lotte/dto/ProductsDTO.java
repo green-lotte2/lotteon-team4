@@ -32,6 +32,14 @@ public class ProductsDTO {
     private int delivery;
     private LocalDateTime RegProdDate;
 
-    private String cateName;
+    private String cateName1;
+    private String cateName2;
+    private String cateName3;
+    private String sellerUid;
+    private String prodState;
+    private String prodTax;
+    private String prodReceipt;
+    private String prodSa;
+    private String prodWonsan;
 
 }

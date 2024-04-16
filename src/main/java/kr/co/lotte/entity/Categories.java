@@ -17,4 +17,6 @@ public class Categories {
     @Id
     private int cateNo;
     private  String cateName;
+    private  String secondCateName;
+    private  String thirdCateName;
 }

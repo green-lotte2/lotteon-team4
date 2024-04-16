@@ -40,5 +40,4 @@ public class User {
     private int totalPoint;
     private int totalPrice;
 
-
 }

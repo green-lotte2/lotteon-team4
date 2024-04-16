@@ -1,5 +1,6 @@
 package kr.co.lotte.dto;
 
+import kr.co.lotte.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -32,5 +33,28 @@ public class UserDTO {
     private LocalDateTime leaveDate;
     private int totalPoint;
     private int totalPrice;
+
+    public User toEntity() {
+        return User.builder()
+                .uid(uid)
+                .pass(pass)
+                .name(name)
+                .nick(nick)
+                .email(email)
+                .hp(hp)
+                .role(role)
+                .zip(zip)
+                .addr1(addr1)
+                .addr2(addr2)
+                .regip(regip)
+                .sms(sms)
+                .provider(provider)
+                .grade(grade)
+                .regDate(regDate)
+                .leaveDate(leaveDate)
+                .totalPoint(totalPoint)
+                .totalPrice(totalPrice)
+                .build();
+    }
 
 }

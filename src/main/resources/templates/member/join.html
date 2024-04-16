@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">    
@@ -20,16 +21,27 @@
             <div class="top">
                 <div>
                     <a href="./member/login.html">로그인</a>
-                    <a href="#">회원가입</a>
-                    <a href="#">마이페이지</a>
-                    <a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;장바구니</a>
+                    <a th:href="@{#}">회원가입</a>
+                    <a th:href="@{#}">마이페이지</a>
+                    <a th:href="@{#}"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;장바구니</a>
                 </div>
-            </div>
-            <div class="logo">
-                <div>
-                    <a href="../index.html"><img src="../images/header_logo.png" alt="로고"/></a>
-                </div>
-            </div>
+
+
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/member/layout/memberLayout.html}">
+
+<div class="join" layout:fragment="content">
+    <h1 class="welcome"><strong>롯데ON</strong>에 오신것을 환영합니다.</h1>
+    <div class="type">
+        <div class="normal">
+            <img th:src="@{/member/images/member_join_tit_normal.gif}" alt="구매회원 가입">
+            <div class="txt">
+                <img th:src="@{/member/images/member_join_txt_normal.gif}" alt="개인 구매회원">
+                <a href="./member/signup.do?type=normal"><img th:src="@{/member/images/member_join_btn1.gif}"
+                                                              alt="회원가입"></a>
+
+
         </header>
         <main id="member">
             <div class="join">
@@ -56,10 +68,10 @@
         </main>        
         <footer>
             <ul>
-              <li><a href="#">회사소개</a></li>
-              <li><a href="#">서비스이용약관</a></li>
-              <li><a href="#">개인정보처리방침</a></li>
-              <li><a href="#">전자금융거래약관</a></li>
+              <li><a th:href="@{#}">회사소개</a></li>
+              <li><a th:href="@{#}">서비스이용약관</a></li>
+              <li><a th:href="@{#}">개인정보처리방침</a></li>
+              <li><a th:href="@{#}">전자금융거래약관</a></li>
             </ul>
             <div>
               <p><img src="../images/footer_logo.png" alt="로고" /></p>
@@ -80,4 +92,5 @@
           </footer>
     </div>    
 </body>
+
 </html>

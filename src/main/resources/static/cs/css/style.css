@@ -349,8 +349,8 @@ footer p > strong {
   padding: 10px 20px;
   text-align: center;        
   margin-top: -48px;
-  background-color: #067dfd;
-  border: 1px solid #0063ce;
+  background-color: #E60012;
+  border: 1px solid #E63232;
   border-radius: 2px;
   font-size: 20px;
   color: #fff;
@@ -359,7 +359,7 @@ footer p > strong {
 
 .btnList {
   display: inline-block;
-  width: 200px;
+  width: 100px;
   height: 60px;
   margin: 40px auto 0;
   border: 1px solid #ccc;
@@ -376,11 +376,11 @@ footer p > strong {
 
 .btnSubmit {
   display: inline-block;
-  width: 200px;
+  width: 100px;
   height: 60px;
   margin: 40px auto 0;
-  background-color: #067dfd;
-  border: 1px solid #0063ce;  
+  background-color: #E60012;
+  border: 1px solid #E63232;
   border-radius: 34px;
   font-size: 16px;
   color: #fff;
@@ -389,7 +389,7 @@ footer p > strong {
   box-sizing: border-box;
 }
 .btnSubmit:hover {
-  background-color: #0954f6;
+  background-color: #E63232;
 }
 
 

@@ -12,5 +12,7 @@ public class CategoriesDTO {
 
     private int cateNo;
     private String cateName;
+    private String secondCateName;
+    private String ThirdCateName;
 
 }

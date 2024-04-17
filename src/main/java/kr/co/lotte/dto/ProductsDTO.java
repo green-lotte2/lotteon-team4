@@ -19,17 +19,25 @@ public class ProductsDTO {
     private int cateNo;
     private String sellerUid;
     private String prodName;
-    private int prodPrice;
     private int prodStock;
     private int prodSold;
     private int prodDiscount;
+
+
+    private MultipartFile multImage1;
+    private MultipartFile multImage2;
+    private MultipartFile multImage3;
+    private MultipartFile multImage4;
+
 
     private String image1;
     private String image2;
     private String image3;
     private String image4;
+
     private String manufacture;
     private int searchCount; //상품조회
+
 
     private int recount;
     private int point;
@@ -37,6 +45,8 @@ public class ProductsDTO {
     private int delivery;
 
     private LocalDateTime RegProdDate;
+    private String manufacture;
+    private int searchCount;
 
     private String cateName;
 

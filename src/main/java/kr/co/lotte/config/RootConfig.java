@@ -1,5 +1,6 @@
 package kr.co.lotte.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 public class RootConfig {
     @Autowired
@@ -17,7 +19,6 @@ public class RootConfig {
     public  AppInfo appInfo(){
         String name = buildProperties.getName();
         String version = buildProperties.getVersion();
-
         return new AppInfo(name, version);
     }
     @Bean

@@ -36,40 +36,8 @@
                             <th>관리</th>
                         </tr>
 
-                        <tr>
-                            <td><input type="checkbox" name="상품코드"/></td>
-                            <td><img src="../images/sample_thumb.jpg" class="thumb"></td>
-                            <td>201603292</td>
-                            <td>FreeMovement BLUEFORCE</td>
-                            <td>36,000</td>
-                            <td>10</td>
-                            <td>360</td>
-                            <td>400</td>
-                            <td>홍길동</td>
-                            <td>126</td>
-                            <td>
-                                <a href="#">[삭제]</a>
-                                <a href="#">[수정]</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="상품코드"/></td>
-                            <td><img src="../images/sample_thumb.jpg" class="thumb"></td>
-                            <td>201603292</td>
-                            <td>FreeMovement BLUEFORCE</td>
-                            <td>36,000</td>
-                            <td>10</td>
-                            <td>360</td>
-                            <td>400</td>
-                            <td>홍길동</td>
-                            <td>126</td>
-                            <td>
-                                <a href="#">[삭제]</a>
-                                <a href="#">[수정]</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="상품코드"/></td>
+                        <tr th:each="product, index:${products}">
+                            <td><input type="checkbox" name="상품코드" th:value="${product.getProdNo()}"/></td>
                             <td><img src="../images/sample_thumb.jpg" class="thumb"></td>
                             <td>201603292</td>
                             <td>FreeMovement BLUEFORCE</td>

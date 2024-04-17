@@ -23,6 +23,10 @@ public class QCategories extends EntityPathBase<Categories> {
 
     public final NumberPath<Integer> cateNo = createNumber("cateNo", Integer.class);
 
+    public final StringPath secondCateName = createString("secondCateName");
+
+    public final StringPath thirdCateName = createString("thirdCateName");
+
     public QCategories(String variable) {
         super(Categories.class, forVariable(variable));
     }

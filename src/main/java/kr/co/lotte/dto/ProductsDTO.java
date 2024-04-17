@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +21,9 @@ public class ProductsDTO {
     private int prodSold; //판매액
     private int prodDiscount;
 
+    private List<String> detail1;
+    private List<String> detail2;
+
     private MultipartFile multImage1;
     private MultipartFile multImage2;
     private MultipartFile multImage3;
@@ -27,6 +31,7 @@ public class ProductsDTO {
     private String image1;
     private String image2;
     private String image3;
+    private int recount;
     private int point;
     private String etc;
     private int delivery;
@@ -41,5 +46,7 @@ public class ProductsDTO {
     private String prodReceipt;
     private String prodSa;
     private String prodWonsan;
+
+    private String sellerName;
 
 }

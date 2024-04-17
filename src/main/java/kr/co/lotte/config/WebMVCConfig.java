@@ -19,20 +19,23 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Value("${file.upload.path}")
     private String resourcePath;
 
-/*
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AppInfoIntercepter(appInfo));
-    }
-*/
+    /*
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(new AppInfoIntercepter(appInfo));
+        }
+    */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/admin/**").addResourceLocations("classpath:/admin/");
         registry.addResourceHandler("/static/cs/**").addResourceLocations("classpath:/cs/");
 
-    registry.addResourceHandler("/static/member/**").addResourceLocations("classpath:/member/");
+        registry.addResourceHandler("/static/member/**").addResourceLocations("classpath:/member/");
+        registry.addResourceHandler("/static/product/**").addResourceLocations("classpath:/product/");
+        registry.addResourceHandler("/uploads/**").addResourceLocations("file:" + resourcePath);
 
-        registry.addResourceHandler("/uploads/**").addResourceLocations(resourceLoader.getResource(resourcePath));
+
+        //registry.addResourceHandler("/uploads/**").addResourceLocations(resourceLoader.getResource(resourcePath));
 
     }
 }

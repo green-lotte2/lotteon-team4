@@ -2,7 +2,7 @@ package kr.co.lotte.security;
 
 
 import kr.co.lotte.entity.User;
-import kr.co.lotte.repository.UserRepository;
+import kr.co.lotte.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class SecurityUserService implements UserDetailsService {
 
     @Autowired
-    private  final UserRepository repository;
+    private  final MemberRepository repository;
 
 
     @Override

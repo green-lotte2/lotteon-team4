@@ -19,6 +19,10 @@ public class QProdImage extends EntityPathBase<ProdImage> {
 
     public static final QProdImage prodImage = new QProdImage("prodImage");
 
+    public final StringPath Image240 = createString("Image240");
+
+    public final StringPath Image750 = createString("Image750");
+
     public final NumberPath<Integer> iNo = createNumber("iNo", Integer.class);
 
     public final StringPath oName = createString("oName");

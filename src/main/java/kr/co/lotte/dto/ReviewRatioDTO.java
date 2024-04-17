@@ -10,6 +10,7 @@ public class ReviewRatioDTO {
     private long count;
     private long sum;
     private double avg;
+    private int r_avg;
     private int percent1;
     private int percent2;
     private int percent3;
@@ -21,8 +22,10 @@ public class ReviewRatioDTO {
         this.count = count;
         this.sum = sum;
         this.avg = avg;
+        this.r_avg = (int)Math.round(avg);
 
         /*
+
         // 각 스코어 별 퍼센트 구하기
         this.percent1 = (int) Math.round((double) oneScore / count * 100);
         this.percent2 = (int) Math.round((double) twoScore / count * 100);
@@ -31,6 +34,8 @@ public class ReviewRatioDTO {
         this.percent5 = (int) Math.round((double) fiveScore / count * 100);
 
          */
+
     }
+
 }
 

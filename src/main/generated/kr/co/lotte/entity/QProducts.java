@@ -19,6 +19,12 @@ public class QProducts extends EntityPathBase<Products> {
 
     public static final QProducts products = new QProducts("products");
 
+    public final StringPath cateName1 = createString("cateName1");
+
+    public final StringPath cateName2 = createString("cateName2");
+
+    public final StringPath cateName3 = createString("cateName3");
+
     public final NumberPath<Integer> cateNo = createNumber("cateNo", Integer.class);
 
     public final NumberPath<Integer> delivery = createNumber("delivery", Integer.class);
@@ -41,9 +47,19 @@ public class QProducts extends EntityPathBase<Products> {
 
     public final NumberPath<Integer> prodPrice = createNumber("prodPrice", Integer.class);
 
+    public final StringPath prodReceipt = createString("prodReceipt");
+
+    public final StringPath prodSa = createString("prodSa");
+
     public final NumberPath<Integer> prodSold = createNumber("prodSold", Integer.class);
 
+    public final StringPath prodState = createString("prodState");
+
     public final NumberPath<Integer> prodStock = createNumber("prodStock", Integer.class);
+
+    public final StringPath prodTax = createString("prodTax");
+
+    public final StringPath prodWonsan = createString("prodWonsan");
 
     public final NumberPath<Integer> recount = createNumber("recount", Integer.class);
 

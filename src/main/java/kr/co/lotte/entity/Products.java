@@ -2,6 +2,7 @@ package kr.co.lotte.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -46,7 +47,6 @@ public class Products {
     private String cateName1;
     private String cateName2;
     private String cateName3;
-    private String sellerUid;
     private String prodState;
     private String prodTax;
     private String prodReceipt;

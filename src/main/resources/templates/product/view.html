@@ -10,6 +10,12 @@
         window.onload = function () {
             const sizeSelect = document.querySelector("#size");
             const colorSelect = document.getElementById("color");
+            const total = document.getElementById('total_price');
+            const dis_price = document.getElementsByClassName('dis_price')[0];
+            let count;
+
+            console.log('total :'+total.innerText);//오케이 여기는 다시 값이 들어옴
+            //console.log('dis_price : '+dis_price.value);
 
             //color를 선택하면 size박스가 나타남
             colorSelect.addEventListener("change", function () {
@@ -23,11 +29,10 @@
 
             sizeSelect.onclick = function () {
 
-                console.log("sizeSelect.value : "+sizeSelect.value);
+                console.log("sizeSelect.value : " + sizeSelect.value);
 
                 if (sizeSelect.value !== "null") {
                     const choiceBox = document.getElementById('choiceBox');
-
 
 
                     //동적으로 내가 선택한 상품들이 띄워짐.
@@ -44,46 +49,66 @@
                     // 태그 문자열 삽입 :
                     choiceBox.insertAdjacentHTML('beforeend', productDetail);
 
-                    console.log("sizeSelect.value : "+sizeSelect.value);
-                    console.log("colorSelect.value : "+colorSelect.value);
+                    console.log("sizeSelect.value : " + sizeSelect.value);
+                    console.log("colorSelect.value : " + colorSelect.value);
 
                     //동적으로 내가 선택한 상품들 띄우고 난 뒤에 size박스를 다시 비활성화 시켜줌
-                    sizeSelect.value="null";
-                    colorSelect.value="null";
+                    sizeSelect.value = "null";
+                    colorSelect.value = "null";
                     sizeSelect.style.display = "none";
 
-                    const increase = document.querySelector('.increase'); // increase 버튼 선택
-                    const decrease = document.querySelector('.decrease'); // decrease 버튼 선택
-                    const total = document.getElementById('total_price'); // total_price 요소 선택
-                    const dis_price = document.querySelector('.dis_price ins'); // dis_price 요소 선택
-                    const numElement = document.querySelector('input[name="num"]'); // num 요소 선택
-                    let num = Number(numElement.value);
-
-                    //+버튼을 클릭했을 때, 값이 증가
-                    increase.onclick = function (e) {
-                        e.preventDefault();
-
-                        num += 1;
-                        numElement.value = num;
-
-                        //총 상품금액 구하기
-                        total.innerText = (parseInt(dis_price.innerText.replace(',', ''))) * num; // , 제거 후 계산
-                    };
-
-                    //-버튼을 클릭했을 때, 값이 감소
-                    decrease.onclick = function (e) {
-                        e.preventDefault();
-
-                        num -= 1;
-                        if (num < 1) num = 1; // 음수 방지
-                        numElement.value = num;
-
-                        //총 상품금액 구하기
-                        total.innerText = (parseInt(dis_price.innerText.replace(',', ''))) * num; // , 제거 후 계산
-                    };
                 }
-            };
+            };//내가 선택한 상품에 대한 옵션을 동적으로 생성(+,- 버튼과 함께)
 
+
+            document.addEventListener('click', async function (e) {
+
+                const parentDiv = e.target.closest('.count');
+                const numElement = parentDiv.querySelector('input[name="num"]');
+
+
+
+                if (e.target.classList.contains('increase')) {
+                    e.preventDefault();
+
+                    let num = Number(numElement.value);
+                    num += 1;
+                    numElement.value = num;
+                    count+=num;
+
+                }
+
+                if(e.target.classList.contains('decrease')){
+                    e.preventDefault();
+
+                    let num = Number(numElement.value);
+                    num -= 1;
+                    numElement.value = num;
+                    count-=num;
+                }
+
+            });
+
+
+            const order = document.getElementsByClassName('order')[0];
+            const uid = document.getElementById('uid').value;
+            const prodId = document.getElementById('prodId').textContent;
+
+            console.log('uid : ' + uid);
+            console.log('prodId : ' + prodId);
+            //console.log('num : '+num);
+
+
+            order.onclick = function (e) {
+                e.preventDefault();
+
+                alert('클릭이 되었습니다.');
+                const jsonData = {
+                    "userId": uid,
+                    "prodNo": prodId,
+
+                }
+            }
         };
 
 
@@ -99,6 +124,46 @@
             width: 100%;
             height: 50px;
         }
+
+        .prodReview {
+            border-bottom: 1px solid #ccc; /* 구분 선 스타일 및 색상 지정 */
+            padding-bottom: 20px; /* 리뷰 사이의 간격 조정 */
+            margin-bottom: 20px; /* 리뷰와 다음 리뷰 사이의 간격 조정 */
+        }
+
+        .prodReviewHeader {
+            border-bottom: 1px solid #ccc; /* 구분 선 스타일 및 색상 지정 */
+            padding-bottom: 20px; /* 리뷰 사이의 간격 조정 */
+            margin-bottom: 20px; /* 리뷰와 다음 리뷰 사이의 간격 조정 */
+        }
+
+        .head {
+            border-bottom: 1px solid #ccc; /* 구분 선 스타일 및 색상 지정 */
+            padding-bottom: 20px; /* 리뷰 사이의 간격 조정 */
+            margin-bottom: 20px; /* 리뷰와 다음 리뷰 사이의 간격 조정 */
+        }
+
+        .PageBox {
+            display: flex;
+            justify-content: center;
+        }
+
+        .PageBox ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .PageBox ul li {
+            display: inline-block;
+            margin: 0 5px; /* 필요한 여백 설정 */
+        }
+
+        .detail {
+            border-top: 1px solid #000000; /* 구분 선 스타일 및 색상 지정 */
+            padding-bottom: 20px; /* 리뷰 사이의 간격 조정 */
+            margin-bottom: 20px;;
+        }
+
 
     </style>
 
@@ -167,12 +232,27 @@
                             <span style="font-size: larger; font-weight: bold;">(주)</span>
                             <span th:text="${product.sellerName}" style="font-size: larger; font-weight: bold;"></span>
                         </p>
-                        <h2>상품번호&nbsp;:&nbsp;<span th:text="${product.prodNo}">10010118412</span></h2>
+                        <h2>상품번호&nbsp;:&nbsp;<span id="prodId" th:text="${product.prodNo}">10010118412</span></h2>
                     </nav>
                     <nav>
                         <h3 th:text="${product.prodName}">상품명</h3>
                         <p th:text="${product.etc}">상품설명 출력</p>
-                        <h5 class="rating star4"><a href="#">상품평보기</a></h5>
+                        <h5>
+                            <img th:if="${reviewRatioDTO.r_avg} == 1 " th:src="@{/review/review_star1.png}"
+                                 alt="oneStar"
+                                 style="max-width: 80px; height: auto;">
+                            <img th:if="${reviewRatioDTO.r_avg} == 2 " th:src="@{/review/review_star2.png}"
+                                 alt="oneStar"
+                                 style="max-width: 80px; height: auto;">
+                            <img th:if="${reviewRatioDTO.r_avg} == 3 " th:src="@{/review/review_star3.png}"
+                                 alt="oneStar"
+                                 style="max-width: 80px; height: auto;">
+                            <img th:if="${reviewRatioDTO.r_avg} == 4 " th:src="@{/review/review_star4.png}"
+                                 alt="oneStar"
+                                 style="max-width: 80px; height: auto;">
+                            <img th:if="${reviewRatioDTO.r_avg} == 5 " th:src="@{/review/review_star5.png}"
+                                 alt="oneStar"
+                                 style="max-width: 80px; height: auto;"><a href="#">상품평보기</a></h5>
                     </nav>
                     <nav>
                         <div class="org_price">
@@ -222,13 +302,13 @@
                     </nav>
 
 
-
                     <img th:src="@{/images/vip_plcc_banner.png}" alt="100원만 결제해도 1만원 적립!" class="banner"/>
 
                     <!--여기에 수량 조절버튼 있었음-->
 
                     <div class="total">
-                        <span id="total_price">35,000</span>
+                        <span id="total_price"
+                              th:text="${product.prodPrice - (product.prodPrice/product.prodDiscount)}">35,000</span>
                         <em>총 상품금액</em>
                     </div>
 
@@ -242,10 +322,13 @@
             <!-- 상품 정보 내용 -->
             <article class="detail">
                 <nav>
-                    <h1>상품정보</h1>
+                    <a href="#" style="font-size: xx-large">상세정보</a>&nbsp;&nbsp;
+                    <a href="#" style="font-size: xx-large">리뷰</a>&nbsp;&nbsp;
                 </nav>
                 <!-- 상품상세페이지 이미지 -->
                 <img th:src="@{/uploads/__${product.image2}__}" th:alt="${product.prodName}" alt="상세페이지1">
+                <!--<input type="hidden" id="uid" th:if="${#authorization.expression('isAuthenticated()')}" th:value="${#authentication.principal.user.uid}">-->
+                <input type="hidden" id="uid" value="a1"/>
             </article>
 
             <!-- 상품 정보 제공 고시 내용 -->
@@ -340,19 +423,43 @@
             </article>
 
             <!-- 상품 리뷰 내용 -->
-            <article class="review">
-                <nav>
-                    <h1>상품리뷰</h1>
-                </nav>
+            <div class="prodReviewBox">
+                <div class="prodReviewHeader">
+                    <div>
+                        <p class="head" style="font-size: xx-large">리뷰(<span style="font-size: xx-large"
+                                                                             th:text="${reviewPage.dtoList.size()}"></span>)
+                        </p>
+                        <br>
+                        <h3>평균</h3>
+
+                        <h1 th:text="${#numbers.formatDecimal(reviewRatioDTO.avg, 0, 'POINT', 2, 'POINT')}"> 점</h1>
+                        <img th:if="${reviewRatioDTO.r_avg} == 1 " th:src="@{/review/review_star1.png}" alt="oneStar"
+                             style="max-width: 80px; height: auto;">
+                        <img th:if="${reviewRatioDTO.r_avg} == 2 " th:src="@{/review/review_star2.png}" alt="oneStar"
+                             style="max-width: 80px; height: auto;">
+                        <img th:if="${reviewRatioDTO.r_avg} == 3 " th:src="@{/review/review_star3.png}" alt="oneStar"
+                             style="max-width: 80px; height: auto;">
+                        <img th:if="${reviewRatioDTO.r_avg} == 4 " th:src="@{/review/review_star4.png}" alt="oneStar"
+                             style="max-width: 80px; height: auto;">
+                        <img th:if="${reviewRatioDTO.r_avg} == 5 " th:src="@{/review/review_star5.png}" alt="oneStar"
+                             style="max-width: 80px; height: auto;">
+                    </div>
+                </div>
+
                 <ul>
                     <li th:each="review, loop:${reviewPage.dtoList}">
                         <div class="prodReview">
-                            <p><b>[[${review.nick}]]</b>
-                                <img th:if="${review.score} == 1 " th:src="@{/review/review_star1.png}" alt="oneStar" style="max-width: 80px; height: auto;">
-                                <img th:if="${review.score} == 2 " th:src="@{/review/review_star2.png}" alt="oneStar" style="max-width: 80px; height: auto;">
-                                <img th:if="${review.score} == 3 " th:src="@{/review/review_star3.png}" alt="oneStar" style="max-width: 80px; height: auto;">
-                                <img th:if="${review.score} == 4 " th:src="@{/review/review_star4.png}" alt="oneStar" style="max-width: 80px; height: auto;">
-                                <img th:if="${review.score} == 5 " th:src="@{/review/review_star5.png}" alt="oneStar" style="max-width: 80px; height: auto;">
+                            <p><b>[[${review.uid}]]</b>
+                                <img th:if="${review.score} == 1 " th:src="@{/review/review_star1.png}" alt="oneStar"
+                                     style="max-width: 80px; height: auto;">
+                                <img th:if="${review.score} == 2 " th:src="@{/review/review_star2.png}" alt="oneStar"
+                                     style="max-width: 80px; height: auto;">
+                                <img th:if="${review.score} == 3 " th:src="@{/review/review_star3.png}" alt="oneStar"
+                                     style="max-width: 80px; height: auto;">
+                                <img th:if="${review.score} == 4 " th:src="@{/review/review_star4.png}" alt="oneStar"
+                                     style="max-width: 80px; height: auto;">
+                                <img th:if="${review.score} == 5 " th:src="@{/review/review_star5.png}" alt="oneStar"
+                                     style="max-width: 80px; height: auto;">
                                 <span th:text="${#temporals.format(review.rdate,'yyyy-MM-dd')}">24.03.22</span></p>
                             <div>
                                 <img th:if="${review.thumbnail} != null" th:src="@{/uploads/__${review.thumbnail}__}"
@@ -363,38 +470,22 @@
                             </div>
                         </div>
                     </li>
-                    <li>
-                        <div>
-                            <h5 class="rating star4">상품평</h5>
-                            <span>seo******	2018-07-10</span>
-                        </div>
-                        <h3>상품명1/BLUE/L</h3>
-                        <p>
-                            가격대비 정말 괜찮은 옷이라 생각되네요 핏은 음...제가 입기엔 어깨선이 맞고 루즈핏이라 하기도 좀 힘드네요.
-                            아주 약간 루즈한정도...?그래도 이만한 옷은 없다고 봅니다 깨끗하고 포장도 괜찮고 다음에도 여기서 판매하는
-                            제품들을 구매하고 싶네요 정말 만족하고 후기 남깁니다 많이 파시길 바래요 ~ ~ ~
-                        </p>
-                    </li>
                 </ul>
-                <div class="paging">
-                        <span class="prev">
-                            <a href="#"><&nbsp;이전</a>
-                        </span>
-                    <span class="num">
-                            <a href="#" class="on">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#">6</a>
-                            <a href="#">7</a>
-                        </span>
-                    <span class="next">
-                            <a href="#">다음&nbsp;></a>
-                        </span>
+                <div class="PageBox" th:if="${!reviewPage.dtoList.isEmpty()}">
+                    <ul>
+                        <li th:if="${reviewPage.prev}">
+                            <a th:href="@{/product/view(prodno=${product.prodNo}, rpg=${reviewPage.start - 1}, aa='a')}">이전</a>
+                        </li>
+                        <li th:each="n : ${#numbers.sequence(reviewPage.start, reviewPage.end)}">
+                            <a th:href="@{/product/view(prodno=${product.prodNo}, rpg=${n}, aa='a')}"
+                               th:classappend="${reviewPage.rpg == n} ? 'pageOn' : 'page-link'" th:text="${n}"></a>
+                        </li>
+                        <li th:if="${reviewPage.next}">
+                            <a th:href="@{/product/view(prodno=${product.prodNo}, rpg=${reviewPage.end + 1}, aa='a')}">다음</a>
+                        </li>
+                    </ul>
                 </div>
-
-            </article>
+            </div>
 
         </section>
         <!-- 상품 상세페이지 끝 -->

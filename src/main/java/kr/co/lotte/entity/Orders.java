@@ -30,4 +30,7 @@ public class Orders {
     private String memo;
     private String sendHp;
     private String sendName;
+    private String size;
+    private String color;
+
 }

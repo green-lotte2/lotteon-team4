@@ -23,6 +23,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath addr2 = createString("addr2");
 
+    public final StringPath agree = createString("agree");
+
     public final StringPath email = createString("email");
 
     public final StringPath grade = createString("grade");

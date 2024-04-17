@@ -23,14 +23,15 @@ public class Products {
     private int cateNo;
     private String sellerUid;
     private String prodName;
-    private int prodPrice;
-    private int prodStock;
-    private int prodSold;
+
     private int prodDiscount;
 
     private String image1;
     private String image2;
     private String image3;
+    private String image4;
+    private String manufacture;
+    private int searchCount; //상품조회
 
     private int recount;
     private int point;
@@ -46,11 +47,14 @@ public class Products {
     private String cateName1;
     private String cateName2;
     private String cateName3;
-    private String sellerUid;
     private String prodState;
     private String prodTax;
     private String prodReceipt;
     private String prodSa;
     private String prodWonsan;
 
+    private String sellerName;
+
+    private String size;
+    private String color;
 }

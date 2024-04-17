@@ -1,5 +1,6 @@
 package kr.co.lotte.config;
 
+import kr.co.lotte.interceptor.AppInfoIntercepter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +20,12 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Value("${file.upload.path}")
     private String resourcePath;
 
-    /*
+
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
             registry.addInterceptor(new AppInfoIntercepter(appInfo));
         }
-    */
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/admin/**").addResourceLocations("classpath:/admin/");

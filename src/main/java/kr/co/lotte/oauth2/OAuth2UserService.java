@@ -1,7 +1,7 @@
 package kr.co.lotte.oauth2;
 
 import kr.co.lotte.entity.User;
-import kr.co.lotte.repository.UserRepository;
+import kr.co.lotte.repository.MemberRepository;
 import kr.co.lotte.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

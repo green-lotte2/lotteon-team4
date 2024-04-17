@@ -6,28 +6,167 @@
         layout:decorate="~{/member/layout/memberLayout.html}">
 
 <div class="register" layout:fragment="content">
+
+    <script>
+        //유효성 검사에 사용할 상태변수
+        let isUidOk = false;
+        let isPassOk = false;
+        let isNameOk = false;
+        let isNickOk = false;
+        let isEmailOk = false;
+        let isHpOk = false;
+        let isEmailCodeOk = false;
+
+        // 유효성 검사에 사용할 정규표현식
+        const reUid = /^[a-z]+[a-z0-9]{4,19}$/g;
+        const rePass = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{5,16}$/;
+        const reName = /^[가-힣]{2,10}$/
+        const reNick = /^[a-zA-Zㄱ-힣0-9][a-zA-Zㄱ-힣0-9]*$/;
+        const reEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+        const reHp = /^01(?:0|1|[6-9])-(?:\d{4})-\d{4}$/;
+
+        window.onload = function () {
+
+            // 아이디 유효성 검사
+            const btnCheckUid = document.getElementById('btnCheckUid');
+            const resultUid = document.getElementById('result_uid');
+
+            btnCheckUid.onclick = function () {
+
+                const type = this.dataset.type; //입력 유형 (uid, nickname 등)
+                const input = document.registerForm[type]; // 입력 요소
+
+                // 정규식 검사
+                if (!input.value.match(reUid)) {
+
+                    console.log("여기에 들어오나?");
+
+                    input.classList.add('is-invalid');
+                    resultUid.innerText = '아이디 형식이 맞지 않습니다.';
+                    isUidOk = false;
+                    return;
+                }
+
+                // 서버에 아이디 중복 확인 요청 (비동기 처리)
+                async function fetchGet(url) {
+
+                    console.log("fetchData1...1");
+
+                    try {
+                        console.log("fetchData1...2");
+                        const response = await fetch(url);
+                        console.log("here1");
+
+                        if (!response.ok) {
+                            console.log("here2");
+                            throw new Error('response not ok');
+                        }
+
+                        const data = await response.json();
+                        console.log("data1 : " + data);
+                        return data;
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+
+
+                setTimeout(async () => {
+
+                        console.log('value : ' + input.value);
+                        console.log('type:' + type);
+
+                        const data = await fetchGet(`/lotteshop/member/check/${type}/${input.value}`);
+
+                        if (data.result > 0) { //중복 아이디 존재
+
+                            input.classList.remove('is-valid'); // 기존의 유효한 클래스를 제거
+                            input.classList.add('is-invalid');
+
+                            resultUid.classList.add('invalid-feedback');
+                            resultUid.innerText = '이미 사용중인 아이디 입니다.';
+                            isUidOk = false;
+                        } else {// 사용 가능한 아이디
+
+                            input.classList.remove('is-invalid'); // 기존의 무효한 클래스를 제거
+                            input.classList.add('is-valid');
+
+                            resultUid.classList.add('valid-feedback');
+
+                            resultUid.innerText = '사용 가능한 아이디 입니다.';
+                            isUidOk = true;
+                            console.log("isUidOk:" + isUidOk);
+                        }
+                    }, 1000
+                );
+            }
+
+            // 비밀번호 유효성 검사
+            const resultPass = document.getElementById('result_pass');
+
+
+            document.registerForm.pass2.addEventListener('focusout', () => {
+
+                const inputPass1 = document.registerForm.pass;
+                const inputPass2 = document.registerForm.pass2;
+
+                console.log("inputPass1 : " + inputPass1);
+                console.log("inputPass2 : " + inputPass2);
+
+
+                if (inputPass1.value === inputPass2.value) {
+
+                    if (!inputPass1.value.match(rePass)) {
+                        inputPass1.classList.add('is-invalid');
+                        inputPass2.classList.add('is-invalid');
+                        resultPass.innerText = '비밀번호 형식에 맞지 않습니다.';
+                        isPassOk = false;
+                    } else {
+                        inputPass1.classList.add('is-valid');
+                        inputPass2.classList.add('is-valid');
+                        resultPass.innerText = '사용 가능한 비밀번호 입니다.';
+                        isPassOk = true;
+                    }
+                } else {
+                    inputPass1.classList.add('is-invalid');
+                    inputPass2.classList.add('is-invalid');
+                    resultPass.innerText = '비밀번호가 일치하지 않습니다.';
+                    isPassOk = false;
+                }
+            });
+        }
+    </script>
+
     <nav>
         <h1>일반 회원가입</h1>
     </nav>
-    <form th:action method="POST">
+    <form name="registerForm" th:action method="POST">
         <section>
             <table>
                 <caption>필수 정보입력</caption>
                 <tr>
                     <th><span class="essential">*</span>아이디</th>
                     <td><input type="text" name="uid" placeholder="아이디를 입력"
-                               required/> <span class="msgId">영문, 숫자로 4~12자까지 설정해 주세요.</span></td>
+                               required/>
+                        <button type="button" id="btnCheckUid" data-type="uid">아이디 중복체크</button>
+                        <div id="result_uid" class="deprecation-block"></div>
+                        <span class="msgId">영문, 숫자로 5~20자까지 설정해 주세요.</span>
+                    </td>
                 </tr>
                 <tr>
                     <th><span class="essential">*</span>비밀번호</th>
                     <td><input type="password" name="pass" placeholder="비밀번호를 입력"
-                               required/> <span class="msgPass">영문, 숫자, 특수문자를 조합하여 8~12자까지 설정해 주세요.</span>
+                               required/>
+                        <span class="msgPass">영문, 숫자, 특수문자를 조합하여 8~12자까지 설정해 주세요.</span>
                     </td>
                 </tr>
                 <tr>
                     <th><span class="essential">*</span>비밀번호확인</th>
-                    <td><input type="password" name="pass" placeholder="비밀번호를 확인"
-                               required/> <span class="msgPass">비밀번호 재입력</span></td>
+                    <td><input type="password" name="pass2" placeholder="비밀번호를 확인"
+                               required/>
+                        <span class="msgPass">비밀번호 재입력</span>
+                        <div id="result_pass"></div>
+                    </td>
                 </tr>
             </table>
         </section>
@@ -81,7 +220,6 @@
                     </td>
                 </tr>
             </table>
-
         </section>
         <div>
             <input type="submit" class="join" value="회원가입"/>

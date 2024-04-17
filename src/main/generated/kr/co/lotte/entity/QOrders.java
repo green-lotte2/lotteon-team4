@@ -19,6 +19,8 @@ public class QOrders extends EntityPathBase<Orders> {
 
     public static final QOrders orders = new QOrders("orders");
 
+    public final StringPath color = createString("color");
+
     public final NumberPath<Integer> itemDiscount = createNumber("itemDiscount", Integer.class);
 
     public final StringPath memo = createString("memo");
@@ -38,6 +40,8 @@ public class QOrders extends EntityPathBase<Orders> {
     public final StringPath sendHp = createString("sendHp");
 
     public final StringPath sendName = createString("sendName");
+
+    public final StringPath size = createString("size");
 
     public final StringPath userId = createString("userId");
 

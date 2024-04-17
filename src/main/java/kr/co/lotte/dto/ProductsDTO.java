@@ -45,8 +45,7 @@ public class ProductsDTO {
     private int delivery;
 
     private LocalDateTime RegProdDate;
-    private String manufacture;
-    private int searchCount;
+
 
     private String cateName;
 

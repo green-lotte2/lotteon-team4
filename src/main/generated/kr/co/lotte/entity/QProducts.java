@@ -27,6 +27,8 @@ public class QProducts extends EntityPathBase<Products> {
 
     public final NumberPath<Integer> cateNo = createNumber("cateNo", Integer.class);
 
+    public final StringPath color = createString("color");
+
     public final NumberPath<Integer> delivery = createNumber("delivery", Integer.class);
 
     public final StringPath etc = createString("etc");
@@ -36,6 +38,10 @@ public class QProducts extends EntityPathBase<Products> {
     public final StringPath image2 = createString("image2");
 
     public final StringPath image3 = createString("image3");
+
+    public final StringPath image4 = createString("image4");
+
+    public final StringPath manufacture = createString("manufacture");
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
@@ -49,11 +55,7 @@ public class QProducts extends EntityPathBase<Products> {
 
     public final StringPath prodSa = createString("prodSa");
 
-    public final NumberPath<Integer> prodSold = createNumber("prodSold", Integer.class);
-
     public final StringPath prodState = createString("prodState");
-
-    public final NumberPath<Integer> prodStock = createNumber("prodStock", Integer.class);
 
     public final StringPath prodTax = createString("prodTax");
 
@@ -63,7 +65,13 @@ public class QProducts extends EntityPathBase<Products> {
 
     public final DateTimePath<java.time.LocalDateTime> RegProdDate = createDateTime("RegProdDate", java.time.LocalDateTime.class);
 
+    public final NumberPath<Integer> searchCount = createNumber("searchCount", Integer.class);
+
+    public final StringPath sellerName = createString("sellerName");
+
     public final StringPath sellerUid = createString("sellerUid");
+
+    public final StringPath size = createString("size");
 
     public QProducts(String variable) {
         super(Products.class, forVariable(variable));

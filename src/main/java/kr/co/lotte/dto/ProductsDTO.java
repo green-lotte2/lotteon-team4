@@ -54,6 +54,7 @@ public class ProductsDTO {
     private String cateName3;
     private String prodState;
     private String prodTax;
+    private int prodPrice;
     private String prodReceipt;
     private String prodSa;
     private String prodWonsan;

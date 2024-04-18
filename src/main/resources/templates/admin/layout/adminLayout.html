@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>
     <script th:src="@{/admin/js/gnb.js}"></script>
-    <script th:src="@{/js/util.js}"></script>
+    <script   type="text/javascript" th:src="@{/js/util.js}" ></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" th:href="@{/admin/css/admin.css}">
@@ -61,7 +61,6 @@
                     <a href="#"><i class="fas fa-store" aria-hidden="true"></i>상점관리</a>
                     <ol>
                         <li><a href="#">판매자현황</a></li>
-                        <li><a href="#">재고관리</a></li>
                     </ol>
                 </li>
                 <li>
@@ -78,7 +77,6 @@
                     <ol>
                         <li><a th:href="@{/admin/product/list}">상품현황</a></li>
                         <li><a th:href="@{/admin/product/register}">상품등록</a></li>
-                        <li><a href="#">재고관리</a></li>
                     </ol>
                 </li>
                 <li>

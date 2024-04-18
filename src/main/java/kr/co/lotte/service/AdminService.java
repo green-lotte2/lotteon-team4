@@ -1,12 +1,11 @@
 package kr.co.lotte.service;
 
-import kr.co.lotte.dto.ProdImageDTO;
-import kr.co.lotte.dto.ProductsDTO;
-import kr.co.lotte.dto.SubProductsDTO;
-import kr.co.lotte.entity.Categories;
-import kr.co.lotte.entity.ProdImage;
-import kr.co.lotte.entity.Products;
-import kr.co.lotte.entity.SubProducts;
+import com.querydsl.core.Tuple;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import kr.co.lotte.adminRepository.ProductsRepository;
+import kr.co.lotte.dto.*;
+import kr.co.lotte.entity.*;
 import kr.co.lotte.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +13,13 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.plaf.PanelUI;
+import org.springframework.data.domain.Pageable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -98,17 +99,22 @@ public class AdminService {
         log.info("registerProd....2!!?"+ sellerName);
         products.setSellerName(sellerName);
         log.info("registerProd....!!!!"+ products);
+        List<SubProducts> subProducts =subProductsRepository.findAllByProdNo(0);
+        products.setProdPrice(subProducts.get(0).getProdPrice());
+        int point = (int) (subProducts.get(0).getProdPrice() * 0.01);
+        products.setPoint(point);
         Products savedProduct = productsRepository.save(products);
         log.info("registerProd....2" + savedProduct);
         int saveProdNo = savedProduct.getProdNo();
         log.info("registerProd....3" + saveProdNo);
-        List<SubProducts> subProducts =subProductsRepository.findAllByProdNo(0);
         log.info("registerProd....3"+subProducts);
 
         for(SubProducts subProducts1 : subProducts){
             subProducts1.setProdNo(saveProdNo);
             subProductsRepository.save(subProducts1);
         }
+
+
         for (ProdImageDTO prodImageDTO : uploadedImages){
             prodImageDTO.setPNo(savedProduct.getProdNo());
 
@@ -227,7 +233,84 @@ public class AdminService {
         return ResponseEntity.ok().body(map);
 
     }
-    public List<Products> searchProducts(){
-        return productsRepository.findAll();
+    public ProductsPageResponseDTO searchProducts(ProductsPageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable("no");
+        Page<Tuple> page = productsRepository.searchAllProductsForAdmin(requestDTO, pageable);
+        log.info(page.getContent().toString()+"!!!!?!");
+        List<SubProducts> dtoList = page.getContent().stream()
+                .map(tuple -> {
+                    Products products = new Products();
+                    products =tuple.get(0, Products.class);
+                  SubProducts ss = tuple.get(1, SubProducts.class);
+               ss.setProducts(products);
+                    return ss;
+                }).toList();
+        int total =(int) page.getTotalElements();
+        return new ProductsPageResponseDTO(requestDTO, total, dtoList);
+
     }
+
+    public Products findOnlyOneProduct(int productNo) {
+        return  productsRepository.findById(productNo).get();
+    }
+
+    public List<SubProducts> subProductsFind(int prodNo){
+        return subProductsRepository.findAllByProdNo(prodNo);
+    }
+
+    public void deleteProducts(List<Integer> subProductsNos){
+        for(Integer subProductsNo : subProductsNos){
+            //table에서 삭제
+            int prodNo = subProductsRepository.findById(subProductsNo).get().getProdNo();
+
+            subProductsRepository.deleteById(subProductsNo);
+
+            try{
+                List<SubProducts> list = subProductsRepository.findAllByProdNo(prodNo);
+                int b = list.get(0).getProdPrice();
+            }catch (Exception e){
+                deleteFile(prodNo);
+                productsRepository.deleteById(prodNo);
+            }
+            //만약 subProducts가 하나도 없으면 거기서도 삭제 (uploads 파일 + prodImg + products entity)
+        }
+    }
+
+    public void deleteProduct(int subProductsNo){
+            //table에서 삭제
+            int prodNo = subProductsRepository.findById(subProductsNo).get().getProdNo();
+            subProductsRepository.deleteById(subProductsNo);
+            try{
+                List<SubProducts> list = subProductsRepository.findAllByProdNo(prodNo);
+                int b = list.get(0).getProdPrice();
+            }catch (Exception e){
+                deleteFile(prodNo);
+                productsRepository.deleteById(prodNo);
+            }
+            //만약 subProducts가 하나도 없으면 거기서도 삭제 (uploads 파일 + prodImg + products entity)
+    }
+
+    public void deleteFile( int prodNo) {
+        List<ProdImage> prodImages = prodImageRepository.findBypNo(prodNo);
+        for(ProdImage prodImage : prodImages){
+            // 업로드 디렉토리 파일 삭제
+            String path = new File(fileUploadPath).getAbsolutePath();
+            // 파일 객체 생성
+            File file = new File(path + File.separator + prodImage.getSName());
+            // 파일 삭제
+            if(file.exists()) {
+                file.delete();
+            }
+            prodImageRepository.delete(prodImage);
+        }
+    }
+
+    @Autowired
+    private TermsRepository termsRepository;
+
+    //terms
+    public Terms findTerms(){
+        return termsRepository.findAll().get(0);
+    }
+
 }

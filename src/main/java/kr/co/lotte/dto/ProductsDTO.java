@@ -1,6 +1,7 @@
 package kr.co.lotte.dto;
 
 import jakarta.persistence.Transient;
+import kr.co.lotte.entity.SubProducts;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +47,6 @@ public class ProductsDTO {
 
     private LocalDateTime RegProdDate;
 
-
     private String cateName;
 
     private String cateName1;
@@ -60,5 +60,7 @@ public class ProductsDTO {
     private String prodWonsan;
 
     private String sellerName;
+    private int prodPrice;
 
+    private List<SubProducts> list;
 }

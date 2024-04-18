@@ -13,7 +13,6 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Repository
 public class SubProductsRepositoryImpl implements SubProductsRepositoryCustom {
 
 

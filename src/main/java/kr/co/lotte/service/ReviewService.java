@@ -1,13 +1,13 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import kr.co.lotte.adminRepository.ProductsRepository;
 import kr.co.lotte.dto.ReviewDTO;
 import kr.co.lotte.dto.ReviewPageRequestDTO;
 import kr.co.lotte.dto.ReviewPageResponseDTO;
 import kr.co.lotte.dto.ReviewRatioDTO;
 import kr.co.lotte.entity.Products;
 import kr.co.lotte.entity.Review;
-import kr.co.lotte.repository.ProductRepository;
 import kr.co.lotte.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ import java.util.UUID;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final ProductRepository productRepository;
+    private final ProductsRepository productRepository;
     private final ModelMapper modelMapper;
 
     @Value("${file.upload.path}")

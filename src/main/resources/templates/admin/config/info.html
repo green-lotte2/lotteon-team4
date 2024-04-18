@@ -15,9 +15,7 @@
 
                         <section>
                             <h4>기본정보</h4>
-                            <p>
-                                기본분류는 반드시 선택하셔야 합니다. 하나의 상품에 1개의 분류를 지정 합니다.
-                            </p>
+                         <br>
                             <table>
                                 <tr>
                                     <td>쇼핑몰 이름</td>
@@ -42,25 +40,23 @@
                         
                         <section>
                             <h4>이용약관</h4>
-                            <p>
-                                기본정보는 반드시 입력해야 합니다.
-                            </p>
+                            <br>
                             <table>
                                 <tr>
                                     <td>1조</td>
-                                    <td><textarea name="art1"></textarea></td>
+                                    <td><textarea name="terms" style="width: calc(100%) ; height: 150px" th:text="${terms.terms}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>1조</td>
-                                    <td><textarea name="art1"></textarea></td>
+                                    <td>2조</td>
+                                    <td><textarea name="terms2" style="width: calc(100%); height: 150px" th:text="${terms.terms2}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>1조</td>
-                                    <td><textarea name="art1"></textarea></td>
+                                    <td>3조</td>
+                                    <td><textarea name="privacy" style="width: calc(100%); height: 150px" th:text="${terms.privacy}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>1조</td>
-                                    <td><textarea name="art1"></textarea></td>
+                                    <td>마케팅 수신</td>
+                                    <td><textarea name="sms" style="width: calc(100%); height: 150px" th:text="${terms.sms}"></textarea></td>
                                 </tr>
                             </table>                                
                         </section>                                                
@@ -74,3 +70,5 @@
                 <!-- 상품등록 컨텐츠 끝 -->
             </section>
 </html>
+
+

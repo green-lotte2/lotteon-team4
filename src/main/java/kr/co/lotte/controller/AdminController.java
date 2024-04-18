@@ -2,6 +2,8 @@ package kr.co.lotte.controller;
 
 
 import kr.co.lotte.dto.ProductsDTO;
+import kr.co.lotte.dto.ProductsPageRequestDTO;
+import kr.co.lotte.dto.ProductsPageResponseDTO;
 import kr.co.lotte.dto.SubProductsDTO;
 import kr.co.lotte.entity.Categories;
 import kr.co.lotte.service.AdminService;
@@ -11,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,14 +40,16 @@ public class AdminController {
     }
 
     @GetMapping("/admin/config/info")
-    public String info(){
+    public String info(Model model){
+        model.addAttribute("terms", adminService.findTerms());
         return "/admin/config/info";
     }
 
     //product
     @GetMapping("/admin/product/list")
-    public String list(Model model){
-        model.addAttribute("products", adminService.searchProducts());
+    public String list(Model model, ProductsPageRequestDTO pageRequestDTO){
+        ProductsPageResponseDTO pageResponseDTO = adminService.searchProducts(pageRequestDTO);
+        model.addAttribute("page", pageResponseDTO);
         return "/admin/product/list";
     }
 
@@ -92,4 +94,34 @@ public class AdminController {
         return adminService.insertSubOptions(subProductsDTOS);
     };
 
+    //상품수정
+    @GetMapping("/admin/product/modify")
+    public String modify(Model model, @RequestParam int prodNo){
+        log.info(prodNo+"prodNo");
+        model.addAttribute("products", adminService.findOnlyOneProduct(prodNo));
+        model.addAttribute("subProducts", adminService.subProductsFind(prodNo));
+        return "/admin/product/modify";
+    }
+
+    //아 상품수정 나중에 할래 귀찮다
+
+
+    //상품 삭제
+    @ResponseBody
+    @PutMapping("/admin/product/delete")
+    public ResponseEntity delete(@RequestBody Map<String, List<Integer>> map){
+        List<Integer> lists = map.get("list");
+        log.info(lists.toString());
+        adminService.deleteProducts(lists);
+        Map<String, String> result = new HashMap<>();
+        result.put("result", "success");
+        return ResponseEntity.ok().body(map);
+    }
+    //하나만 삭제
+    @PostMapping("/admin/product/deleteOne")
+    public void deleteOne(@RequestBody Map<String, Integer> map){
+        int subNo = map.get("number");
+        log.info(subNo+"subNo");
+        adminService.deleteProduct(subNo);
+    }
 }

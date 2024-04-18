@@ -22,9 +22,11 @@ public class SubProducts {
     private int prodStock;
     private int prodSold;
 
+
     private String size;
     private String color;
 
     @Transient
     private Products products;
+
 }

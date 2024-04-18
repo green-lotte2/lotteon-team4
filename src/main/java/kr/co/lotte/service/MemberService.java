@@ -94,5 +94,8 @@ public class MemberService {
         return  null;
     }
 
+    public UserDTO findUser(String uid) {
+        return memberMapper.findUser(uid);
+    }
 
 }

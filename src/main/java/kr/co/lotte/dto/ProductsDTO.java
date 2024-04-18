@@ -60,7 +60,5 @@ public class ProductsDTO {
     private String prodWonsan;
 
     private String sellerName;
-    private int prodPrice;
-
     private List<SubProducts> list;
 }

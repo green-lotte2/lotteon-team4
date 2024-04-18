@@ -45,4 +45,12 @@ public class MemberService {
         log.info("i={}", i);
         return memberMapper.selectCountMember(type, value);
     }
+
+
+    //아이디로 회원의 정보를 찾을 수 있게 만들어주기
+    public UserDTO findUser(String uid){
+
+        return memberMapper.findUser(uid);
+
+    }
 }

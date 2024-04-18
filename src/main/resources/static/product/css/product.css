@@ -505,7 +505,7 @@
 
 #product > .view > .info > .summary .count {
 	position: relative;
-	width: 100px;
+	width: 456px;
 	height: 40px;
 } 
 #product > .view > .info > .summary .count > button {
@@ -517,6 +517,19 @@
   background-color: transparent;
   border: none;
 }
+
+#product > .view > .info > .summary .count > .selectDelete {
+    position: absolute;
+    right: 0; /* 오른쪽에 배치합니다. */
+    top: 0; /* 상단에 배치합니다. */
+    width: 21px;
+    height: 21px;
+    font-size: 21px;
+    background-color: #ffffff;
+    background-image: none;
+    border: none;
+}
+
 #product > .view > .info > .summary .count > .decrease {
 	left:0;
   top:0;

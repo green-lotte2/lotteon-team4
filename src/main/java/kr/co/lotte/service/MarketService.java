@@ -9,12 +9,15 @@ import kr.co.lotte.entity.ProdImage;
 import kr.co.lotte.entity.Products;
 import kr.co.lotte.entity.Seller;
 import kr.co.lotte.repository.MarketRepository;
+import kr.co.lotte.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class MarketService {
 
     private final MarketRepository marketRepository;
     private final ModelMapper modelMapper;
+    private final ProductRepository productRepository;
 
     // 장보기 글보기 페이지 - 장보기 게시글 출력
     public ProductsDTO selectProduct(int prodno){

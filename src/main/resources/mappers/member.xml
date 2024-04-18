@@ -15,4 +15,10 @@
         </where>
 
     </select>
+
+
+    <select id="findUser" resultType="kr.co.lotte.dto.UserDTO">
+        select * from `user` where uid=#{uid}
+    </select>
+
 </mapper>

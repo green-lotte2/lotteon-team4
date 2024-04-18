@@ -11,104 +11,245 @@
             const sizeSelect = document.querySelector("#size");
             const colorSelect = document.getElementById("color");
             const total = document.getElementById('total_price');
-            const dis_price = document.getElementsByClassName('dis_price')[0];
-            let count;
+            const dis_price = document.getElementById('disCount');
+            let count = 0;
 
-            console.log('total :'+total.innerText);//오케이 여기는 다시 값이 들어옴
-            //console.log('dis_price : '+dis_price.value);
 
-            //color를 선택하면 size박스가 나타남
-            colorSelect.addEventListener("change", function () {
-                console.log("colorSelect : " + colorSelect.value);
-                if (colorSelect.value !== "null") {
-                    sizeSelect.style.display = "block";
-                } else {
-                    sizeSelect.style.display = "none";
-                }
-            });
+            console.log('total :' + total.innerText);//오케이 여기는 다시 값이 들어옴
+            console.log('dis_price : ' + dis_price.innerText);//여기도 들어옴
+
+            // colorSelect 요소가 존재하는지 확인
+            if (colorSelect) {
+                // colorSelect 요소의 변경 이벤트 리스너 추가
+                colorSelect.addEventListener("change", function () {
+                    console.log("colorSelect : " + colorSelect.value);
+                    // colorSelect의 값이 "null"이 아닌 경우
+                    if (colorSelect.value !== "null") {
+                        // sizeSelect 요소의 display 속성을 "block"으로 변경
+                        sizeSelect.style.display = "block";
+                    } else {
+                        // sizeSelect 요소의 display 속성을 "none"으로 변경
+                        sizeSelect.style.display = "none";
+                    }
+                });
+            } else {
+                // colorSelect 요소가 존재하지 않을 경우 오류 메시지 출력
+                console.error("colorSelect 요소를 찾을 수 없습니다.");
+            }
+
+            // 선택한 상품들을 저장할 배열
+            let selectedProducts = [];
 
             sizeSelect.onclick = function () {
+                if (sizeSelect.value !== "null" && colorSelect.value !== "null") {
+                    // 새로운 제품 객체 생성
+                    const newProduct = {
+                        size: sizeSelect.value,
+                        color: colorSelect.value
+                    };
 
-                console.log("sizeSelect.value : " + sizeSelect.value);
+                    console.log("새로 선택한 상품 컬러 : " + newProduct.color);
+                    console.log("새로 선택한 상품 사이즈 : " + newProduct.size);
 
-                if (sizeSelect.value !== "null") {
-                    const choiceBox = document.getElementById('choiceBox');
+                    // 이미 선택한 상품인지 확인
+                    const isAlreadySelected = selectedProducts.some(product => {
+                        // 새로 선택한 상품이 이미 선택된 상품과 크기와 색상이 같으면 중복으로 처리
+                        if (newProduct.size !== "null" && newProduct.color !== "null") {
+                            return product.size === newProduct.size && product.color === newProduct.color;
+                        }
+                        // 크기나 색상이 null이 아닌 경우에만 중복으로 처리
+                        else if (product.size !== "null" || product.color !== "null") {
+                            return false;
+                        }
+                        return false; // 둘 다 null인 경우는 중복으로 처리하지 않음
+                    });
 
 
-                    //동적으로 내가 선택한 상품들이 띄워짐.
-                    const productDetail = `<div class="product_item">
-                                    <p>
-                                        <span>${sizeSelect.value}</spanth>&nbsp;&nbsp;<span>${colorSelect.value}</span>
-                                    </p>
-                                    <div class="count">
-                                        <button class="decrease">-</button>
-                                        <input type="text" name="num" value="1"/>
-                                        <button class="increase">+</button>
-                                    </div>
-                                </div>`;
-                    // 태그 문자열 삽입 :
-                    choiceBox.insertAdjacentHTML('beforeend', productDetail);
+                    if (!isAlreadySelected && sizeSelect.value !== "null" && colorSelect.value !== "null") {
+                        const choiceBox = document.getElementById('choiceBox');
 
-                    console.log("sizeSelect.value : " + sizeSelect.value);
-                    console.log("colorSelect.value : " + colorSelect.value);
+                        //동적으로 내가 선택한 상품들이 띄워짐.
+                        const productDetail = `<div class="product_item">
+                                                <p style="font-size: 20px">
+                                                    상품 사이즈 : <span class="size" style="font-size: 20px">${newProduct.size}</span><br>
+                                                    상품 컬러 : <span class="color" style="font-size: 20px">${newProduct.color}</span><br>
+                                                </p>
+                                                <div class="count">
+                                                    <button class="decrease">-</button>
+                                                    <input type="text" class="num" name="num" value="1"/>
+                                                    <button class="increase">+</button>
+                                                    <button class="selectDelete">X</button>
+                                                </div>
+                                            </div>`;
 
-                    //동적으로 내가 선택한 상품들 띄우고 난 뒤에 size박스를 다시 비활성화 시켜줌
-                    sizeSelect.value = "null";
-                    colorSelect.value = "null";
-                    sizeSelect.style.display = "none";
+                        // 태그 문자열 삽입 :
+                        choiceBox.insertAdjacentHTML('beforeend', productDetail);
 
+                        console.log("sizeSelect.value : " + sizeSelect.value);
+                        console.log("colorSelect.value : " + colorSelect.value);
+
+                        // 선택한 상품 배열에 추가
+                        selectedProducts.push(newProduct);
+
+                        console.log("selectedProducts : " + JSON.stringify(selectedProducts));
+
+                        //동적으로 내가 선택한 상품들 띄우고 난 뒤에 size박스를 다시 비활성화 시켜줌
+                        sizeSelect.value = "null";
+                        colorSelect.value = "null";
+                        count += 1;
+                        total.innerText = (dis_price.innerText) * count;
+                        sizeSelect.style.display = "none";
+                    } else {
+                        alert("이미 선택한 상품입니다.");
+                        sizeSelect.value = "null";
+                        colorSelect.value = "null";
+                        sizeSelect.style.display = "none";
+
+                    }
                 }
             };//내가 선택한 상품에 대한 옵션을 동적으로 생성(+,- 버튼과 함께)
 
 
-            document.addEventListener('click', async function (e) {
+            // 삭제 버튼 클릭 시
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('selectDelete')) {
+                    e.preventDefault();
+                    const productItem = e.target.closest('.product_item');
 
+                    // 삭제된 상품의 크기와 색상 가져오기
+                    const sizeElement = productItem.querySelector('.size');
+                    const colorElement = productItem.querySelector('.color');
+
+                    console.log("sizeElement : " + sizeElement);
+                    console.log("colorElement : " + colorElement);
+
+                    if (sizeElement && colorElement) {
+
+                        console.log("여기 들어가니?");
+
+                        const size = sizeElement.innerText;
+                        const color = colorElement.innerText;
+
+                        console.log("size : " + size);
+                        console.log("color : " + color);
+
+                        // selectedProducts 배열에서 해당 상품 제거
+                        selectedProducts = selectedProducts.filter(product => product.size !== size || product.color !== color);
+                    }
+
+                    productItem.remove(); // 해당 상품 삭제
+
+                    console.log("selectedProducts : " + JSON.stringify(selectedProducts));
+
+                    count -= 1; // 상품 개수 감소
+                    total.innerText = (dis_price.innerText) * count; // 총 가격 업데이트
+                }
+            });
+
+            //상품 수량 조절버튼 클릭 시
+            document.addEventListener('click', async function (e) {
                 const parentDiv = e.target.closest('.count');
                 const numElement = parentDiv.querySelector('input[name="num"]');
-
-
+                let num = Number(numElement.value);
 
                 if (e.target.classList.contains('increase')) {
                     e.preventDefault();
 
-                    let num = Number(numElement.value);
                     num += 1;
                     numElement.value = num;
-                    count+=num;
+                    count += 1;
 
                 }
 
-                if(e.target.classList.contains('decrease')){
+                if (e.target.classList.contains('decrease') && num > 1) {
                     e.preventDefault();
 
-                    let num = Number(numElement.value);
                     num -= 1;
                     numElement.value = num;
-                    count-=num;
+                    count -= 1;
                 }
+
+                console.log("count : " + count);
+
+
+                total.innerText = (dis_price.innerText) * count;
 
             });
 
 
-            const order = document.getElementsByClassName('order')[0];
+            //바로 구매버튼을 눌렀을 때
             const uid = document.getElementById('uid').value;
             const prodId = document.getElementById('prodId').textContent;
 
-            console.log('uid : ' + uid);
-            console.log('prodId : ' + prodId);
-            //console.log('num : '+num);
+            const buyButton = document.getElementsByClassName('order')[0];
+
+            // 주문 정보를 저장할 리스트
+            const orderList = [];
 
 
-            order.onclick = function (e) {
+            buyButton.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                alert('클릭이 되었습니다.');
-                const jsonData = {
-                    "userId": uid,
-                    "prodNo": prodId,
+                const productItems = document.querySelectorAll('.product_item');
+                productItems.forEach(productItem => {
+                    // 상품의 사이즈와 컬러 정보 가져오기
+                    const sizeElement = productItem.querySelector('.size');
+                    const colorElement = productItem.querySelector('.color');
+                    const quantityInput = productItem.querySelector('.num');
 
-                }
-            }
+
+                    console.log(sizeElement.innerText);
+                    console.log(colorElement.innerText);
+                    console.log(quantityInput.value);
+                    console.log(total.innerText);
+                    console.log(uid);
+                    console.log(prodId);
+
+                    if (sizeElement && colorElement && quantityInput) {
+                        const size = sizeElement.innerText;
+                        const color = colorElement.innerText;
+                        const quantity = parseInt(quantityInput.value);
+
+                        // 주문 리스트에 상품 정보 추가
+                        orderList.push({
+                            "size": size,
+                            "color": color,
+                            "quantity": quantity
+                        });
+                    }
+                });
+
+                const orderData = {
+                    "total": total.innerText,
+                    "uid": uid,
+                    "prodId": prodId,
+                    "orderList": orderList
+                };
+
+                // 리스트에 저장된 주문 정보 확인
+                console.log("주문한 상품 리스트:", orderData);
+
+                fetch("/lotteshop/product/view", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(orderData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('데이터를 보내는데 실패했습니다.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data.result>0){
+                            window.location.href="/lotteshop/product/order";
+                        }else{
+                            console.log('결과 실패');
+                        }
+                    })
+                    .catch(err => console.log(err))
+            });
+
         };
 
 
@@ -162,6 +303,16 @@
             border-top: 1px solid #000000; /* 구분 선 스타일 및 색상 지정 */
             padding-bottom: 20px; /* 리뷰 사이의 간격 조정 */
             margin-bottom: 20px;;
+        }
+
+        .count {
+            display: flex;
+            justify-content: space-between; /* 요소들을 동일한 간격으로 분산 정렬 */
+            align-items: center; /* 수직 중앙 정렬 */
+        }
+
+        .selectDelete {
+            margin-left: auto;
         }
 
 
@@ -260,7 +411,9 @@
                             <span th:text="${product.prodDiscount}+'%'"></span>
                         </div>
                         <div class="dis_price">
-                            <ins th:text="${product.prodPrice - (product.prodPrice/product.prodDiscount)}">할인된 가격</ins>
+                            <ins id="disCount"
+                                 th:text="${product.prodPrice - (product.prodPrice/product.prodDiscount)}">할인된 가격
+                            </ins>
                         </div>
                     </nav>
                     <nav>

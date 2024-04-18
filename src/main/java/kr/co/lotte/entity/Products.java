@@ -57,8 +57,6 @@ public class Products {
 
     private String sellerName;
 
-    private int prodPrice;
-
     @Transient
     private SubProducts subProducts;
 }

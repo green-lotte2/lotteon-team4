@@ -22,6 +22,20 @@ spring:
                 format_sql: true
                 show_sql: true
 
+    # 이메일 설정
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: qksrm5546@gmail.com
+        password: syyi llmm zjkw jchx
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    timeout: 5000
+                    starttls:
+                        enable: true
+
     thymeleaf:
         cache: false
         check-template-location: true

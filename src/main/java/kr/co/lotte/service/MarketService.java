@@ -30,37 +30,7 @@ public class MarketService {
 
     // 장보기 글보기 페이지 - 장보기 게시글 출력
     public ProductsDTO selectProduct(int prodno){
-
-        log.info("prodno : "+prodno);
-
-
-        List<Tuple> joinProduct = marketRepository.selectProduct(prodno);
-        // List에서 Product, Images 엔티티 꺼낸 후 ProductDTO로 병합
-        ProductsDTO joinProductDTO = joinProduct.stream()
-                .map(tuple ->
-                        {
-                            Products product = tuple.get(0, Products.class);
-                            ProdImage images = tuple.get(1, ProdImage.class);
-                            Seller seller = tuple.get(2, Seller.class);
-
-
-                            ProductsDTO productDTO = modelMapper.map(product, ProductsDTO.class);
-                            ProdImageDTO imagesDTO = modelMapper.map(images, ProdImageDTO.class);
-                            SellerDTO sellerDTO = modelMapper.map(seller, SellerDTO.class);
-
-
-                            productDTO.setImage1(imagesDTO.getImageoName());
-                            productDTO.setImage2(imagesDTO.getImagesName());
-                            productDTO.setSellerName(sellerDTO.getSellerName());
-                            return productDTO;
-                        }
-                )
-                .findFirst()
-                .orElse(null);
-
-
-        log.info("joinProductDTO-marketService: "+joinProductDTO);
-        return joinProductDTO;
+        return modelMapper.map( productRepository.findById(prodno).get() , ProductsDTO.class);
     }
 
 

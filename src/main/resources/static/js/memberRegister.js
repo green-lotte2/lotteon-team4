@@ -32,8 +32,8 @@ window.onload = function () {
         if (!input.value.match(reUid)) {
 
             console.log("여기에 들어오나?");
-
             input.classList.add('is-invalid');
+            resultUid.style.color = 'red';
             resultUid.innerText = '아이디 형식이 맞지 않습니다.';
             isUidOk = false;
             return;
@@ -73,7 +73,7 @@ window.onload = function () {
 
                     input.classList.remove('is-valid'); // 기존의 유효한 클래스를 제거
                     input.classList.add('is-invalid');
-
+                    resultUid.style.color = 'red';
                     resultUid.classList.add('invalid-feedback');
                     resultUid.innerText = '이미 사용중인 아이디 입니다.';
                     isUidOk = false;
@@ -83,7 +83,7 @@ window.onload = function () {
                     input.classList.add('is-valid');
 
                     resultUid.classList.add('valid-feedback');
-
+                    resultUid.style.color = 'green';
                     resultUid.innerText = '사용 가능한 아이디 입니다.';
                     isUidOk = true;
                     console.log("isUidOk:" + isUidOk);

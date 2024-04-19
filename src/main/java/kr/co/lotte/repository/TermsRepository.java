@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TermsRepository extends JpaRepository<Terms, String> {
+public interface TermsRepository extends JpaRepository<Terms, Integer> {
 }

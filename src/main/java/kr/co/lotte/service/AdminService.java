@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import kr.co.lotte.adminRepository.ProductsRepository;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.*;
+import kr.co.lotte.mapper.TermsMapper;
 import kr.co.lotte.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.plaf.PanelUI;
 import org.springframework.data.domain.Pageable;
+
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -308,9 +311,17 @@ public class AdminService {
     @Autowired
     private TermsRepository termsRepository;
 
+    @Autowired
+    private TermsMapper termsMapper;
+
     //terms
     public Terms findTerms(){
         return termsRepository.findAll().get(0);
     }
 
+    public void modifyTerms(TermsDTO termsDTO) {
+        log.info(termsDTO.getTerms2());
+        log.info(termsDTO.getIntPk()+"");
+        termsMapper.modifyTerms(termsDTO);
+    }
 }

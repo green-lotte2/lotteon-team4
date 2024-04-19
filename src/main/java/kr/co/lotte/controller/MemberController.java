@@ -7,7 +7,6 @@ import kr.co.lotte.dto.UserDTO;
 import kr.co.lotte.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +32,12 @@ public class MemberController {
         return "/member/login";
     }
 
-    @PostMapping("/member/login")
-    public String login(UserDTO userDTO, Model model) {
-
-        memberService.login(userDTO);
-        return "/index";
-    }
+//    @PostMapping("/member/login")
+//    public String login(UserDTO userDTO, Model model) {
+//
+//        memberService.login(userDTO);
+//        return "/index";
+//    }
 
     //회원가입 페이지 매핑
     @GetMapping("/member/register")

@@ -4,7 +4,7 @@ spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: Password1!
-        url: jdbc:mysql://43.200.184.246/farmstory_4
+        url: jdbc:mysql://127.0.0.1/farmstory_4
         username: abc1234
     devtools:
         livereload:

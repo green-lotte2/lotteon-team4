@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.Products;
+import kr.co.lotte.entity.SubProducts;
 import kr.co.lotte.service.MarketService;
 import kr.co.lotte.service.MemberService;
 import kr.co.lotte.service.ReviewService;
@@ -44,9 +45,19 @@ public class MarketController {
         //상품 조회
         ProductsDTO productsDTO = marketService.selectProduct(prodno);
 
-        log.info("productsDTO : "+productsDTO);
+        //subProducts에서 prodno로 조회, color과 size의 리스트를 들고 온다
+
+        List<SubProducts> Options = marketService.findAllByProdNo(prodno);
+
+        log.info("Options : "+Options.size());
+
+        log.info("options : "+Options);
+
+        log.info("view - getMapping - productsDTO : "+productsDTO);
 
         log.info("/product/view : 여기까지 들어오는건가?");
+
+        model.addAttribute("options", Options);
 
         //리뷰 조회
         ReviewPageResponseDTO reviewPageResponseDTO = reviewService.selectReviews(prodno,reviewPageRequestDTO);
@@ -57,7 +68,6 @@ public class MarketController {
         ReviewRatioDTO reviewRatioDTO = reviewService.selectForRatio(prodno);
 
         model.addAttribute("product", productsDTO);//제품정보와 이미지정보도 같이 담은 productsDTO
-       // model.addAttribute(marketPageRequestDTO);
         model.addAttribute("reviewPage", reviewPageResponseDTO);
         model.addAttribute(reviewRatioDTO);
 
@@ -117,6 +127,7 @@ public class MarketController {
         ProductsDTO products= (ProductsDTO) session.getAttribute("productsDTO");
 
         log.info("ordersDTOS : "+ordersDTOS);
+
 
         UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
 

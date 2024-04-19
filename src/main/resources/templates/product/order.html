@@ -6,6 +6,13 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
 
+        window.onload = function (){
+
+
+
+        }
+
+
         //우편번호 검색
         function postcode() {
             new daum.Postcode({
@@ -40,13 +47,13 @@
             //포인트를 사용한다고 적용 버튼을 눌렀을 때, 5000점 이상이면 현금처럼 사용가능
             const curPoint = document.getElementsByClassName('curPoint')[0].textContent;
             const usingPoint = document.getElementById('point').value;
-            const totalPrice = document.getElementById('totalPrice').textContent;
-            const total = totalPrice.replace(/,/g, '');
+            const totalOrder = document.getElementById('totalOrder').textContent;
+            const order = totalOrder.replace(/,/g, '');
             const result = document.getElementById('result');//적용했을때의 결과를 띄워줌
 
 
 
-            console.log('totalPrice'+total);//총 금액
+            console.log('totalOrder'+total);//총 금액
             console.log('curPoint : '+curPoint);//나의 포인트
             console.log('usingPoint : '+usingPoint);//사용포인트
 
@@ -61,7 +68,7 @@
                     result.style.color="red";
                 }
                 //2.사용할 포인트가 total금액보다 많은 경우
-                else if(usingPoint>parseInt(total)){
+                else if(usingPoint>parseInt(order)){
                     result.innerText="결제금액보다 사용포인트가 많습니다!";
                     result.style.color="red";
                 }else{
@@ -73,7 +80,53 @@
                 alert('현재 포인트가 5000점이상이여야 사용이 가능합니다.');
                 isPointOk = false;
             }
-            //최종 결제 정보 창
+        }
+
+        //// 각 장바구니 품목 가격 합산하는 함수 ////
+        function orderPriceSub(usingPoint = 0) {
+
+            let totalProdPrice = 0;
+            let totalProdDisPrice = 0;
+            let totalProdDelCost = 0;
+            let totalProdPoint = 0;
+            let totalProdTotal = 0;
+
+
+
+            const totalPrice = document.getElementById('totalPrice');
+            const totalDiscount = document.getElementById('totalDiscount');
+            const totalDelCost = document.getElementById('totalDelCost');
+            const totalPoint = document.getElementById('totalPoint');
+            const totalOrder = document.getElementById('totalOrder');
+
+            const inputUsingPoint = document.getElementById('inputUsingPoint');
+            const prodCount = document.getElementsByName('prodCount');
+            const prodPrice = document.getElementsByName('prodPrice'); // 할인 전 가격
+            const prodPoint = document.getElementsByName('prodPoint');
+            const prodDisPrice = document.getElementsByName('prodDisPrice');
+
+            console.log("usingPoint : " + usingPoint);
+
+
+            // 각 포인트, 가격, 할인, 합계값 더하는 for문
+            for (let i = 0; i < prodPoint.length; i++) {
+
+                totalProdPrice += parseInt(prodPrice[i].innerText);
+                totalProdDisPrice += (parseInt(prodPrice[i].innerText) - parseInt(prodDisPrice[i].innerText));
+                totalProdTotal += parseInt(prodDisPrice[i].innerText);
+                totalProdPoint += (parseInt(prodDisPrice[i].innerText));
+
+                if (totalProdTotal >= 30000) {
+                    totalProdDelCost = 0;
+                } else {
+                    totalProdDelCost = 3000;
+                }
+            }
+            // 태그에 값 출력하기
+            totalPrice.innerText = totalProdPrice.toLocaleString();
+            totalDiscount.innerText = totalProdDisPrice.toLocaleString();
+            totalDelCost.innerText = totalProdDelCost.toLocaleString();
+            totalOrder.innerText = (totalProdTotal + parseInt(totalDelCost.innerText) - inputUsingPoint.innerText).toLocaleString();
 
         }
 
@@ -159,7 +212,7 @@
                                 <a href="#"><img th:src="@{/uploads/__${product.image1}__}" alt=""></a>
                                 <div>
                                     <h2 th:text="${product.prodName}"><a href="#">상품명</a></h2>
-                                    <p th:text="${order.size}">상품설명</p>
+                                    <p th:text="${order.size + ',' + order.color}">상품설명</p>
                                 </div>
                             </article>
                         </td>
@@ -176,28 +229,32 @@
                     <h2>최종결제 정보</h2>
                     <table border="0">
                         <tr>
-                            <td>총</td>
-                            <td id="totalCount">2 건</td>
+                            <td>주문 건수</td>
+                           <td id="totalCount" th:text="${ordersDTOS.size}+'건'"></td>
                         </tr>
                         <tr>
-                            <td>상품금액</td>
-                            <td>27,000</td>
+                            <td>총 상품금액</td>
+                            <td id = totalPrice>27,000</td>
                         </tr>
                         <tr>
                             <td>할인금액</td>
-                            <td>-1,000</td>
+                            <td id="totalDiscount">-1,000</td>
                         </tr>
                         <tr>
                             <td>배송비</td>
-                            <td>0</td>
+                            <td id="totalDelCost">0</td>
                         </tr>
                         <tr>
                             <td>포인트 할인</td>
-                            <td>-1000</td>
+                            <td id="inputUsingPoint">-1000</td>
                         </tr>
                         <tr>
-                            <td>전체주문금액</td>
-                            <td id="totalPrice">25,000</td>
+                            <td>포인트 적립</td>
+                            <td id="totalPoint">2000</td>
+                        </tr>
+                        <tr>
+                            <td>결제금액</td>
+                            <td id="totalOrder">25,000</td>
                         </tr>
                     </table>
                     <input type="button" name="" value="결제하기">
@@ -249,7 +306,7 @@
                         <label>
                             <input type="text" id="point" name="point"/>점
                             <input type="button" onclick="usingPoint()" value="적용"/><br>
-                            <span id="result">요거 되는건가?</span>
+                            <span id="result"></span>
                         </label>
                         <span>포인트 5,000점 이상이면 현금처럼 사용 가능합니다.</span>
                     </div>

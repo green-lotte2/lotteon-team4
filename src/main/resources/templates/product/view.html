@@ -7,7 +7,7 @@
 
 
     <script>
-        window.onload = function () {
+       window.onload = function () {
             const sizeSelect = document.querySelector("#size");
             const colorSelect = document.getElementById("color");
             const total = document.getElementById('total_price');
@@ -41,7 +41,7 @@
             let selectedProducts = [];
 
             sizeSelect.onclick = function () {
-                if (sizeSelect.value !== "null" && colorSelect.value !== "null") {
+                if (sizeSelect.value.trim() !== "" && colorSelect.value.trim() !== "") {//null에서 ""로 고침
                     // 새로운 제품 객체 생성
                     const newProduct = {
                         size: sizeSelect.value,
@@ -108,7 +108,6 @@
                     }
                 }
             };//내가 선택한 상품에 대한 옵션을 동적으로 생성(+,- 버튼과 함께)
-
 
             // 삭제 버튼 클릭 시
             document.addEventListener('click', function (e) {
@@ -249,6 +248,7 @@
                     })
                     .catch(err => console.log(err))
             });
+
 
         };
 
@@ -437,20 +437,15 @@
 
                     <nav id="choiceBox">
                         <label for="color" style="font-size: medium"></label>
-                        <select id="color" name="size">
-                            <option style="font-size: x-large" value=null>::(필수)옵션 색상 선택</option>
-                            <option style="font-size: x-large" value="black">검정</option>
-                            <option style="font-size: x-large" value="white">화이트</option>
-                            <option style="font-size: x-large" value="beige">베이지</option>
+                        <select id="color" name="color">
+                            <option style="font-size: x-large" value="" disabled selected>::(필수)옵션 색상 선택</option>
+                            <option th:each="option : ${options}" th:value="${option.color}" th:text="${option.color}" style="font-size: x-large"></option>
                         </select>
 
                         <label for="size" style="font-size: medium"></label>
                         <select id="size" name="size">
-                            <option style="font-size: x-large" value=null>::(필수)옵션 사이즈 선택</option>
-                            <option style="font-size: x-large" value="S">사이즈 (S)</option>
-                            <option style="font-size: x-large" value="M">사이즈 (M)</option>
-                            <option style="font-size: x-large" value="L">사이즈 (L)</option>
-                            <option style="font-size: x-large" value="XL">사이즈 (XL)</option>
+                            <option style="font-size: x-large" value="" disabled selected>::(필수)옵션 사이즈 선택</option>
+                            <option th:each="option : ${options}" th:value="${option.size}" th:text="${option.size}" style="font-size: x-large"></option>
                         </select>
                     </nav>
 

@@ -3,7 +3,7 @@ package kr.co.lotte.service;
 import com.querydsl.core.Tuple;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
-import kr.co.lotte.adminRepository.ProductsRepository;
+import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.*;
 import kr.co.lotte.repository.*;

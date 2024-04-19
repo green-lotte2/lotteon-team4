@@ -49,7 +49,7 @@ public class Products {
     private String cateName2;
     private String cateName3;
     private String prodState;
-    private int prodPrice;
+    private Integer prodPrice;
     private String prodTax;
     private String prodReceipt;
     private String prodSa;

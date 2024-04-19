@@ -26,6 +26,12 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     // market/newview 리뷰 목록 조회
     @Override
     public Page<Tuple> selectReviewsAndNick(int prodno, ReviewPageRequestDTO pageRequestDTO, Pageable pageable){
+
+
+        log.info("review_impl - prodno : "+prodno);
+        log.info("review_impl - pageRequestDTO : "+pageRequestDTO);
+        log.info("review_impl - pageable : "+pageable);
+
         // review 테이블과 User 테이블을 Join해서 리뷰 목록, 닉네임을 select
         QueryResults<Tuple> results = jpaQueryFactory
                 .select(qReview, qUser.nick)
@@ -38,6 +44,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
         long total = results.getTotal();
+
+
+        log.info("review_impl - total : "+total);
 
         List<Tuple> reviews = results.getResults();
 

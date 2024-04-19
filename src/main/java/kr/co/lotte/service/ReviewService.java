@@ -1,13 +1,13 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
-import kr.co.lotte.adminRepository.ProductsRepository;
 import kr.co.lotte.dto.ReviewDTO;
 import kr.co.lotte.dto.ReviewPageRequestDTO;
 import kr.co.lotte.dto.ReviewPageResponseDTO;
 import kr.co.lotte.dto.ReviewRatioDTO;
 import kr.co.lotte.entity.Products;
 import kr.co.lotte.entity.Review;
+import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +46,9 @@ public class ReviewService {
         log.info("selectReviews Serv ...1 ");
         // 리뷰 목록  Page 조회
         Page<Tuple> results = reviewRepository.selectReviewsAndNick(prodno, reviewPageRequestDTO, pageable);
+
+        log.info("selectReviews Serv ...2 "+results.getTotalElements());
+        log.info("selectReviews Serv ...3 "+results.getTotalPages());
 
         // Page<Tuple>을 List<ReviewDTO>로 변환
         List<ReviewDTO> reviewList = results.getContent().stream()

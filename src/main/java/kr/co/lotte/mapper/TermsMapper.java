@@ -1,11 +1,10 @@
 package kr.co.lotte.mapper;
 
 import kr.co.lotte.dto.TermsDTO;
-import kr.co.lotte.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface TermsMapper {
     public void modifyTerms(TermsDTO termsDTO);
+    public TermsDTO findTerms(int pk);
 }

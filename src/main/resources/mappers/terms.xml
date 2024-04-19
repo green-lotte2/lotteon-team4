@@ -10,5 +10,7 @@
         update `terms` set terms = #{terms}, privacy = #{privacy}, sms= #{sms}, terms2 =#{terms2}
         where intPk = 1
     </update>
-
+    <select id="findTerms"  resultType="kr.co.lotte.dto.TermsDTO">
+        select * from `terms` where intPk = #{intPk}
+    </select>
 </mapper>

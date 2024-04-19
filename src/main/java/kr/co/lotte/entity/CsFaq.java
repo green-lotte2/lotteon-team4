@@ -10,8 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name="csarticle")
-public class CsArticle {
+@Table(name="csfaq")
+public class CsFaq {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

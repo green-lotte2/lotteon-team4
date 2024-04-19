@@ -1,8 +1,8 @@
 package kr.co.lotte.controller;
 
 import groovy.util.logging.Slf4j;
-import kr.co.lotte.dto.CsArticleDTO;
-import kr.co.lotte.entity.CsArticle;
+import kr.co.lotte.dto.CsFaqDTO;
+import kr.co.lotte.entity.CsFaq;
 import kr.co.lotte.service.CsService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class CsController {
     }
 
     @PostMapping("/cs/qna/write")
-    public String qnaWrite(CsArticleDTO csArticleDTO){
+    public String qnaWrite(CsFaqDTO csFaqDTO){
 
 
         return "redirect:/cs/qna/list";
@@ -70,19 +70,19 @@ public class CsController {
     @GetMapping("/cs/faq/user")
     public String faqUser(Model model) {
 
-        List<CsArticle> lotteOners = csService.getLotteonersArticles();
+        List<CsFaq> lotteOners = csService.getLotteonersArticles();
         model.addAttribute("lotteOners", lotteOners);
 
-        List<CsArticle> reg = csService.getRegArticles();
+        List<CsFaq> reg = csService.getRegArticles();
         model.addAttribute("reg", reg);
 
-        List<CsArticle> info = csService.getInfoArticles();
+        List<CsFaq> info = csService.getInfoArticles();
         model.addAttribute("info", info);
 
-        List<CsArticle> grade = csService.getGradeArticles();
+        List<CsFaq> grade = csService.getGradeArticles();
         model.addAttribute("grade", grade);
 
-        List<CsArticle> del = csService.getDelArticles();
+        List<CsFaq> del = csService.getDelArticles();
         model.addAttribute("del", del);
 
         return "/cs/faq/user";
@@ -92,16 +92,16 @@ public class CsController {
     @GetMapping("/cs/faq/trade")
     public String faqTrade(Model model) {
 
-        List<CsArticle> etcord = csService.getEtcOrdArticle();
+        List<CsFaq> etcord = csService.getEtcOrdArticle();
         model.addAttribute("etcord", etcord);
 
-        List<CsArticle> etccard = csService.getEtcCardArticle();
+        List<CsFaq> etccard = csService.getEtcCardArticle();
         model.addAttribute("etccard", etccard);
 
-        List<CsArticle> cashreceipt = csService.getCashReceiptArticle();
+        List<CsFaq> cashreceipt = csService.getCashReceiptArticle();
         model.addAttribute("cashreceipt", cashreceipt);
 
-        List<CsArticle> taxreceipt = csService.getTaxReceiptArticle();
+        List<CsFaq> taxreceipt = csService.getTaxReceiptArticle();
         model.addAttribute("taxreceipt", taxreceipt);
 
         return "/cs/faq/trade";
@@ -111,22 +111,22 @@ public class CsController {
     @GetMapping("/cs/faq/order")
     public String faqOrder(Model model) {
 
-        List<CsArticle> lpay = csService.getLpayArticle();
+        List<CsFaq> lpay = csService.getLpayArticle();
         model.addAttribute("lpay", lpay);
 
-        List<CsArticle> etc = csService.getEtcArticle();
+        List<CsFaq> etc = csService.getEtcArticle();
         model.addAttribute("etc", etc);
 
-        List<CsArticle> mutong = csService.getMutongArticle();
+        List<CsFaq> mutong = csService.getMutongArticle();
         model.addAttribute("mutong", mutong);
 
-        List<CsArticle> ord = csService.getOrdArticle();
+        List<CsFaq> ord = csService.getOrdArticle();
         model.addAttribute("ord", ord);
 
-        List<CsArticle> ordlist = csService.getOrdlistArticle();
+        List<CsFaq> ordlist = csService.getOrdlistArticle();
         model.addAttribute("ordlist", ordlist);
 
-        List<CsArticle> card = csService.getCardArticle();
+        List<CsFaq> card = csService.getCardArticle();
         model.addAttribute("card", card);
 
         return "/cs/faq/order";
@@ -136,19 +136,19 @@ public class CsController {
     @GetMapping("/cs/faq/delivery")
     public String faqDelivery(Model model) {
 
-        List<CsArticle> buy = csService.getBuyArticle();
+        List<CsFaq> buy = csService.getBuyArticle();
         model.addAttribute("buy", buy);
 
-        List<CsArticle> delp = csService.getDelpArticle();
+        List<CsFaq> delp = csService.getDelpArticle();
         model.addAttribute("delp", delp);
 
-        List<CsArticle> delm = csService.getDelmArticle();
+        List<CsFaq> delm = csService.getDelmArticle();
         model.addAttribute("delm", delm);
 
-        List<CsArticle> delinfo = csService.getDelinfoArticle();
+        List<CsFaq> delinfo = csService.getDelinfoArticle();
         model.addAttribute("delinfo", delinfo);
 
-        List<CsArticle> gift = csService.getGiftArticle();
+        List<CsFaq> gift = csService.getGiftArticle();
         model.addAttribute("gift", gift);
 
         return "/cs/faq/delivery";
@@ -158,22 +158,22 @@ public class CsController {
     @GetMapping("/cs/faq/cancel")
     public String faqCancel(Model model) {
 
-        List<CsArticle> ordCancel = csService.getOrdCancelArticle();
+        List<CsFaq> ordCancel = csService.getOrdCancelArticle();
         model.addAttribute("ordCancel", ordCancel);
 
-        List<CsArticle> refund = csService.getRefundArticle();
+        List<CsFaq> refund = csService.getRefundArticle();
         model.addAttribute("refund", refund);
 
-        List<CsArticle> as = csService.getAsArticle();
+        List<CsFaq> as = csService.getAsArticle();
         model.addAttribute("as", as);
 
-        List<CsArticle> asp = csService.getAspArticle();
+        List<CsFaq> asp = csService.getAspArticle();
         model.addAttribute("asp", asp);
 
-        List<CsArticle> change = csService.getChangeArticle();
+        List<CsFaq> change = csService.getChangeArticle();
         model.addAttribute("change", change);
 
-        List<CsArticle> returns = csService.getReturnsArticle();
+        List<CsFaq> returns = csService.getReturnsArticle();
         model.addAttribute("returns", returns);
 
         return "/cs/faq/cancel";
@@ -183,19 +183,19 @@ public class CsController {
     @GetMapping("/cs/faq/eventCupon")
     public String faqEventCupon(Model model) {
 
-        List<CsArticle> lpoint = csService.getLpointArticles();
+        List<CsFaq> lpoint = csService.getLpointArticles();
         model.addAttribute("lpoint", lpoint);
 
-        List<CsArticle> lstamp = csService.getLstampArticles();
+        List<CsFaq> lstamp = csService.getLstampArticles();
         model.addAttribute("lstamp", lstamp);
 
-        List<CsArticle> review = csService.getReviewArticles();
+        List<CsFaq> review = csService.getReviewArticles();
         model.addAttribute("review", review);
 
-        List<CsArticle> onmile = csService.getOnmileArticles();
+        List<CsFaq> onmile = csService.getOnmileArticles();
         model.addAttribute("onmile", onmile);
 
-        List<CsArticle> event = csService.getEventArticles();
+        List<CsFaq> event = csService.getEventArticles();
         model.addAttribute("event", event);
 
         return "/cs/faq/eventCupon";

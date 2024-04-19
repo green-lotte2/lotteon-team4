@@ -19,6 +19,8 @@ public class QTerms extends EntityPathBase<Terms> {
 
     public static final QTerms terms1 = new QTerms("terms1");
 
+    public final NumberPath<Integer> intPk = createNumber("intPk", Integer.class);
+
     public final StringPath privacy = createString("privacy");
 
     public final StringPath sms = createString("sms");

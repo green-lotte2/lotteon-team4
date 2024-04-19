@@ -15,32 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarketRepositoryImpl implements MarketRepositoryCustom {
 
-    private final JPAQueryFactory jpaQueryFactory;
-    private final QProducts qProduct = QProducts.products;
-    private final QProdImage qImages = QProdImage.prodImage;
-    private final QSeller qSeller = QSeller.seller;
 
-
-    // 장보기 게시판 게시글 출력 (market/view)
-    @Override
-    public List<Tuple> selectProduct(int prodno) {
-        // select * from `product` as a join `images` as b on a.prodno = b.prodno where a`prodno` = ?
-        //SELECT * FROM `prodimage`AS a JOIN `products` AS b ON a.pNo = b.prodNo JOIN `seller`AS c ON b.sellerUid=c.sellerUid WHERE b.prodNo=1;
-        List<Tuple> joinProduct = jpaQueryFactory
-                .select(qProduct, qImages,qSeller)
-                .from(qImages)
-                .join(qProduct)
-                .on(qProduct.prodNo.eq(qImages.pNo))
-                .join(qSeller)
-                .on(qProduct.sellerUid.eq(qSeller.sellerUid))
-                .where(qProduct.prodNo.eq(prodno))
-                .fetch();
-
-        log.info("무슨 값들이 들어오는가? " +joinProduct);
-
-        return joinProduct;
-
-    }
 
    /*
 

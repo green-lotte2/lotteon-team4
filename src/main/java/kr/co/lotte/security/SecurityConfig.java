@@ -16,18 +16,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         // 로그인 설정
-        httpSecurity.formLogin(login -> login
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/user/login?success=100")
-                .usernameParameter("uid")
-                .passwordParameter("pass"));
+        httpSecurity.formLogin(login -> login //Form 로그인 인증 기능이 작동함
+                .loginPage("/member/login") // 로그인 페이지
+                .defaultSuccessUrl("/") // 로그인 성공 후 이동페이지
+                .failureUrl("/member/login?success=100") // 로그인 실패 후 이동 페이지
+                .usernameParameter("uid") //아이디 파라미터명 설정
+                .passwordParameter("pass")); // 패스워드 파라미터 설정
 
         // 로그아웃 설정
         httpSecurity.logout(logout -> logout
                 .invalidateHttpSession(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/user/login?success=300"));
+                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                .logoutSuccessUrl("/member/login?success=300"));
 
         /*
             인가 설정

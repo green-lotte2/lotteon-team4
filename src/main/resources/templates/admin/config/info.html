@@ -3,6 +3,23 @@
             xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
             layout:decorate="~{/admin/layout/adminLayout.html}">
             <section id="admin-config-info" layout:fragment="content">
+                <script>
+                    window.onload=function (e){
+                        const modify = document.getElementById('modify');
+                        const formSubmit = document.formSubmit;
+                        const code = [[${code}]];
+                        if(code == '100'){
+                            alert('수정이 완료되었습니다.');
+                        }
+                        modify.onclick = function (e){
+                            e.preventDefault();
+                            if(confirm('수정하시겠습니까?')){
+                                console.log(formSubmit);
+                                formSubmit.submit();
+                            }
+                        }
+                    }
+                </script>
                 <nav>
                     <h3>기본환경정보</h3>
                     <p>
@@ -11,7 +28,6 @@
                 </nav>
                 <!-- 상품등록 컨텐츠 시작 -->
                 <article>
-                    <form action="#">
 
                         <section>
                             <h4>기본정보</h4>
@@ -39,8 +55,10 @@
                         </section>
                         
                         <section>
-                            <h4>이용약관</h4>
+                            <h4>이용약관  <span style="margin-left: 10px" id="modify">수정하기</span></h4>
+                            <form name="formSubmit" th:action="@{/admin/info/modify}" method="post">
                             <br>
+                                <input type="hidden" th:value="${terms.intPk}">
                             <table>
                                 <tr>
                                     <td>1조</td>
@@ -58,9 +76,9 @@
                                     <td>마케팅 수신</td>
                                     <td><textarea name="sms" style="width: calc(100%); height: 150px" th:text="${terms.sms}"></textarea></td>
                                 </tr>
-                            </table>                                
-                        </section>                                                
-                    </form>
+                            </table>
+                            </form>
+                        </section>
                 </article>
 
                 <p class="ico alert">

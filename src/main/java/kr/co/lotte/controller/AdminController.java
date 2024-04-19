@@ -1,10 +1,7 @@
 package kr.co.lotte.controller;
 
 
-import kr.co.lotte.dto.ProductsDTO;
-import kr.co.lotte.dto.ProductsPageRequestDTO;
-import kr.co.lotte.dto.ProductsPageResponseDTO;
-import kr.co.lotte.dto.SubProductsDTO;
+import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.Categories;
 import kr.co.lotte.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +36,25 @@ public class AdminController {
         return "/admin/config/banner";
     }
 
+    //info
     @GetMapping("/admin/config/info")
-    public String info(Model model){
+    public String info(Model model, @RequestParam(name = "code", required = false)String code){
+        if(code == null){
+            code ="0";
+        }
+        model.addAttribute("code",code);
         model.addAttribute("terms", adminService.findTerms());
         return "/admin/config/info";
     }
+
+    //info modify
+    @PostMapping("/admin/info/modify")
+    public String modifyInfo( TermsDTO termsDTO){
+        adminService.modifyTerms(termsDTO);
+        return "redirect:/admin/config/info?code=100";
+    }
+
+
 
     //product
     @GetMapping("/admin/product/list")
@@ -54,13 +65,18 @@ public class AdminController {
     }
 
     @GetMapping("/admin/product/register")
-    public String register(Model model){
+    public String register(Model model, @RequestParam(name="code" , required = false) String code){
         List<Categories> list = adminService.searchCategories();
         List<String> cateNameLists = list.stream().map(categories -> categories.getCateName()).toList();
         Set<String> cateNames = cateNameLists.stream().collect(Collectors.toSet());
         log.info(list.toString());
         model.addAttribute("cates", list);
         model.addAttribute("cateNames",cateNames);
+        if(code == null){
+            model.addAttribute("code", 0);
+        }else{
+            model.addAttribute("code", code);
+        }
         return "/admin/product/register";
     }
 
@@ -83,7 +99,7 @@ public class AdminController {
     public String register( ProductsDTO productsDTO){
         log.info(productsDTO.toString());
         adminService.productRegister(productsDTO);
-      return  "redirect:/admin/product/register";
+      return  "redirect:/admin/product/register?code=100";
     }
 
 

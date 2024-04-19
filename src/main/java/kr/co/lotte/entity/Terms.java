@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 
 public class Terms {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int intPk;
     private String terms;
     private String terms2;
     private String privacy;

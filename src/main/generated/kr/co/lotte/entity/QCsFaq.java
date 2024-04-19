@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QCsArticle is a Querydsl query type for CsArticle
+ * QCsFaq is a Querydsl query type for CsFaq
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QCsArticle extends EntityPathBase<CsArticle> {
+public class QCsFaq extends EntityPathBase<CsFaq> {
 
-    private static final long serialVersionUID = -593492254L;
+    private static final long serialVersionUID = -2073388286L;
 
-    public static final QCsArticle csArticle = new QCsArticle("csArticle");
+    public static final QCsFaq csFaq = new QCsFaq("csFaq");
 
     public final StringPath cate = createString("cate");
 
@@ -27,16 +27,16 @@ public class QCsArticle extends EntityPathBase<CsArticle> {
 
     public final StringPath title = createString("title");
 
-    public QCsArticle(String variable) {
-        super(CsArticle.class, forVariable(variable));
+    public QCsFaq(String variable) {
+        super(CsFaq.class, forVariable(variable));
     }
 
-    public QCsArticle(Path<? extends CsArticle> path) {
+    public QCsFaq(Path<? extends CsFaq> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QCsArticle(PathMetadata metadata) {
-        super(CsArticle.class, metadata);
+    public QCsFaq(PathMetadata metadata) {
+        super(CsFaq.class, metadata);
     }
 
 }

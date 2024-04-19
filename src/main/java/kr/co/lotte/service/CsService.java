@@ -2,13 +2,12 @@ package kr.co.lotte.service;
 
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
-import kr.co.lotte.entity.CsArticle;
+import kr.co.lotte.entity.CsFaq;
 import kr.co.lotte.repository.CsRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.ls.LSException;
 
 import java.util.List;
 
@@ -22,107 +21,107 @@ public class CsService {
     private final HttpServletRequest request;
 
     // faq.user 출력
-    public List<CsArticle> getLotteonersArticles(){
+    public List<CsFaq> getLotteonersArticles(){
         return csRepository.findByCate("lotteOners");
     }
-    public List<CsArticle> getRegArticles(){
+    public List<CsFaq> getRegArticles(){
         return csRepository.findByCate("reg");
     }
-    public List<CsArticle> getInfoArticles(){
+    public List<CsFaq> getInfoArticles(){
         return csRepository.findByCate("info");
     }
-    public List<CsArticle> getGradeArticles(){
+    public List<CsFaq> getGradeArticles(){
         return csRepository.findByCate("grade");
     }
-    public List<CsArticle> getDelArticles(){
+    public List<CsFaq> getDelArticles(){
         return csRepository.findByCate("del");
     }
 
     // faq.eventCupon 출력
-    public List<CsArticle> getLpointArticles(){
+    public List<CsFaq> getLpointArticles(){
         return csRepository.findByCate("lpoint");
     }
-    public List<CsArticle> getLstampArticles(){
+    public List<CsFaq> getLstampArticles(){
         return csRepository.findByCate("lstamp");
     }
-    public List<CsArticle> getReviewArticles(){
+    public List<CsFaq> getReviewArticles(){
         return csRepository.findByCate("review");
     }
-    public List<CsArticle> getOnmileArticles(){
+    public List<CsFaq> getOnmileArticles(){
         return csRepository.findByCate("onmile");
     }
-    public List<CsArticle> getEventArticles(){
+    public List<CsFaq> getEventArticles(){
         return csRepository.findByCate("event");
     }
 
     // faq.ord 출력
-    public List<CsArticle> getLpayArticle(){
+    public List<CsFaq> getLpayArticle(){
         return csRepository.findByCate("lpay");
     }
-    public List<CsArticle> getEtcArticle(){
+    public List<CsFaq> getEtcArticle(){
         return csRepository.findByCate("etc");
     }
-    public List<CsArticle> getMutongArticle(){
+    public List<CsFaq> getMutongArticle(){
         return csRepository.findByCate("mutong");
     }
-    public List<CsArticle> getOrdArticle(){
+    public List<CsFaq> getOrdArticle(){
         return csRepository.findByCate("ord");
     }
-    public List<CsArticle> getOrdlistArticle(){
+    public List<CsFaq> getOrdlistArticle(){
         return csRepository.findByCate("ordlist");
     }
-    public List<CsArticle> getCardArticle(){
+    public List<CsFaq> getCardArticle(){
         return csRepository.findByCate("card");
     }
 
     // faq.delivery 출력
-    public List<CsArticle> getBuyArticle(){
+    public List<CsFaq> getBuyArticle(){
         return csRepository.findByCate("buy");
     }
-    public List<CsArticle> getDelpArticle(){
+    public List<CsFaq> getDelpArticle(){
         return csRepository.findByCate("delp");
     }
-    public List<CsArticle> getDelmArticle(){
+    public List<CsFaq> getDelmArticle(){
         return csRepository.findByCate("delm");
     }
-    public List<CsArticle> getDelinfoArticle(){
+    public List<CsFaq> getDelinfoArticle(){
         return csRepository.findByCate("delinfo");
     }
-    public List<CsArticle> getGiftArticle(){
+    public List<CsFaq> getGiftArticle(){
         return csRepository.findByCate("gift");
     }
 
     // faq.cancel 출력
-    public List<CsArticle> getOrdCancelArticle(){
+    public List<CsFaq> getOrdCancelArticle(){
         return csRepository.findByCate("ordcancel");
     }
-    public List<CsArticle> getRefundArticle(){
+    public List<CsFaq> getRefundArticle(){
         return csRepository.findByCate("refund");
     }
-    public List<CsArticle> getAsArticle(){
+    public List<CsFaq> getAsArticle(){
         return csRepository.findByCate("as");
     }
-    public List<CsArticle> getAspArticle(){
+    public List<CsFaq> getAspArticle(){
         return csRepository.findByCate("asp");
     }
-    public List<CsArticle> getChangeArticle(){
+    public List<CsFaq> getChangeArticle(){
         return csRepository.findByCate("change");
     }
-    public List<CsArticle> getReturnsArticle(){
+    public List<CsFaq> getReturnsArticle(){
         return csRepository.findByCate("returns");
     }
 
     // faq.cancel 출력
-    public List<CsArticle> getEtcOrdArticle(){
+    public List<CsFaq> getEtcOrdArticle(){
         return csRepository.findByCate("etcord");
     }
-    public List<CsArticle> getEtcCardArticle(){
+    public List<CsFaq> getEtcCardArticle(){
         return csRepository.findByCate("etccard");
     }
-    public List<CsArticle> getCashReceiptArticle(){
+    public List<CsFaq> getCashReceiptArticle(){
         return csRepository.findByCate("cashreceipt");
     }
-    public List<CsArticle> getTaxReceiptArticle(){
+    public List<CsFaq> getTaxReceiptArticle(){
         return csRepository.findByCate("taxreceipt");
     }
 

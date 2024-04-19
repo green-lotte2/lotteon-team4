@@ -138,7 +138,7 @@
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button"
                                         data-bs-toggle="collapse"
-                                        th:data-bs-target="'#collapse' + ${iterStat.index}"
+                                        th:data-bs-target="'#collapseLstamp' + ${iterStat.index}"
                                         aria-expanded="true"
                                         th:aria-controls="'collapseLstamp' + ${iterStat.index}">
                                     [[${lstamp.title}]]
@@ -159,13 +159,13 @@
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button"
                                         data-bs-toggle="collapse"
-                                        th:data-bs-target="'#collapse' + ${iterStat.index}"
+                                        th:data-bs-target="'#collapseReview' + ${iterStat.index}"
                                         aria-expanded="true"
-                                        th:aria-controls="'collapseLpoint' + ${iterStat.index}">
+                                        th:aria-controls="'collapseReview' + ${iterStat.index}">
                                     [[${review.title}]]
                                 </button>
                             </h2>
-                            <div th:id="collapseReview + ${iterStat.index}" class="accordion-collapse collapse"
+                            <div th:id="'collapseReview' + ${iterStat.index}" class="accordion-collapse collapse"
                                  th:data-bs-parent="'#accordionReview'">
                                 <div class="accordion-body">
                                     [[${review.content}]]

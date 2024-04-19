@@ -315,8 +315,9 @@ public class AdminService {
     private TermsMapper termsMapper;
 
     //terms
-    public Terms findTerms(){
-        return termsRepository.findAll().get(0);
+    public TermsDTO findTerms(int intPk ){
+
+        return termsMapper.findTerms(intPk);
     }
 
     public void modifyTerms(TermsDTO termsDTO) {

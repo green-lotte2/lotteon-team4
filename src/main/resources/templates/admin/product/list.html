@@ -40,11 +40,10 @@
                                } else {
                                    const jsonData = {list: list}
                                    const result = await fetchPut('/lotteshop/admin/product/delete', jsonData);
-                                    if(result.result === 'success'){
-                                        location.reload();
-                                    }
+                                   console.log(result.result);
 
                                }
+                               location.reload();git
                            }
 
                        }

@@ -1,8 +1,11 @@
 package kr.co.lotte.oauth2;
 
+import kr.co.lotte.dto.oauth2.GoogleResponse;
+import kr.co.lotte.dto.oauth2.KakaoResponse;
+import kr.co.lotte.dto.oauth2.NaverResponse;
+import kr.co.lotte.dto.oauth2.OAuth2Response;
 import kr.co.lotte.entity.User;
 import kr.co.lotte.repository.MemberRepository;
-import kr.co.lotte.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -10,8 +13,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,43 +24,51 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        log.info("loadUser...1 : " + userRequest);
+        OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String accessToken = userRequest.getAccessToken().getTokenValue();
-        log.info("loadUser...2 : " + accessToken);
-
+        //네이버, 구글 어떤 provider 인지 출력
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        log.info("loadUser...3 : " + provider);
+        log.info("provider={}", provider);
 
-        OAuth2User oauth2User = super.loadUser(userRequest);
-        log.info("loadUser...4 : " + oauth2User);
-
-        Map<String, Object> attributes = oauth2User.getAttributes();
-        log.info("loadUser...5 : " + attributes);
+        log.info("userRequest={}", userRequest);
 
         // 사용자 확인 및 회원가입 처리
-        String email = (String) attributes.get("email");
-        String uid = email.substring(0, email.lastIndexOf("@"));
-        String name = (String) attributes.get("name");
+        OAuth2Response oAuth2Response = null;
 
-        // 사용자 확인
-        User user = userRepository.findById(uid)
+        if (provider.equals("naver")) {
+
+            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+
+        } else if (provider.equals("google")) {
+
+            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+
+        } else if (provider.equals("kakao")){
+
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+
+        } else {
+
+            return null;
+        }
+
+        String createOAuth2Uid = (oAuth2Response.getProvider() + "_" + oAuth2Response.getProviderId()).substring(0,16);
+
+        String role = "USER";
+        User user = userRepository.findById(createOAuth2Uid)
                 .orElse(User.builder()
-                        .uid(uid)
-                        .email(email)
-                        .name(name)
-                        .nick(name)
+                        .uid(createOAuth2Uid)
+                        .email(oAuth2Response.getEmail())
+                        .name(oAuth2Response.getName())
+                        .nick(oAuth2Response.getName())
+                        .provider(oAuth2Response.getProvider())
                         .role("USER")
-                        .provider(provider)
                         .build());
 
-        // 저장 or 수정
+        log.info("user={}", user);
         userRepository.save(user);
 
-        // SecurityContextHolder의 principal(사용자 인증 객체)로 저장
-        return MyUserDetails.builder()
-                .user(user)
-                .build();
 
+        return new CustomOAuth2User(oAuth2Response, role);
     }
 }

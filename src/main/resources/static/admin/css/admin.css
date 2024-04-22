@@ -698,3 +698,36 @@ button[type=submit] {
     margin: 0 auto;
     cursor: pointer;
 }
+
+#admin-cs-faq .paging{
+    width: 100%;
+    padding: 30px 0;
+    text-align: center;
+}
+#admin-cs-faq .paging > .num > a {
+    display: inline-block;
+    min-width: 14px;
+    margin: 0 2px;
+    padding: 8px 9px;
+    border: 1px solid #1e1e1e;
+    color: #c84f3c;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: none;
+}
+#admin-cs-faq .paging > .num > a:hover {
+    border: 1px solid #454c5f;
+    text-decoration: none;
+}
+#admin-cs-faq .paging .num a.on {
+    color: #fe434c; /* 강조할 색상으로 변경하세요 */
+    font-weight: bold;
+}
+
+#admin-cs-faq > section > table  tr > td:nth-child(1) {width: 20px;}
+#admin-cs-faq > section > table  tr > td:nth-child(2) {width: 80px;}
+#admin-cs-faq > section > table  tr > td:nth-child(3) {width: 80px;}
+#admin-cs-faq > section > table  tr > td:nth-child(4) {width: auto; text-align: left;}
+#admin-cs-faq > section > table  tr > td:nth-child(5) {width: 80px;}
+#admin-cs-faq > section > table  tr > td:nth-child(6) {width: 80px;}
+#admin-cs-faq > section > table  tr > td:nth-child(7) {width: 80px;}

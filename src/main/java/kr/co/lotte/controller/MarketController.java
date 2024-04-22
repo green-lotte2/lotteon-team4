@@ -5,19 +5,22 @@ import com.nimbusds.jose.shaded.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
+import kr.co.lotte.entity.Carts;
 import kr.co.lotte.entity.Products;
 import kr.co.lotte.entity.SubProducts;
+import kr.co.lotte.entity.User;
+import kr.co.lotte.repository.CartsRepository;
+import kr.co.lotte.security.MyUserDetails;
 import kr.co.lotte.service.MarketService;
 import kr.co.lotte.service.MemberService;
 import kr.co.lotte.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -38,7 +41,7 @@ public class MarketController {
     }
 
     @GetMapping("/product/view")
-    public String view(Model model, int prodno, ReviewPageRequestDTO reviewPageRequestDTO){
+    public String view(Model model, @RequestParam(name = "prodno") int prodno, ReviewPageRequestDTO reviewPageRequestDTO){
 
         log.info("prodno 값 : "+prodno);
 
@@ -46,7 +49,6 @@ public class MarketController {
         ProductsDTO productsDTO = marketService.selectProduct(prodno);
 
         //subProducts에서 prodno로 조회, color과 size의 리스트를 들고 온다
-
         List<SubProducts> Options = marketService.findAllByProdNo(prodno);
 
         log.info("Options : "+Options.size());
@@ -58,6 +60,7 @@ public class MarketController {
         log.info("/product/view : 여기까지 들어오는건가?");
 
         model.addAttribute("options", Options);
+
 
         //리뷰 조회
         ReviewPageResponseDTO reviewPageResponseDTO = reviewService.selectReviews(prodno,reviewPageRequestDTO);
@@ -74,46 +77,17 @@ public class MarketController {
         return "/product/view";
     }
 
-
-
-    //주문한 목록과 사용자 아이디,상품번호를 받고 세션에 저장함
+    //장바구니 넣기
     @PostMapping("/product/view")
-    public ResponseEntity<Map<String, String>> view(@RequestBody Map<String, Object> result,  HttpServletRequest request){
+    public ResponseEntity<Map<String, String>> view(@RequestBody Map<String , Object> map){
+            log.info(map.get("itemsCounts").toString());
+            log.info(map.get("itemsNos").toString());
+            List<Integer> nos = (List<Integer>) map.get("itemsNos");
+            List<Integer> counts = (List<Integer>) map.get("itemsCounts");
+            String uid = map.get("userId").toString();
+            return marketService.inserCart(uid, counts , nos);
+    };
 
-
-        String uid = result.get("uid").toString();
-        int total = Integer.parseInt(result.get("total").toString());//안쓸 듯... 다시 계산
-        int prodId = Integer.parseInt(result.get("prodId").toString());
-
-        //orders 배열을 받음
-        List<Map<String, Object>> orders = (List<Map<String, Object>>) result.get("orderList");
-
-        HttpSession session = request.getSession();
-
-        session.setAttribute("orderList", orders);//주문한 목록 세션에 저장
-
-        //상품 번호를 이용해서 상품에 대한 정보를 불러오기
-        ProductsDTO productsDTO = marketService.selectProduct(prodId);
-
-        log.info("productDTO : "+productsDTO);
-
-        session.setAttribute("productsDTO", productsDTO);//상품번호 저장
-
-        log.info("uid : "+uid);
-
-        UserDTO userDTO = memberService.findUser(uid);//사용자 아이디를 통해 사용자에 대한 정보를 불러옴
-
-        log.info("userDTO : "+userDTO);
-
-        session.setAttribute("userDTO", userDTO);//사용자의 정보를 세션에 저장하기
-
-        log.info("여기까지 오는거니? marketController-view");
-
-        Map<String, String> response = new HashMap<>();
-        response.put("result","1");
-        return ResponseEntity.ok().body(response);
-
-    }
 
     @GetMapping("/product/order")//여기는 바로 구매 했을 때 넘겨주는 페이지(세션으로 넘김)
     public String order(HttpServletRequest request, Model model){
@@ -138,9 +112,33 @@ public class MarketController {
         return "/product/order";
     }
 
+    //옵션관련된것
+    @ResponseBody
+    @GetMapping("/product/optionSelect")
+    public ResponseEntity optionSelect(@RequestParam(name = "color") String color,
+                                       @RequestParam(name = "prodNo") int prodNo){
+
+        return  marketService.selectOption(color, prodNo);
+    }
+
     @GetMapping("/product/cart")
-    public String cart(){
+    public String cart(Authentication authentication , Model model){
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+        List<Carts> carts = marketService.selectCart(user.getUid());
+        List<Integer> subProdnos = carts.stream().map(e -> e.getProdNo()).toList();
+        model.addAttribute("subProducts", marketService.selectProducts(subProdnos));
+        model.addAttribute("carts", carts);
         return "/product/cart";
+
+    }
+
+    //장바구니 삭제
+    @ResponseBody
+    @PutMapping("/product/cart/delete")
+    public ResponseEntity deleteCart(@RequestBody  Map<String,List<Integer>> map){
+        log.info(map.toString());
+        return marketService.deleteCart(map.get("list"));
 
     }
 
@@ -155,6 +153,8 @@ public class MarketController {
 
         return "/product/complete";
     }
+
+
 
 
 }

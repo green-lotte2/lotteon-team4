@@ -67,4 +67,15 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         return joinProduct;
 
     }
+
+    @Override
+    public Tuple serachOnlyOne(int subProductNo) {
+      Tuple results =  jpaQueryFactory.select(qProducts, subProducts)
+                .from(subProducts)
+                .join(qProducts)
+                .on(qProducts.prodNo.eq(subProducts.prodNo))
+                .where(subProducts.subProdNo.eq(subProductNo)).fetchOne();
+
+        return results;
+    }
 }

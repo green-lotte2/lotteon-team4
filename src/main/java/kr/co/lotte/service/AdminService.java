@@ -206,7 +206,8 @@ public class AdminService {
                         File file = new File(path, sName);
 
                         Thumbnails.of(mf.getInputStream())
-                                .size(940, 940) // 썸네일 크기 지정
+                                .width(940)
+                                .keepAspectRatio(true)// 썸네일 크기 지정
                                 .toFile(file);
 
                         ProdImageDTO prodImageDTO = ProdImageDTO.builder()

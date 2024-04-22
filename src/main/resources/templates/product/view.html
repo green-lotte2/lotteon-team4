@@ -5,263 +5,14 @@
 <div class="container" layout:fragment="content">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
-
-    <script>
-       window.onload = function () {
-            const sizeSelect = document.querySelector("#size");
-            const colorSelect = document.getElementById("color");
-            const total = document.getElementById('total_price');
-            const dis_price = document.getElementById('disCount');
-            let count = 0;
-
-
-            console.log('total :' + total.innerText);//오케이 여기는 다시 값이 들어옴
-            console.log('dis_price : ' + dis_price.innerText);//여기도 들어옴
-
-            // colorSelect 요소가 존재하는지 확인
-            if (colorSelect) {
-                // colorSelect 요소의 변경 이벤트 리스너 추가
-                colorSelect.addEventListener("change", function () {
-                    console.log("colorSelect : " + colorSelect.value);
-                    // colorSelect의 값이 "null"이 아닌 경우
-                    if (colorSelect.value !== "null") {
-                        // sizeSelect 요소의 display 속성을 "block"으로 변경
-                        sizeSelect.style.display = "block";
-                    } else {
-                        // sizeSelect 요소의 display 속성을 "none"으로 변경
-                        sizeSelect.style.display = "none";
-                    }
-                });
-            } else {
-                // colorSelect 요소가 존재하지 않을 경우 오류 메시지 출력
-                console.error("colorSelect 요소를 찾을 수 없습니다.");
-            }
-
-            // 선택한 상품들을 저장할 배열
-            let selectedProducts = [];
-
-            sizeSelect.onclick = function () {
-                if (sizeSelect.value.trim() !== "" && colorSelect.value.trim() !== "") {//null에서 ""로 고침
-                    // 새로운 제품 객체 생성
-                    const newProduct = {
-                        size: sizeSelect.value,
-                        color: colorSelect.value
-                    };
-
-                    console.log("새로 선택한 상품 컬러 : " + newProduct.color);
-                    console.log("새로 선택한 상품 사이즈 : " + newProduct.size);
-
-                    // 이미 선택한 상품인지 확인
-                    const isAlreadySelected = selectedProducts.some(product => {
-                        // 새로 선택한 상품이 이미 선택된 상품과 크기와 색상이 같으면 중복으로 처리
-                        if (newProduct.size !== "null" && newProduct.color !== "null") {
-                            return product.size === newProduct.size && product.color === newProduct.color;
-                        }
-                        // 크기나 색상이 null이 아닌 경우에만 중복으로 처리
-                        else if (product.size !== "null" || product.color !== "null") {
-                            return false;
-                        }
-                        return false; // 둘 다 null인 경우는 중복으로 처리하지 않음
-                    });
-
-
-                    if (!isAlreadySelected && sizeSelect.value !== "null" && colorSelect.value !== "null") {
-                        const choiceBox = document.getElementById('choiceBox');
-
-                        //동적으로 내가 선택한 상품들이 띄워짐.
-                        const productDetail = `<div class="product_item">
-                                                <p style="font-size: 20px">
-                                                    상품 사이즈 : <span class="size" style="font-size: 20px">${newProduct.size}</span><br>
-                                                    상품 컬러 : <span class="color" style="font-size: 20px">${newProduct.color}</span><br>
-                                                </p>
-                                                <div class="count">
-                                                    <button class="decrease">-</button>
-                                                    <input type="text" class="num" name="num" value="1"/>
-                                                    <button class="increase">+</button>
-                                                    <button class="selectDelete">X</button>
-                                                </div>
-                                            </div>`;
-
-                        // 태그 문자열 삽입 :
-                        choiceBox.insertAdjacentHTML('beforeend', productDetail);
-
-                        console.log("sizeSelect.value : " + sizeSelect.value);
-                        console.log("colorSelect.value : " + colorSelect.value);
-
-                        // 선택한 상품 배열에 추가
-                        selectedProducts.push(newProduct);
-
-                        console.log("selectedProducts : " + JSON.stringify(selectedProducts));
-
-                        //동적으로 내가 선택한 상품들 띄우고 난 뒤에 size박스를 다시 비활성화 시켜줌
-                        sizeSelect.value = "null";
-                        colorSelect.value = "null";
-                        count += 1;
-                        total.innerText = (dis_price.innerText) * count;
-                        sizeSelect.style.display = "none";
-                    } else {
-                        alert("이미 선택한 상품입니다.");
-                        sizeSelect.value = "null";
-                        colorSelect.value = "null";
-                        sizeSelect.style.display = "none";
-
-                    }
-                }
-            };//내가 선택한 상품에 대한 옵션을 동적으로 생성(+,- 버튼과 함께)
-
-            // 삭제 버튼 클릭 시
-            document.addEventListener('click', function (e) {
-                if (e.target.classList.contains('selectDelete')) {
-                    e.preventDefault();
-                    const productItem = e.target.closest('.product_item');
-
-                    // 삭제된 상품의 크기와 색상 가져오기
-                    const sizeElement = productItem.querySelector('.size');
-                    const colorElement = productItem.querySelector('.color');
-
-                    console.log("sizeElement : " + sizeElement);
-                    console.log("colorElement : " + colorElement);
-
-                    if (sizeElement && colorElement) {
-
-                        console.log("여기 들어가니?");
-
-                        const size = sizeElement.innerText;
-                        const color = colorElement.innerText;
-
-                        console.log("size : " + size);
-                        console.log("color : " + color);
-
-                        // selectedProducts 배열에서 해당 상품 제거
-                        selectedProducts = selectedProducts.filter(product => product.size !== size || product.color !== color);
-                    }
-
-                    productItem.remove(); // 해당 상품 삭제
-
-                    console.log("selectedProducts : " + JSON.stringify(selectedProducts));
-
-                    count -= 1; // 상품 개수 감소
-                    total.innerText = (dis_price.innerText) * count; // 총 가격 업데이트
-                }
-            });
-
-            //상품 수량 조절버튼 클릭 시
-            document.addEventListener('click', async function (e) {
-                const parentDiv = e.target.closest('.count');
-                const numElement = parentDiv.querySelector('input[name="num"]');
-                let num = Number(numElement.value);
-
-                if (e.target.classList.contains('increase')) {
-                    e.preventDefault();
-
-                    num += 1;
-                    numElement.value = num;
-                    count += 1;
-
-                }
-
-                if (e.target.classList.contains('decrease') && num > 1) {
-                    e.preventDefault();
-
-                    num -= 1;
-                    numElement.value = num;
-                    count -= 1;
-                }
-
-                console.log("count : " + count);
-
-
-                total.innerText = (dis_price.innerText) * count;
-
-            });
-
-
-            //바로 구매버튼을 눌렀을 때
-            const uid = document.getElementById('uid').value;
-            const prodId = document.getElementById('prodId').textContent;
-
-            const buyButton = document.getElementsByClassName('order')[0];
-
-            // 주문 정보를 저장할 리스트
-            const orderList = [];
-
-
-            buyButton.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                const productItems = document.querySelectorAll('.product_item');
-                productItems.forEach(productItem => {
-                    // 상품의 사이즈와 컬러 정보 가져오기
-                    const sizeElement = productItem.querySelector('.size');
-                    const colorElement = productItem.querySelector('.color');
-                    const quantityInput = productItem.querySelector('.num');
-
-
-                    console.log(sizeElement.innerText);
-                    console.log(colorElement.innerText);
-                    console.log(quantityInput.value);
-                    console.log(total.innerText);
-                    console.log(uid);
-                    console.log(prodId);
-
-                    if (sizeElement && colorElement && quantityInput) {
-                        const size = sizeElement.innerText;
-                        const color = colorElement.innerText;
-                        const quantity = parseInt(quantityInput.value);
-
-                        // 주문 리스트에 상품 정보 추가
-                        orderList.push({
-                            "size": size,
-                            "color": color,
-                            "quantity": quantity
-                        });
-                    }
-                });
-
-                const orderData = {
-                    "total": total.innerText,
-                    "uid": uid,
-                    "prodId": prodId,
-                    "orderList": orderList
-                };
-
-                // 리스트에 저장된 주문 정보 확인
-                console.log("주문한 상품 리스트:", orderData);
-
-                fetch("/lotteshop/product/view", {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(orderData)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('데이터를 보내는데 실패했습니다.');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if(data.result>0){
-                            window.location.href="/lotteshop/product/order";
-                        }else{
-                            console.log('결과 실패');
-                        }
-                    })
-                    .catch(err => console.log(err))
-            });
-
-
-        };
-
-
-    </script>
     <style>
-        #size {
-            width: 100%;
-            height: 50px;
-            display: none;
-        }
 
         #color {
+            width: 100%;
+            height: 50px;
+        }
+
+        #size {
             width: 100%;
             height: 50px;
         }
@@ -315,7 +66,49 @@
             margin-left: auto;
         }
 
+        .quantity-container {
+            display: flex;
+            align-items: center;
+        }
 
+        .quantity-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .quantity-container input[type="number"] {
+            width: 30px;
+            text-align: center;
+            border: none;
+        }
+
+        .quantity-container input[type="text"] {
+            width: 10px;
+            flex-grow: 1;
+            border: none;
+            text-align: center;
+        }
+
+        .quantity-container button {
+            background-color: #d2d2d2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            text-decoration: none;
+            margin-left: 5px;
+            border-radius: 4px;
+        }
+
+        .quantity-container button:hover {
+            background-color: #606060;
+        }
     </style>
 
     <main id="product">
@@ -368,7 +161,8 @@
             <nav>
                 <h1>상품보기</h1>
                 <p>
-                    HOME > <span>패션·의류·뷰티</span> > <strong>남성의류</strong>
+                    HOME > <span>[[${product.cateName1}]]</span> >
+                    <span>[[${product.cateName2}]]</span> > <strong>[[${product.cateName3}]]</strong>
                 </p>
             </nav>
 
@@ -412,7 +206,7 @@
                         </div>
                         <div class="dis_price">
                             <ins id="disCount"
-                                 th:text="${product.prodPrice - (product.prodPrice/product.prodDiscount)}">할인된 가격
+                                 th:text="${#numbers.formatDecimal(product.prodPrice * (100 - product.prodDiscount) * 0.01, 1, 0 )}">할인된 가격
                             </ins>
                         </div>
                     </nav>
@@ -433,37 +227,243 @@
                     <nav>
                         <span class="origin">원산지-상세설명 참조</span>
                     </nav>
-                    <!--옷 사이즈-->
+                    <!-- 만약에 옵션이 있는 경우-->
+                    <script>
+                        window.onload=function () {
+                            const color = document.getElementById('color');
+                            const size = document.getElementById('size');
+                            const totalPrice = document.getElementById('total_price');
+                            const prodNo = [[${product.prodNo}]];
+                            const prodDiscount = [[${product.prodDiscount}]];
+                            var price = [[${product.prodPrice}]];
+                        try{
+                            color.onchange = async function () {
+                                sCor = this.value;
 
-                    <nav id="choiceBox">
-                        <label for="color" style="font-size: medium"></label>
-                        <select id="color" name="color">
-                            <option style="font-size: x-large" value="" disabled selected>::(필수)옵션 색상 선택</option>
-                            <option th:each="option : ${options}" th:value="${option.color}" th:text="${option.color}" style="font-size: x-large"></option>
+                                // 옵션 사이즈를 추가
+                                const result = await fetchGet('/lotteshop/product/optionSelect?color=' + this.value + '&prodNo=' + prodNo);
+                                console.log(result.sub);
+                                // 기존의 옵션을 제거
+                                size.innerHTML = '';
+                                // 새로운 옵션을 추가
+                                const defaultOption = document.createElement('option');
+                                defaultOption.style.fontSize = 'x-large';
+                                defaultOption.value = "";
+                                defaultOption.disabled = true;
+                                defaultOption.selected = true;
+                                defaultOption.textContent = "::(필수)옵션 사이즈 선택";
+                                size.appendChild(defaultOption);
+
+                                result.sub.forEach(item => {
+                                    console.log(item.size);
+                                    const optionSize = document.createElement('option');
+                                    optionSize.value = item.size;
+                                    optionSize.text = item.size + ' (' + item.prodPrice + ')';
+                                    optionSize.dataset.subNo = item.subProdNo;
+                                    optionSize.dataset.color = item.color;
+                                    optionSize.dataset.size = item.size;
+                                    optionSize.dataset.price = item.prodPrice;
+                                    size.appendChild(optionSize);
+
+
+                                });
+                            };
+                        }catch (e){
+
+                        }
+
+
+                            document.addEventListener('change', function (e) {
+                                if (e.target.matches('.size')) {
+                                    const plus = document.getElementById('plus');
+                                    const targetDiv = document.getElementById('option-container');
+                                    const newPlus = plus.cloneNode(true);
+                                    newPlus.style.removeProperty('display');
+                                    const select = e.target.selectedOptions[0];
+                                    newPlus.querySelector('#optionNo').value = select.dataset.subNo;
+                                    newPlus.querySelector('#optionColor').value = select.dataset.color;
+                                    newPlus.querySelector('#optionSize').value = select.dataset.size;
+                                    newPlus.querySelector('#optionPrice').value = select.dataset.price;
+                                    targetDiv.appendChild(newPlus);
+                                    totalPrice.innerText = parseInt(totalPrice.innerText) + parseInt(select.dataset.price * (100 - prodDiscount) * 0.01);
+
+                                }
+                            });
+                            const productPriceForNo = [[${product.prodPrice}]];
+                            const productDiscountForNo = [[${product.prodDiscount}]];
+                            var priceForMe = parseInt(parseInt(productPriceForNo) * (100 - productDiscountForNo) * 0.01);
+                            document.addEventListener('click', async function (event) {
+                                if (event.target.matches('.plus')) {
+                                    const element = event.target.parentNode.querySelector('input[type="number"]');
+                                    const optionPrice = event.target.parentNode.querySelector('#optionPrice');
+                                  try{ totalPrice.innerText = parseInt(totalPrice.innerText) + parseInt(optionPrice.value * (100 - prodDiscount) * 0.01);}
+                                  catch(e){
+                                        totalPrice.innerText = parseInt(totalPrice.innerText) + parseInt(priceForMe);
+                                    }
+                                    element.stepUp();
+                                }
+                                if (event.target.matches('.minus')) {
+                                    const element = event.target.parentNode.querySelector('input[type="number"]');
+                                    const optionPrice = event.target.parentNode.querySelector('#optionPrice');
+                                    if (element.value > 1) {
+                                       try{totalPrice.innerText = parseInt(totalPrice.innerText) - parseInt(optionPrice.value * (100 - prodDiscount) * 0.01);}
+                                       catch (e){
+                                           totalPrice.innerText = parseInt(totalPrice.innerText) - parseInt(priceForMe);
+                                       }
+                                    }
+
+                                    element.stepDown();
+                                }
+
+                                if (event.target.matches('.delete')) {
+                                    const element = event.target.parentNode;
+                                    const optionPrice = event.target.parentNode.querySelector('#optionPrice');
+                                    const optionCount = event.target.parentNode.querySelector('#optionCount');
+                                   totalPrice.innerText = parseInt(totalPrice.innerText) - parseInt(optionPrice.value * (100 - prodDiscount) * 0.01 * optionCount.value);
+
+                                    element.remove();
+                                }
+
+                                if (event.target.matches('#cartSub')) {
+                                    try {
+                                        const userID = document.getElementById('userId').value;
+                                        const quantityContainers = document.querySelectorAll('.quantity-container');
+                                        const itemsCounts = [];
+                                        const itemsNos = [];
+
+                                        quantityContainers.forEach(container => {
+                                            if (container.querySelector('#optionNo').value == "") {
+
+                                            } else {
+                                                itemsCounts.push(parseInt(container.querySelector('#optionCount').value));
+                                                itemsNos.push(parseInt(container.querySelector('#optionNo').value));
+                                            }
+
+                                        });
+                                        if (itemsCounts.length < 1) {
+                                            alert('상품을 선택해주세요');
+                                        } else {
+                                            const json = {itemsCounts: itemsCounts, itemsNos: itemsNos, userId: userID};
+                                            console.log(json);
+                                            const result = await fetchPost('/lotteshop/product/view', json);
+                                            if(result.result === 'success'){
+                                                alert('장바구니로 상품이 담겼습니다.')
+                                                //추후에 장바구니 이동 추가
+                                            }
+                                        }
+                                    } catch (e) {
+                                        console.log(e.toString())
+                                        alert('로그인 후 이용해주세요');
+                                    }
+                                }
+
+                                if(event.target.matches('#cartSub2')){
+
+                                        const userID = document.getElementById('userId').value;
+                                        const quantityContainers = document.querySelectorAll('.quantity-container');
+                                        const itemsCounts = [];
+                                        const itemsNos = [];
+
+                                        quantityContainers.forEach(container => {
+                                            if (container.querySelector('#optionNo').value == "") {
+
+                                            } else {
+                                                itemsCounts.push(parseInt(container.querySelector('#optionCount').value));
+                                                itemsNos.push(parseInt(container.querySelector('#optionNo').value));
+                                            }
+
+                                        });
+                                        if (itemsCounts.length < 1) {
+                                            alert('상품을 선택해주세요');
+                                        } else {
+                                            const json = {itemsCounts: itemsCounts, itemsNos: itemsNos, userId: userID};
+                                            console.log(json);
+                                            const result = await fetchPost('/lotteshop/product/view', json);
+                                            if(result.result === 'success'){
+                                                alert('장바구니로 상품이 담겼습니다.')
+                                                //추후에 장바구니 이동 추가
+                                            }
+                                        }
+
+                                }
+
+                            });
+
+                        }
+                    </script>
+                    <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                        <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">
+                    </th:block>
+
+                    <div class="quantity-container" id="plus" style="display: none">
+                        <button class="minus">-</button>
+                        <input type="number" id="optionCount" min="1" value="1">
+                        <button class="plus">+</button>
+                        <input type="text" id="optionColor" readonly value="">
+                        <input type="text" id="optionSize" readonly value="">
+                        <input type="text" id="optionPrice" readonly value="">
+                        <input type="hidden"  id="optionNo" readonly value="">
+                        <button class="delete">삭제</button>
+                    </div>
+                    <th:block th:if="${options.size()>1}">
+                        <nav id="choiceBox">
+                            <label for="color" style="font-size: medium"></label>
+                            <select id="color" name="color">
+                                <option style="font-size: x-large" value="" disabled selected>::(필수)옵션 색상 선택</option>
+                                <th:block th:each="option : ${options}">
+                                    <option th:value="${option.color}" th:text="${option.color}" style="font-size: x-large"></option>
+                            </th:block>
                         </select>
-
+                        <br>
+                        <br>
                         <label for="size" style="font-size: medium"></label>
-                        <select id="size" name="size">
+                        <select id="size" name="size" class="size">
                             <option style="font-size: x-large" value="" disabled selected>::(필수)옵션 사이즈 선택</option>
-                            <option th:each="option : ${options}" th:value="${option.size}" th:text="${option.size}" style="font-size: x-large"></option>
                         </select>
                     </nav>
+                        <img th:src="@{/images/vip_plcc_banner.png}" alt="100원만 결제해도 1만원 적립!" class="banner"/>
 
 
-                    <img th:src="@{/images/vip_plcc_banner.png}" alt="100원만 결제해도 1만원 적립!" class="banner"/>
+                            <div class="option-container" id="option-container">
 
-                    <!--여기에 수량 조절버튼 있었음-->
-
-                    <div class="total">
+                            </div>
+                        <div class="button">
+                            <input type="button" class="cart" id="cartSub" value="장바구니"/>
+                            <input type="button" class="order"   id="cartOrder" value="구매하기"/>
+                        </div>
+                        <div class="total">
                         <span id="total_price"
-                              th:text="${product.prodPrice - (product.prodPrice/product.prodDiscount)}">35,000</span>
-                        <em>총 상품금액</em>
-                    </div>
+                              th:text="${0}"></span>
+                            <em>총 상품금액</em>
+                        </div>
+                </th:block>
 
-                    <div class="button">
-                        <input type="button" class="cart" value="장바구니"/>
-                        <input type="button" class="order" value="구매하기"/>
-                    </div>
+                    <th:block th:if="${options.size()==1}" th:each="option , index:${options}">
+
+                        <img th:src="@{/images/vip_plcc_banner.png}" alt="100원만 결제해도 1만원 적립!" class="banner"/>
+                        <div class="option-container" id="option-container">
+                            <div class="quantity-container" id="plus" >
+                                <button class="minus">-</button>
+                                <input type="number" id="optionCount" min="1" value="1">
+                                <button class="plus">+</button>
+                                <input type="hidden"  id="optionNo" readonly th:value="${option.subProdNo}">
+                                <input type="text" th:value="${product.getProdName()}">
+                            </div>
+                        </div>
+                        <div class="button">
+                            <input type="button" class="cart"  id="cartSub2" value="장바구니"/>
+                            <input type="button" class="order" value="구매하기"/>
+                        </div>
+                        <div class="total">
+                        <span id="total_price"
+                              th:text="${#numbers.formatDecimal( product.prodPrice * (100 - product.getProdDiscount()) * 0.01 , 1, 0)}"></span>
+                            <em>총 상품금액</em>
+                        </div>
+                    </th:block>
+
+
+
+
                 </div>
             </article>
 
@@ -474,9 +474,7 @@
                     <a href="#" style="font-size: xx-large">리뷰</a>&nbsp;&nbsp;
                 </nav>
                 <!-- 상품상세페이지 이미지 -->
-                <img th:src="@{/uploads/__${product.image2}__}" th:alt="${product.prodName}" alt="상세페이지1">
-                <!--<input type="hidden" id="uid" th:if="${#authorization.expression('isAuthenticated()')}" th:value="${#authentication.principal.user.uid}">-->
-                <input type="hidden" id="uid" value="a1"/>
+                <img th:src="@{/uploads/__${product.image4}__}" th:alt="${product.prodName}" alt="상세페이지1">
             </article>
 
             <!-- 상품 정보 제공 고시 내용 -->

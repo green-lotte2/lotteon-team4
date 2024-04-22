@@ -116,41 +116,35 @@
         <section>
             <article>
                 <h3>배너 정보입력</h3>
-                <form action="#" method="post">
+                <form th:action="@{/banner/register}" method="post" enctype="multipart/form-data">
                     <table border="0">
                         <tr>
                             <td>배너이름</td>
                             <td>
                                 <p>배너명을 입력하세요.</p>
-                                <input type="text" name="name" placeholder="배너명 입력"/>
+                                <input type="text" name="name" id="name" placeholder="배너명 입력"/>
                             </td>
                         </tr>
                         <tr>
                             <td>배너파일</td>
                             <td>
                                 <p>배너 이미지 파일을 추가하세요.</p>
-                                <input type="file" name="file" placeholder="배너 이미지 파일 선택"/>
+                                <input type="file" name="multImage1" placeholder="배너 이미지 파일 선택"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>배너크기</td>
-                            <td>
-                                <p>배너의 크기를 입력하세요.</p>
-                                <input type="text" name="size" placeholder="배너크기"/>
-                            </td>
-                        </tr>
                         <tr>
                             <td>배경색</td>
                             <td>
                                 <p>메인 상단 배너에 적용되는 배너 배경색입니다. ex) #ffff00</p>
-                                <input type="text" name="color" placeholder="배너 배경색 입력"/>
+                                <input type="text" name="color" id="color" placeholder="배너 배경색 입력"/>
                             </td>
                         </tr>
                         <tr>
                             <td>배너링크</td>
                             <td>
                                 <p>배너를 클릭했을 떄 이동할 페이지 링크주소를 입력하세요.</p>
-                                <input type="text" name="link" placeholder="링크주소 입력"/>
+                                <input type="text" name="link" id="link" placeholder="링크주소 입력"/>
                             </td>
                         </tr>
                         <tr>
@@ -171,18 +165,18 @@
                             <td>배너 노출날짜</td>
                             <td>
                                 <p>배너가 노출되는 기간을 선택하십시요.</p>
-                                <input type="date" name="begin"/>
+                                <input type="date" name="d_begin" id="d_begin"/>
                                 <span>~</span>
-                                <input type="date" name="end"/>
+                                <input type="date" name="d_end" id="d_end"/>
                             </td>
                         </tr>
                         <tr>
                             <td>배너 노출시간</td>
                             <td>
                                 <p>배너가 노출되는 시간을 선택하십시요.</p>
-                                <input type="time" name="begin"/>
+                                <input type="time" name="t_begin" id="t_begin"/>
                                 <span>~</span>
-                                <input type="time" name="end"/>
+                                <input type="time" name="t_end" id="t_end"/>
                             </td>
                         </tr>
                     </table>
@@ -190,7 +184,6 @@
                     <div>
                         <input type="submit" class="btnPositive" value="등록하기"/>
                     </div>
-
                 </form>
             </article>
         </section>

@@ -30,7 +30,9 @@ public class MarketService {
 
     // 장보기 글보기 페이지 - 장보기 게시글 출력
     public ProductsDTO selectProduct(int prodno){
+
         return modelMapper.map( productRepository.findById(prodno).get() , ProductsDTO.class);
+
     }
 
 

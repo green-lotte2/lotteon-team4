@@ -1,26 +1,30 @@
-package kr.co.lotte.controller;
+package kr.co.lotte.controller.cs;
 
 import groovy.util.logging.Slf4j;
 import kr.co.lotte.dto.CsFaqDTO;
 import kr.co.lotte.entity.CsFaq;
-import kr.co.lotte.service.CsService;
+import kr.co.lotte.service.cs.CsFaqService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-public class CsController {
+public class CsFaqController {
 
-    private static final Logger log = LoggerFactory.getLogger(CsController.class);
-    private final CsService csService;
+    private static final Logger log = LoggerFactory.getLogger(CsFaqController.class);
+    private final CsFaqService csFaqService;
 
     @GetMapping(value = {"/cs","/cs/index"} )
     public String index(){
@@ -66,23 +70,35 @@ public class CsController {
         return "/cs/notice/view";
     }
 
+    // admin.cs.faq.list 출력
+    @GetMapping("/admin/cs/faq/list")
+    public String adminFaqList(Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CsFaq> csFaqs = (Page<CsFaq>) csFaqService.getFaqArticles(pageable);
+        model.addAttribute("csFaqs", csFaqs);
+
+        return "/admin/cs/faq/list";
+    }
+
     // faq.user 페이지 출력
     @GetMapping("/cs/faq/user")
     public String faqUser(Model model) {
 
-        List<CsFaq> lotteOners = csService.getLotteonersArticles();
+        List<CsFaq> lotteOners = csFaqService.getLotteonersArticles();
         model.addAttribute("lotteOners", lotteOners);
 
-        List<CsFaq> reg = csService.getRegArticles();
+        List<CsFaq> reg = csFaqService.getRegArticles();
         model.addAttribute("reg", reg);
 
-        List<CsFaq> info = csService.getInfoArticles();
+        List<CsFaq> info = csFaqService.getInfoArticles();
         model.addAttribute("info", info);
 
-        List<CsFaq> grade = csService.getGradeArticles();
+        List<CsFaq> grade = csFaqService.getGradeArticles();
         model.addAttribute("grade", grade);
 
-        List<CsFaq> del = csService.getDelArticles();
+        List<CsFaq> del = csFaqService.getDelArticles();
         model.addAttribute("del", del);
 
         return "/cs/faq/user";
@@ -92,16 +108,16 @@ public class CsController {
     @GetMapping("/cs/faq/trade")
     public String faqTrade(Model model) {
 
-        List<CsFaq> etcord = csService.getEtcOrdArticle();
+        List<CsFaq> etcord = csFaqService.getEtcOrdArticle();
         model.addAttribute("etcord", etcord);
 
-        List<CsFaq> etccard = csService.getEtcCardArticle();
+        List<CsFaq> etccard = csFaqService.getEtcCardArticle();
         model.addAttribute("etccard", etccard);
 
-        List<CsFaq> cashreceipt = csService.getCashReceiptArticle();
+        List<CsFaq> cashreceipt = csFaqService.getCashReceiptArticle();
         model.addAttribute("cashreceipt", cashreceipt);
 
-        List<CsFaq> taxreceipt = csService.getTaxReceiptArticle();
+        List<CsFaq> taxreceipt = csFaqService.getTaxReceiptArticle();
         model.addAttribute("taxreceipt", taxreceipt);
 
         return "/cs/faq/trade";
@@ -111,22 +127,22 @@ public class CsController {
     @GetMapping("/cs/faq/order")
     public String faqOrder(Model model) {
 
-        List<CsFaq> lpay = csService.getLpayArticle();
+        List<CsFaq> lpay = csFaqService.getLpayArticle();
         model.addAttribute("lpay", lpay);
 
-        List<CsFaq> etc = csService.getEtcArticle();
+        List<CsFaq> etc = csFaqService.getEtcArticle();
         model.addAttribute("etc", etc);
 
-        List<CsFaq> mutong = csService.getMutongArticle();
+        List<CsFaq> mutong = csFaqService.getMutongArticle();
         model.addAttribute("mutong", mutong);
 
-        List<CsFaq> ord = csService.getOrdArticle();
+        List<CsFaq> ord = csFaqService.getOrdArticle();
         model.addAttribute("ord", ord);
 
-        List<CsFaq> ordlist = csService.getOrdlistArticle();
+        List<CsFaq> ordlist = csFaqService.getOrdlistArticle();
         model.addAttribute("ordlist", ordlist);
 
-        List<CsFaq> card = csService.getCardArticle();
+        List<CsFaq> card = csFaqService.getCardArticle();
         model.addAttribute("card", card);
 
         return "/cs/faq/order";
@@ -136,19 +152,19 @@ public class CsController {
     @GetMapping("/cs/faq/delivery")
     public String faqDelivery(Model model) {
 
-        List<CsFaq> buy = csService.getBuyArticle();
+        List<CsFaq> buy = csFaqService.getBuyArticle();
         model.addAttribute("buy", buy);
 
-        List<CsFaq> delp = csService.getDelpArticle();
+        List<CsFaq> delp = csFaqService.getDelpArticle();
         model.addAttribute("delp", delp);
 
-        List<CsFaq> delm = csService.getDelmArticle();
+        List<CsFaq> delm = csFaqService.getDelmArticle();
         model.addAttribute("delm", delm);
 
-        List<CsFaq> delinfo = csService.getDelinfoArticle();
+        List<CsFaq> delinfo = csFaqService.getDelinfoArticle();
         model.addAttribute("delinfo", delinfo);
 
-        List<CsFaq> gift = csService.getGiftArticle();
+        List<CsFaq> gift = csFaqService.getGiftArticle();
         model.addAttribute("gift", gift);
 
         return "/cs/faq/delivery";
@@ -158,22 +174,22 @@ public class CsController {
     @GetMapping("/cs/faq/cancel")
     public String faqCancel(Model model) {
 
-        List<CsFaq> ordCancel = csService.getOrdCancelArticle();
+        List<CsFaq> ordCancel = csFaqService.getOrdCancelArticle();
         model.addAttribute("ordCancel", ordCancel);
 
-        List<CsFaq> refund = csService.getRefundArticle();
+        List<CsFaq> refund = csFaqService.getRefundArticle();
         model.addAttribute("refund", refund);
 
-        List<CsFaq> as = csService.getAsArticle();
+        List<CsFaq> as = csFaqService.getAsArticle();
         model.addAttribute("as", as);
 
-        List<CsFaq> asp = csService.getAspArticle();
+        List<CsFaq> asp = csFaqService.getAspArticle();
         model.addAttribute("asp", asp);
 
-        List<CsFaq> change = csService.getChangeArticle();
+        List<CsFaq> change = csFaqService.getChangeArticle();
         model.addAttribute("change", change);
 
-        List<CsFaq> returns = csService.getReturnsArticle();
+        List<CsFaq> returns = csFaqService.getReturnsArticle();
         model.addAttribute("returns", returns);
 
         return "/cs/faq/cancel";
@@ -183,28 +199,22 @@ public class CsController {
     @GetMapping("/cs/faq/eventCupon")
     public String faqEventCupon(Model model) {
 
-        List<CsFaq> lpoint = csService.getLpointArticles();
+        List<CsFaq> lpoint = csFaqService.getLpointArticles();
         model.addAttribute("lpoint", lpoint);
 
-        List<CsFaq> lstamp = csService.getLstampArticles();
+        List<CsFaq> lstamp = csFaqService.getLstampArticles();
         model.addAttribute("lstamp", lstamp);
 
-        List<CsFaq> review = csService.getReviewArticles();
+        List<CsFaq> review = csFaqService.getReviewArticles();
         model.addAttribute("review", review);
 
-        List<CsFaq> onmile = csService.getOnmileArticles();
+        List<CsFaq> onmile = csFaqService.getOnmileArticles();
         model.addAttribute("onmile", onmile);
 
-        List<CsFaq> event = csService.getEventArticles();
+        List<CsFaq> event = csFaqService.getEventArticles();
         model.addAttribute("event", event);
 
         return "/cs/faq/eventCupon";
-    }
-
-    @GetMapping("/cs/faq/view")
-    public String faqView(){
-
-        return "/cs/faq/view";
     }
 
 }

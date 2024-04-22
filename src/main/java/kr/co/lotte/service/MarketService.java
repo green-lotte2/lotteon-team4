@@ -49,8 +49,8 @@ public class MarketService {
                             SellerDTO sellerDTO = modelMapper.map(seller, SellerDTO.class);
 
 
-                            productDTO.setImage1(imagesDTO.getImage240());
-                            productDTO.setImage2(imagesDTO.getImage750());
+                            productDTO.setImage1(imagesDTO.getOName());
+                            productDTO.setImage2(imagesDTO.getSName());
                             productDTO.setSellerName(sellerDTO.getSellerName());
                             return productDTO;
                         }

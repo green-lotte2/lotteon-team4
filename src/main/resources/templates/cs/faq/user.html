@@ -3,47 +3,25 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/cs/layouts/csLayout.html}">
 
-<script>
-    /////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////faq 페이지 btnHome, Top 처리
-    /////////////////////////////////////////////////////////////////////////////////////////
-    $(document).ready(function (){
-        $(window).scroll(function (){
-            if($(this).scrollTop() > 400){
-                $('#btnTop').fadeIn();
-            }else{
-                $('#btnTop').fadeOut();
-            }        });
-        $('#btnTop').click(function (){
-            $('html, body').animate({scrollTop: 0}, 400);
-            return false;
-        });
-    });
-
-</script>
-
-<script th:inline="javascript">
-    function showMore(){
-        var accordionItems = document.querySelectorAll('.accordion-item');
-        for (var i = 3; i < accordionItems.length; i++){
-            accordionItems[i].style.display = 'block';
-        }
-        document.getElementById('btn-more').style.display = 'none';
-        document.getElementById('btn-less').style.display = 'inline-block';
-    }
-
-    function showLess(){
-        var accordionItems = document.querySelectorAll('.accordion-item');
-        for (var i = 3; i < accordionItems.length; i++){
-            accordionItems[i].style.display = 'none';
-        }
-        document.getElementById('btn-more').style.display = 'inline-block';
-        document.getElementById('btn-less').style.display = 'none';
-    }
-
-</script>
-
 <main layout:fragment="content">
+    <script>
+        //////////////////////////////////////////////////////////////////
+        /////btnHome, Top 버튼 스크립트
+        //////////////////////////////////////////////////////////////////
+        $(document).ready(function (){
+            $(window).scroll(function (){
+                if($(this).scrollTop() > 250){
+                    $('#btnTop').fadeIn();
+                }else{
+                    $('#btnTop').fadeOut();
+                }        });
+            $('#btnTop').click(function (){
+                $('html, body').animate({scrollTop: 0}, 400);
+                return false;
+            });
+        });
+    </script>
+
     <section id="cs">
         <div class="faq">
             <nav>
@@ -104,11 +82,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 더보기 버튼 -->
-                        <button class="btn btn-primary btn-more" type="button" data-index="1" onclick="showMore()">더보기</button>
-                        <!-- 간략히 보기 버튼 -->
-                        <button class="btn btn-secondary btn-less" type="button" data-index="1" onclick="showLess()" style="display: none;">간략히 보기</button>
                     </div>
+
                     <div class="accordion" id="accordionInfo">
                         <h3 id="scrollspyHeading2" data-bs-smooth-scroll="true">정보확인/변경</h3>
                         <div th:each="info, iterStat : ${info}" class="accordion-item">

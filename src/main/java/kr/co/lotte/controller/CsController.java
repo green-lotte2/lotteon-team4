@@ -201,10 +201,4 @@ public class CsController {
         return "/cs/faq/eventCupon";
     }
 
-    @GetMapping("/cs/faq/view")
-    public String faqView(){
-
-        return "/cs/faq/view";
-    }
-
 }

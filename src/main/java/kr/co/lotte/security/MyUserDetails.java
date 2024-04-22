@@ -19,14 +19,9 @@ import java.util.Map;
 @Setter
 @Builder
 @ToString
-public class MyUserDetails implements UserDetails, OAuth2User {
+public class MyUserDetails implements UserDetails {
     //entity  선언
     private User user;
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
 
     
     @Override
@@ -72,8 +67,4 @@ public class MyUserDetails implements UserDetails, OAuth2User {
         return true;
     }
 
-    @Override
-    public String getName() {
-        return null;
-    }
 }

@@ -639,3 +639,23 @@ header {
 #member > .passConfirm table tr > td > input[type=submit]:hover {
     background-color: #036dde;
 }
+
+#member > .login > form > div{
+  margin: 26px 150px;
+  padding: 5px;
+  /*border: 1px solid #e3e3e3;*/
+}
+.login .social .google_img {
+  width: 46px;
+  height: 52px;
+}
+
+.login .social .kakao_img {
+  width: 62px;
+  height: 57px;
+}
+
+.login .social .naver_img {
+  width: 50px;
+  height: 50px;
+}

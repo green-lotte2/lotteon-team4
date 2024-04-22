@@ -4,10 +4,15 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
+import kr.co.lotte.dto.SellerDTO;
+import kr.co.lotte.dto.TermsDTO;
 import kr.co.lotte.dto.UserDTO;
+import kr.co.lotte.entity.Seller;
 import kr.co.lotte.entity.User;
 import kr.co.lotte.mapper.MemberMapper;
+import kr.co.lotte.mapper.TermsMapper;
 import kr.co.lotte.repository.MemberRepository;
+import kr.co.lotte.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +30,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final SellerRepository sellerRepository;
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final MemberMapper memberMapper;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final TermsMapper termsMapper;
 
 
     //회원 등록이 되어 있는지 확인하는 서비스(0또는 1)
@@ -76,8 +83,17 @@ public class MemberService {
 
         userDTO.setPass(encodedPass);
 
+        userDTO.setRole("USER");
         User user = modelMapper.map(userDTO, User.class);
         memberRepository.save(user);
+    }
+    public void insert(SellerDTO sellerDTO) {
+        String encodedPass = passwordEncoder.encode(sellerDTO.getSellerPass());
+
+        sellerDTO.setSellerPass(encodedPass);
+
+        Seller seller = modelMapper.map(sellerDTO, Seller.class);
+        sellerRepository.save(seller);
     }
 
     public UserDTO login(UserDTO userDTO) {
@@ -97,5 +113,13 @@ public class MemberService {
     public UserDTO findUser(String uid) {
         return memberMapper.findUser(uid);
     }
+
+    //terms
+    public TermsDTO findTerms(int intPk){
+
+        return termsMapper.findTerms(intPk);
+    }
+
+
 
 }

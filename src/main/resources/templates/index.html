@@ -59,9 +59,14 @@
     </script>
   </head>
   <body>
-    <div id="bannerTop" class="on" style="background: #e4dfdf;">
+  <div id="bannerTop" class="on" th:style="${bannerDTO == null ? 'background-color: #0000;' : 'background-color: ' + bannerDTO.color + ';'}">
       <article>
-        <a th:href="@{#}"><img src="./images/topBanner1.png"/></a>
+        <a th:if="${bannerDTO!=null}" th:href="${bannerDTO.link}">
+          <img th:src="@{/uploads/__${bannerDTO.img_1200}__}"/>
+        </a>
+        <a th:if="${bannerDTO == null}" th:href="@{/index}">
+          <img th:src="@{/images/header_logo.png}"/>
+        </a>
         <button class="btnClose">close</button>
       </article>
     </div>

@@ -2,16 +2,21 @@ package kr.co.lotte.controller;
 
 
 import kr.co.lotte.dto.*;
+import kr.co.lotte.entity.Banner;
 import kr.co.lotte.entity.Categories;
+import kr.co.lotte.repository.BannerRepository;
 import kr.co.lotte.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.security.AlgorithmConstraints;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,23 @@ public class AdminController {
 
     //config
     @GetMapping("/admin/config/banner")
-    public String banner(){
+    public String banner(Model model){
+
+        List<BannerDTO> banner = adminService.findMAIN1("MAIN1");
+
+        log.info("AdminController - banner : "+banner.toString());
+
+
+        model.addAttribute("banner", banner);
+
+        /*
+        adminService.findMAIN2();
+        adminService.findPRODUCT1();
+        adminService.findMEMBER1();
+        adminService.findMY1();
+
+         */
+
         return "/admin/config/banner";
     }
 
@@ -140,5 +161,53 @@ public class AdminController {
         int subNo = map.get("number");
         log.info(subNo+"subNo");
         adminService.deleteProduct(subNo);
+    }
+
+
+    //배너에 등록에 대한 컨트롤러
+    @ResponseBody
+    @PostMapping("/banner/register")
+    public ResponseEntity<String> register(BannerDTO bannerDTO){
+
+        log.info("정상적으로 여기에 들어와지니?");
+
+        adminService.bannerReigser(bannerDTO);//이미지 등록완료!
+
+        log.info(bannerDTO.toString());//제대로 들어와짐
+
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/lotteshop/admin/config/banner")).build();
+
+    }
+
+    //선택삭제를 위한 컨트롤러
+    @PostMapping("/banner/delete")
+    public ResponseEntity<?> SelectDelete(@RequestBody Map<String, String> requestData){
+
+        log.info("삭제하려고 controller로 왔습니다.");
+
+        String bannerNo = requestData.get("bannerNo");
+
+        log.info("bannerNo:"+bannerNo);
+
+        adminService.bannerDelete(bannerNo);
+
+        log.info("BannerNo로 삭제를 성공했느냐? ");
+
+        Map<String, String> result = new HashMap<>();
+        result.put("data","1");
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/banner/active")
+    public String bannerActive(@RequestParam("bannerNo") String bannerNo, Model model){
+
+        log.info("bannerNo : "+bannerNo);//배너번호 잘 넘어옴
+
+        BannerDTO bannerDTO = adminService.findById(bannerNo);//배너번호를 이용해서 설정하기 내용은 읽어오기!
+
+        model.addAttribute("bannerDTO", bannerDTO);//활성화한 배너에 대한 정보가 들어있음
+
+        return "redirect:/admin/config/banner";
+
     }
 }

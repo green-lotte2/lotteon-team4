@@ -8,54 +8,66 @@
 
         window.onload = function () {
 
-            //선택삭제
-            document.addEventListener("DOMContentLoaded", function () {
-                const btnDelete = document.getElementsByClassName('btnNegative')[0];//input type = Button
+            const b_delete = document.getElementById('delete');
+            const checkBoxes = document.querySelectorAll('.checkBoxes');
 
-                btnDelete.onclick = function (e) {
-                    e.preventDefault();
+            b_delete.onclick = function (e) {
+                e.preventDefault();
 
-                    const chekcBoxes = document.querySelectorAll('.checkBoxes');
+                deleteSelectedBanners();
+            }
 
-                    chekcBoxes.forEach(check => {
-                        if (check.checked) {
-                            const row = check.closest('tr');
-                            const bannerNo = row.querySelector('[id="bannerNo"]').textContent;
-                            //배너번호를 확인
-                            console.log('BannerNo : ' + bannerNo);//배너번호 잘 찍힘
-                            row.remove();
+            //전체 선택
 
-                            const jsonData = {
-                                "bannerNo": bannerNo
-                            }
-                            fetch("/lotteshop/banner/delete", {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify(jsonData)
-                            })
-                                .then(response => {
-                                    if (response.ok) {
-                                        console.log("삭제가 성공!여기는 banner.html");
-                                    } else {
-                                        throw new Error("삭제 실패");
-                                    }
-                                })
-                                .catch(err => console.log(err))
-                        }
+            const totalCheckBox = document.getElementsByName('all')[0];
+            let checkedTurn = 0;
 
+            totalCheckBox.onclick = function (e) {
+                if (checkedTurn === 0) {
+                    checkBoxes.forEach(function (checkbox) {
+                        checkbox.checked = true;
                     });
+                    checkedTurn = 1;
+                } else {
+                    checkBoxes.forEach(function (checkbox) {
+                        checkbox.checked = false;
+                    });
+                    checkedTurn = 0;
                 }
-            });//선택삭제 끝
 
-            //배너의 활성화 버튼이 클릭되면 bannerNo를 들고 controller로 이동
-            document.querySelectorAll('.activeButton').forEach(button => {
-                button.addEventListener('click', function() {
-                    const row = this.closest('tr');
-                    const bannerNo = row.querySelector('#bannerNo').textContent;
-                    console.log('BannerNo:', bannerNo);
-                    // bannerNo를 사용하여 서버로 요청을 보낼 수 있음
+            }
+
+
+            function deleteSelectedBanners() {
+
+                checkBoxes.forEach(check => {
+                    if (check.checked) {
+                        const row = check.closest('tr');
+                        const bannerNo = row.querySelector('[id="bannerNo"]').textContent;
+                        // 배너번호를 확인
+                        console.log('BannerNo : ' + bannerNo);//배너번호 잘 찍힘
+                        row.remove();
+
+                        const jsonData = {
+                            "bannerNo" :bannerNo
+                        };
+
+                        fetch("/lotteshop/banner/delete", {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(jsonData)
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log("삭제가 성공!여기는 banner.html");
+                                } else {
+                                    throw new Error("삭제 실패");
+                                }
+                            })
+                            .catch(err => console.log(err));
+                    }
                 });
-            });
+            }
 
 
         }
@@ -118,12 +130,12 @@
                     <td th:text="${bannerList.t_end}">14:00</td>
                     <td th:text="${bannerList.hit}">12</td>
                     <td>
-                        <a th:href="@{/banner/reactive}">[비활성]</a>
+                        <a th:href="@{/banner/inactive}">[비활성]</a>
                         <a th:href="@{'/banner/active?bannerNo='+${bannerList.bannerNo}}" class="activeButton">[활성]</a>
                     </td>
                 </tr>
             </table>
-            <input type="button" class="btnNegative" value="선택삭제"/>
+            <input type="button" class="btnNegative" id="delete" value="선택삭제"/>
             <input type="button" class="btnPositive btnRegister" value="등록하기"/>
 
         </section>

@@ -2,6 +2,7 @@ package kr.co.lotte.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.co.lotte.dto.SellerDTO;
 import kr.co.lotte.dto.TermsDTO;
 import kr.co.lotte.dto.UserDTO;
 import kr.co.lotte.service.MemberService;
@@ -106,15 +107,11 @@ public class MemberController {
         return "/member/message";
     }
 
-    @GetMapping("/member/registerseller")
-    public String registerSeller() {
-        return "/member/registerSeller";
-    }
-
     //약관 동의 페이지 매핑
     @GetMapping("/member/signup")
-    public String signUp(TermsDTO termsDTO, Model model) {
-        model.addAttribute(termsDTO);
+    public String signup(Model model){
+        model.addAttribute("terms", memberService.findTerms(1));
+        TermsDTO terms = memberService.findTerms(1);
         return "/member/signup";
     }
 
@@ -127,4 +124,23 @@ public class MemberController {
         return "redirect:/member/register";
     }
 
+    /**
+     * 여기부터는 판매자
+     */
+
+    //판매자 회원가입 페이지 매핑
+    @GetMapping("/member/registerseller")
+    public String registerSeller() {
+        return "/member/registerSeller";
+    }
+
+    @PostMapping("/member/registerseller")
+    public String registerSeller(HttpSession session, SellerDTO sellerDTO, Model model) {
+
+
+        memberService.insert(sellerDTO);
+        model.addAttribute("message", "판매자 회원가입이 완료 되었습니다.");
+        model.addAttribute("searchUrl", "/lotteshop/member/login");
+        return "/member/message";
+    }
 }

@@ -542,3 +542,25 @@ button[type=submit] {
     box-sizing: border-box;
     cursor: pointer;
 }
+
+/* cs 페이지 admin-cs-# */
+#admin-cs-notice > section > table  {
+    border-top: 2px solid #8798a3;
+}
+#admin-cs-notice > section > table  tr > th{
+    padding: 10px 0;
+    background: #f6f6f6;
+}
+#admin-cs-notice > section > table  tr > td {
+    background: #fff;
+    text-align: center;
+    box-sizing: border-box;
+}
+#admin-cs-notice > section > table  tr > td:nth-child(1) {width: 20px;}
+#admin-cs-notice > section > table  tr > td:nth-child(2) {width: 80px;}
+#admin-cs-notice > section > table  tr > td:nth-child(3) {width: 80px;}
+#admin-cs-notice > section > table  tr > td:nth-child(4) {width: auto; text-align: left;}
+#admin-cs-notice > section > table  tr > td:nth-child(5) {width: 80px;}
+#admin-cs-notice > section > table  tr > td:nth-child(6) {width: 80px;}
+#admin-cs-notice > section > table  tr > td:nth-child(7) {width: 80px;}
+

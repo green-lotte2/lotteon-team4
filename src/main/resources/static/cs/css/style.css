@@ -1023,10 +1023,11 @@ footer p > strong {
 #cs .accordion-body {
   background-color: #f9f9f9;
   white-space: pre-line;
+
 }
 
 #cs .nav-link{
-  color: #D41313;
+  color: #FF6347;
 }
 
 #cs .more{

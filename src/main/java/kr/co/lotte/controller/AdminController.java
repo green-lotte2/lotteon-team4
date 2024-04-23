@@ -1,6 +1,7 @@
 package kr.co.lotte.controller;
 
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.Banner;
 import kr.co.lotte.entity.Categories;
@@ -17,11 +18,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.AlgorithmConstraints;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.lang.System.out;
 
 @Controller
 @Slf4j
@@ -170,7 +176,7 @@ public class AdminController {
 
         log.info("정상적으로 여기에 들어와지니?");
 
-        adminService.bannerReigser(bannerDTO);//이미지 등록완료!
+        adminService.bannerRegister(bannerDTO);//이미지 등록완료!
 
         log.info(bannerDTO.toString());//제대로 들어와짐
 
@@ -198,15 +204,73 @@ public class AdminController {
     }
 
     @GetMapping("/banner/active")
-    public String bannerActive(@RequestParam("bannerNo") String bannerNo, Model model){
+    public String bannerActive(@RequestParam("bannerNo") String bannerNo, HttpSession session){
 
         log.info("bannerNo : "+bannerNo);//배너번호 잘 넘어옴
 
         BannerDTO bannerDTO = adminService.findById(bannerNo);//배너번호를 이용해서 설정하기 내용은 읽어오기!
 
-        model.addAttribute("bannerDTO", bannerDTO);//활성화한 배너에 대한 정보가 들어있음
+        log.info("세션에 저장하기 전에 DTO값 확인 : "+bannerDTO);
 
+        // 현재 날짜
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // 배너의 시작일과 종료일
+        LocalDate startDate = LocalDate.parse(bannerDTO.getD_begin());
+        LocalDate endDate = LocalDate.parse(bannerDTO.getD_end());
+
+        // 배너의 시작 시간과 종료 시간
+        LocalTime startTime = LocalTime.parse(bannerDTO.getT_begin());
+        LocalTime endTime = LocalTime.parse(bannerDTO.getT_end());
+
+        log.info("currentDate : "+currentDateTime);
+        log.info("currentDateTime.toLocalDate() : "+currentDateTime.toLocalDate());
+        log.info("startDate : " +startDate);
+        log.info("endDate : " +endDate);
+
+        // 배너의 시작일과 종료일
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+        log.info("currentDateTime : " + currentDateTime);
+        log.info("startDateTime : " + startDateTime);
+        log.info("endDateTime : " + endDateTime);
+
+// 현재 날짜와 시간이 배너의 기간에 포함되어 있는지 확인
+        if (currentDateTime.isEqual(startDateTime) ||
+                (currentDateTime.isAfter(startDateTime) && currentDateTime.isBefore(endDateTime))) {
+            // 배너를 노출합니다.
+            log.info("여기로 들어와야해!!! 기간 안이라구!!!");
+            session.setAttribute("bannerDTO", bannerDTO);
+        } else {
+            // 배너 기간이 아닌 경우 노출하지 않습니다.
+            log.info("기간 범위에 포함되지 않습니다.");
+        }
+
+
+/*
+
+        //세션에 저장되어 있는 값을 확인
+        Object bannerDTOObject = session.getAttribute("bannerDTO");
+        if (bannerDTOObject != null) {
+            BannerDTO bannerDTO2 = (BannerDTO) bannerDTOObject;
+            System.out.println("세션에 저장된 bannerDTO 값: " + bannerDTO2);
+        } else {
+            System.out.println("세션에 저장된 bannerDTO 값이 없습니다.");
+        }
+
+
+ */
         return "redirect:/admin/config/banner";
 
+    }
+
+    @GetMapping("/banner/inactive")
+    public String bannerInactive(HttpSession session){
+
+        // 세션에서 bannerDTO 속성 제거
+        session.removeAttribute("bannerDTO");
+
+        return "redirect:/admin/config/banner";
     }
 }

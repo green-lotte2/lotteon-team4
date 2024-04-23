@@ -108,12 +108,7 @@
                             <td style="text-align: center">[[${subProduct.products.prodName}]]</td>
                             <td>[[${subProduct.color}]]</td>
                             <td>[[${subProduct.size}]]</td>
-                            <th:block th:if="${subProduct.products.prodPrice == subProduct.prodPrice}">
                                <td>[[${subProduct.products.prodPrice}]]</td>
-                            </th:block>
-                            <th:block th:if="${subProduct.products.prodPrice != subProduct.prodPrice}">
-                               <td>[[${subProduct.products.prodPrice + subProduct.prodPrice}]]</td>
-                            </th:block>
                             <td>[[${subProduct.products.prodDiscount}]]</td>
                             <td>[[${subProduct.products.point}]]</td>
                             <th:block th:if="${subProduct.prodStock<= 30}">

@@ -19,7 +19,7 @@ import java.util.Optional;
 public class SecurityUserService implements UserDetailsService {
 
     @Autowired
-    private  final MemberRepository repository;
+    private final MemberRepository repository;
 
 
     @Override
@@ -27,14 +27,15 @@ public class SecurityUserService implements UserDetailsService {
         Optional<User> result= repository.findById(username);
         UserDetails userDetails =null;
         if(!result.isEmpty()){
-            //해당하는 사용자가 존재하면 인증 객체 생성
 
+            //해당하는 사용자가 존재하면 인증 객체 생성
             User user = result.get();
             userDetails = MyUserDetails.builder()
                     .user(user)
                     .build();
         }
         //Security ContextHolder 저장
+        //사용자가 로그인을 진행한 뒤 사용자 정보는 SecurityContentHolder에 의해서 서버 세션에 관리된다.
         return userDetails;
     }
 

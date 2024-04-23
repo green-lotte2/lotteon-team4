@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface SubProductsRepository extends JpaRepository<SubProducts, Integer> , SubProductsRepositoryCustom {
         public List<SubProducts> findAllByProdNo(int prodNo);
+
+        public List<SubProducts> findAllByProdNoAndColor(int prodNo, String color);
 }

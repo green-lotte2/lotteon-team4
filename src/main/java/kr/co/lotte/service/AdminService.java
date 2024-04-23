@@ -45,7 +45,7 @@ public class AdminService {
 
     private final BannerRepository bannerRepository;
 
-    private final  BannerImgRepository bannerImgRepository;
+    private final BannerImgRepository bannerImgRepository;
 
     @Autowired
     private ProdImageRepository prodImageRepository;
@@ -220,7 +220,8 @@ public class AdminService {
                         File file = new File(path, sName);
 
                         Thumbnails.of(mf.getInputStream())
-                                .size(940, 940) // 썸네일 크기 지정
+                                .width(940)
+                                .keepAspectRatio(true)// 썸네일 크기 지정
                                 .toFile(file);
 
                         ProdImageDTO prodImageDTO = ProdImageDTO.builder()
@@ -341,7 +342,7 @@ public class AdminService {
         termsMapper.modifyTerms(termsDTO);
     }
 
-    public ResponseEntity<?> bannerReigser(BannerDTO bannerDTO) {
+    public ResponseEntity<?> bannerRegister(BannerDTO bannerDTO) {
 
         Banner banner = modelMapper.map(bannerDTO, Banner.class);//배너를 엔티티로 변환
 
@@ -359,7 +360,7 @@ public class AdminService {
 
         log.info("registerBanner....1" + banner);
 
-        Banner savedBannaer =bannerRepository.save(banner);
+        Banner savedBannaer = bannerRepository.save(banner);
 
         log.info("registerBanner....2" + savedBannaer);
 
@@ -398,12 +399,13 @@ public class AdminService {
 
 
                 // 파일 저장 경로 설정
-                File dest = new File(path,sName);
+                File dest = new File(path, sName);
 
                 // 썸네일 생성 (이미지 크기를 1200x80으로 조정)
                 Thumbnails.of(file.getInputStream())
-                        .size(1200, 80)
+                        .forceSize(1200, 80)//여기를 size에서 forceSize로 강제 사이즈 변환
                         .toFile(dest);
+
 
                 // 배너 이미지 정보를 담은 DTO 생성 및 반환
                 return BannerImgDTO.builder()
@@ -420,7 +422,7 @@ public class AdminService {
     }
 
     //tab1에 대한 내용들
-    public List<BannerDTO> findMAIN1(String main){
+    public List<BannerDTO> findMAIN1(String main) {
 
         List<Banner> banners = bannerRepository.findByPosition(main);
         return banners.stream()
@@ -466,16 +468,17 @@ public class AdminService {
 
     //삭제버튼에 대한 내용
     @Transactional
-    public void bannerDelete(String bannerNo){
-        int bNo = Integer.parseInt(bannerNo);
+    public void bannerDelete(String bannerNo) {
 
-        log.info("adminService : "+bNo);
+        int bno = Integer.parseInt(bannerNo);
 
-        bannerRepository.deleteByBannerNo(bNo);
+        // 각 배너 번호에 대한 데이터 삭제
+        bannerRepository.deleteByBannerNo(bno);
+        bannerImgRepository.deleteById(bno);
 
     }
 
-    public BannerDTO findById(String bno){
+    public BannerDTO findById(String bno) {
 
         int bNo = Integer.parseInt(bno);
 

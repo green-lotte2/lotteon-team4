@@ -8,16 +8,21 @@
 
         window.onload = function () {
 
-            //선택삭제
-            document.addEventListener("DOMContentLoaded", function () {
-                const btnDelete = document.getElementsByClassName('btnNegative')[0];//input type = Button
+                const btnDeletes = document.querySelectorAll('.btnNegative');//input type = Button
 
+            btnDeletes.forEach(function (btnDelete){
+                btnDelete.onclick = function (e){
+                    alert('아');
+                }
+            })
+                /*
                 btnDelete.onclick = function (e) {
                     e.preventDefault();
+                    alert('클릭되었습니다.');
 
-                    const chekcBoxes = document.querySelectorAll('.checkBoxes');
+                    const checkBoxes = document.querySelectorAll('.checkBoxes');
 
-                    chekcBoxes.forEach(check => {
+                    checkBoxes.forEach(check => {
                         if (check.checked) {
                             const row = check.closest('tr');
                             const bannerNo = row.querySelector('[id="bannerNo"]').textContent;
@@ -42,21 +47,11 @@
                                 })
                                 .catch(err => console.log(err))
                         }
-
                     });
                 }
-            });//선택삭제 끝
 
-            //배너의 활성화 버튼이 클릭되면 bannerNo를 들고 controller로 이동
-            document.querySelectorAll('.activeButton').forEach(button => {
-                button.addEventListener('click', function() {
-                    const row = this.closest('tr');
-                    const bannerNo = row.querySelector('#bannerNo').textContent;
-                    console.log('BannerNo:', bannerNo);
-                    // bannerNo를 사용하여 서버로 요청을 보낼 수 있음
-                });
-            });
-
+                */
+           //선택삭제 끝
 
         }
 
@@ -86,7 +81,7 @@
             </p>
             <table>
                 <tr>
-                    <th><input type="checkbox" name="all"/></th>
+                    <th><input type="checkbox" name="all" id="alls"/></th>
                     <th>배너번호</th>
                     <th>이미지</th>
                     <th>배너정보</th>
@@ -123,7 +118,7 @@
                     </td>
                 </tr>
             </table>
-            <input type="button" class="btnNegative" value="선택삭제"/>
+            <input type="button" class="btnNegative" id="momo" value="선택삭제"/>
             <input type="button" class="btnPositive btnRegister" value="등록하기"/>
 
         </section>
@@ -400,7 +395,7 @@
                     </td>
                 </tr>
             </table>
-            <input type="button" class="btnNegative" value="선택삭제"/>
+            <input type="button" class="btnNegative"  value="선택삭제"/>
             <input type="button" class="btnPositive btnRegister" value="등록하기"/>
         </section>
     </article>

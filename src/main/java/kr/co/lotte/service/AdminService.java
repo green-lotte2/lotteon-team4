@@ -428,6 +428,42 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    //tab2에 대한 내용들
+    public List<BannerDTO> findMAIN2(String main) {
+
+        List<Banner> banners = bannerRepository.findByPosition(main);
+        return banners.stream()
+                .map(banner -> modelMapper.map(banner, BannerDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    //tab3에 대한 내용들
+    public List<BannerDTO> findPRODUCT1(String main) {
+
+        List<Banner> banners = bannerRepository.findByPosition(main);
+        return banners.stream()
+                .map(banner -> modelMapper.map(banner, BannerDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    //tab4에 대한 내용들
+    public List<BannerDTO> findMEMBER1(String main) {
+
+        List<Banner> banners = bannerRepository.findByPosition(main);
+        return banners.stream()
+                .map(banner -> modelMapper.map(banner, BannerDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    //tab5에 대한 내용들
+    public List<BannerDTO> findMY1(String main) {
+
+        List<Banner> banners = bannerRepository.findByPosition(main);
+        return banners.stream()
+                .map(banner -> modelMapper.map(banner, BannerDTO.class))
+                .collect(Collectors.toList());
+    }
+
     //삭제버튼에 대한 내용
     @Transactional
     public void bannerDelete(String bannerNo){

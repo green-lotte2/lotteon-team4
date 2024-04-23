@@ -43,7 +43,6 @@ public class AdminController {
 
         log.info("AdminController - banner : "+banner.toString());
 
-
         model.addAttribute("banner", banner);
 
         /*

@@ -30,7 +30,7 @@ public class CsNoticeController {
     }
 
     @GetMapping("/admin/cs/notice/write")
-    public String adminNoticeWrite(){
+    public String noticeWrite(){
         return "/admin/cs/notice/write";
     }
 
@@ -39,12 +39,6 @@ public class CsNoticeController {
         csNoticeService.insertCsNotice(csNoticeDTO);
 
         return "redirect:/admin/cs/notice/write?code=100";
-    }
-
-    @GetMapping("/admin/cs/qna/list")
-    public String adminQnaList(){
-
-        return "/admin/cs/qna/list";
     }
 
 }

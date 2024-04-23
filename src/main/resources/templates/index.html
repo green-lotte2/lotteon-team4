@@ -74,10 +74,22 @@
       <header>
         <div class="top">
           <div>
-
+            <th:block th:if="${#authentication.principal == 'anonymousUser'}">
             <a th:href="@{/member/login}">로그인</a>
+            </th:block>
+            <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+              <a th:href="@{/member/logout}">로그아웃</a>
+            </th:block>
             <a th:href="@{#}">회원가입</a>
+            <th:block th:if="${#authentication.principal != 'anonymousUser'}">
             <a th:href="@{#}">마이페이지</a>
+            </th:block>
+
+            <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+              <th:block th:if="${#authentication.principal.user.role != 'USER'}">
+            <a th:href="@{#}">관리자페이지</a>
+              </th:block>
+              </th:block>
             <a th:href="@{/product/cart}"
 
               ><i class="fa fa-shopping-cart" aria-hidden="true"></i

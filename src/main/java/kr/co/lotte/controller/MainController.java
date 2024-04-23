@@ -40,18 +40,6 @@ public class MainController {
             log.error("세션이 존재하지 않습니다.");
         }
 
-        //customUserDetails 가 저장된 SecurityContextHolder 호출
-        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority authority = iterator.next();
-        String role = authority.getAuthority();
-
-        model.addAttribute("uid", uid);
-        model.addAttribute("role", role);
         return "/index";
     }
 }

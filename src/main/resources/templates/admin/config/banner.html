@@ -20,23 +20,19 @@
                 }
             })
 
-            //전체 선택
-
-            totalCheckBox.onclick = function (e) {
-                if (checkedTurn === 0) {
-                    checkBoxes.forEach(function (checkbox) {
-                        checkbox.checked = true;
+            //전체 선택 및 해제
+            document.querySelectorAll('section[id^="tabs"] input[type="checkbox"][name="all"]').forEach(function(checkbox) {
+                checkbox.addEventListener('click', function() {
+                    // 체크박스가 클릭되었을 때 동작하는 코드
+                    // 클릭된 체크박스의 부모 요소인 section 요소를 찾음
+                    var section = checkbox.closest('section[id^="tabs"]');
+                    // section 요소 내부의 모든 체크박스를 선택 혹은 해제
+                    var sectionCheckboxes = section.querySelectorAll('input[type="checkbox"]');
+                    sectionCheckboxes.forEach(function(cb) {
+                        cb.checked = checkbox.checked;
                     });
-                    checkedTurn = 1;
-                } else {
-                    checkBoxes.forEach(function (checkbox) {
-                        checkbox.checked = false;
-                    });
-                    checkedTurn = 0;
-                }
-
-            }
-
+                });
+            });
 
             function deleteSelectedBanners() {
 
@@ -187,7 +183,7 @@
             <input type="button" class="btnNegative" value="선택삭제"/>
             <input type="button" class="btnPositive btnRegister" value="등록하기"/>
         </section>
-      <!-- 상품 상세보기 배너-->
+        <!-- 상품 상세보기 배너-->
         <section id="tabs3">
             <h4>상품 상세보기 배너</h4>
             <p>
@@ -324,6 +320,12 @@
                     <td>
                         <a th:href="@{'/banner/inactive?bannerNo='+${bannerList.bannerNo}}">[비활성]</a>
                         <a th:href="@{'/banner/active?bannerNo='+${bannerList.bannerNo}}" class="activeButton">[활성]</a>
+                        <!--
+                        <a th:href="@{'/banner/inactive?bannerNo=' + ${bannerList.bannerNo} + '&tabs=' + tabsValue}">[비활성]</a>
+                        <a th:href="@{'/banner/active?bannerNo=' + ${bannerList.bannerNo} + '&tabs=' + tabsValue}" class="activeButton">[활성]</a>
+                        -->
+
+
                     </td>
                 </tr>
 

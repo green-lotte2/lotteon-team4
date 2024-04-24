@@ -1,8 +1,10 @@
 package kr.co.lotte.controller;
 
+import kr.co.lotte.dto.BannerDTO;
 import kr.co.lotte.dto.UserUpdateDTO;
 import kr.co.lotte.entity.User;
 import kr.co.lotte.repository.MemberRepository;
+import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,6 +24,7 @@ public class MyController {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final AdminService adminService;
 
     @GetMapping("/my/coupon")
     public String myCoupon() {
@@ -28,7 +32,12 @@ public class MyController {
     }
 
     @GetMapping("/my/home")
-    public String myHome() {
+    public String myHome(Model model) {
+
+        List<BannerDTO> banner5 = adminService.findMY1("MY1");
+        log.info("banner5: {}", banner5);
+        model.addAttribute("banner5", banner5);
+
         return "/my/home";
     }
 

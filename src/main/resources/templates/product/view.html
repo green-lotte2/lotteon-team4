@@ -4,6 +4,39 @@
 
 <div class="container" layout:fragment="content">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script>
+        const score1 = [[${reviewRatioDTO.percent1}]];
+        const score2 = [[${reviewRatioDTO.percent2}]];
+        const score3 = [[${reviewRatioDTO.percent3}]];
+        const score4 = [[${reviewRatioDTO.percent4}]];
+        const score5 = [[${reviewRatioDTO.percent5}]];
+        // 리뷰로 스크롤 이동 //
+        const prodReviewBox = document.getElementsByClassName('prodReviewBox')[0];
+        const moveReview = document.getElementsByClassName('moveReview')[0];
+        moveReview.onclick = function (){
+            prodReviewBox.scrollIntoView();
+        }
+        // 별점 그래프
+        new Chart(document.getElementById("pie-chart"), {
+            type: 'pie',
+            data: {
+                labels: ["1점", "2점", "3점", "4점", "5점"],
+
+                datasets: [{
+                    label: "ReviewScore (percent)",
+                    backgroundColor: ["#FFF8E1", "#187498","#F9D923","#EB5353","#36AE7C"],
+                    data: [score1,score2,score3,score4,score5]
+                }]
+            },
+            options: {
+                // 크기 조절을 위해 false
+                responsive: false,
+                title: {
+                    display: true,
+                }
+            }
+        });
+    </script>
 
     <style>
 

@@ -8,14 +8,15 @@
         //////////////////////////////////////////////////////////////////
         /////btnHome, Top
         //////////////////////////////////////////////////////////////////
-        $(document).ready(function (){
-            $(window).scroll(function (){
-                if($(this).scrollTop() > 250){
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 250) {
                     $('#btnTop').fadeIn();
-                }else{
+                } else {
                     $('#btnTop').fadeOut();
-                }        });
-            $('#btnTop').click(function (){
+                }
+            });
+            $('#btnTop').click(function () {
                 $('html, body').animate({scrollTop: 0}, 400);
                 return false;
             });
@@ -24,6 +25,7 @@
         //////////////////////////////////////////////////////////////////
         ///// 더보기, 간략히 보기
         //////////////////////////////////////////////////////////////////
+
     </script>
 
     <section id="cs">
@@ -69,7 +71,7 @@
                     </nav>
                     <div class="accordion" id="accordionLo">
                         <h3 id="scrollspyHeading1" data-bs-smooth-scroll="true" >롯데오너스</h3>
-                        <div th:each="lotteOners, iterStat : ${lotteOners}"  class="accordion-item" th:if="${iterStat.index} &lt; 3">
+                        <div th:each="lotteOners, iterStat : ${lotteOners}"  class="accordion-item" th:if="${iterStat.index}">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button"
                                         data-bs-toggle="collapse"
@@ -86,6 +88,8 @@
                                 </div>
                             </div>
                         </div>
+                        <button class="show-more" data-category="accordionInfo">더보기</button>
+                        <button class="show-less" data-category="accordionInfo" style="display: none;">간략히 보기</button>
                     </div>
 
                     <div class="accordion" id="accordionInfo">

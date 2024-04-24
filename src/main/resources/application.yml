@@ -21,7 +21,6 @@ spring:
             hibernate:
                 format_sql: true
                 show_sql: true
-
     # 이메일 설정
     mail:
         host: smtp.gmail.com

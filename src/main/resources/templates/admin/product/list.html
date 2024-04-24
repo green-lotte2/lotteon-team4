@@ -141,7 +141,8 @@
                             </th:block>
 
                             <th:block th:if="${num != page.pg}">
-                                 <a th:href="@{/admin/product/list( pg=${num})}" class="on">[[${num}]]</a>
+
+                                 <a th:href="@{/admin/product/list( pg=${num})}" >[[${num}]]</a>
                             </th:block>
 
                         </span>

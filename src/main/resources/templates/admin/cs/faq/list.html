@@ -5,59 +5,18 @@
 
 <section id="admin-cs-faq" layout:fragment="content">
     <script>
-        window.onload=function (){
-            var list=[];
+        window.onload = function (){
             const all = document.getElementById('all');
-            const checkAll = document.querySelectorAll('#check');
+            const checkAll = document.querySelectorAll('.check');
+
+            // 전체 선택 기능 구현
             all.onclick = function (){
-                if(all.checked){
-                    checkAll.forEach(function (item){
-                        if (!item.checked){
-                            item.click();
-                        }
-                    });
-                }else{
-                    checkAll.forEach(function (item){
-                        if (item.checked){
-                            item.click();
-                        }
-                    });
-                }
-            }
-            const selectDelete = document.getElementById('selectDelete');
-            selectDelete.onclick=async function(e){
-                e.preventDefault();
-                if (confirm('삭제 하시겠습니까!?')){
-                    checkAll.forEach(function (item){
-                        if (item.checked){
-                            list.push(item.value);
-                        }
-                    });
-                    if(list.length == 0){
-                        alert('선택된 상품 없습니다.')
-                    }else{
-                        const jsonData = {list: list}
-                        const result = await fetchGet('/lotteshop/admin/cs/faq/delete', jsonData);
-                        console.log(result.result);
-                    }
-                    location.reload();git
-                }
-            }
-        }
-        function toggleSelectAll(){
-            var selectAllCheckbox = document.getElementById("selectAll");
-            var checkboxes = document.getElementsByClassName("selectCheckbox");
-            for(var i = 0; i < checkboxes.length; i++){
-                checkboxes[i].checked = selectAllCheckbox.checked;
-            }
-        }
+                checkAll.forEach(function (item){
+                    item.checked = all.checked;
+                });
+            };
 
-        function dleleteSelected(){
-            if (confirm('선택한 항목들을 삭제하시겠습니까?')){
-                document.getElementById("deleteForm").submit();
-            }
         }
-
     </script>
     <nav>
         <h3>FAQ 보기</h3>
@@ -69,7 +28,7 @@
     <section>
         <div>
             <form id="deleteSelectedForm" th:action="@{/admin/cs/faq/delete/selectDelete}" method="post">
-
+                <input type="hidden" id="selectedNoList" name="selectedNo" />
                 <select name="search">
                     <option value="search1">전체</option>
                     <option value="search2">제목</option>
@@ -90,7 +49,7 @@
                         <th>관리</th>
                     </tr>
                     <tr th:each="faq: ${csFaqs}">
-                        <td class="faq-list-checkbox"><input type="checkbox" name="질문번호" id="check" /></td>
+                        <td class="faq-list-checkbox"><input type="checkbox" name="selectedNo" class="check" value="[[${faq.no}]]" /></td>
                         <td>[[${faq.no}]]</td>
                         <td>[[${faq.cate}]]</td>
                         <td>[[${faq.title}]]</td>

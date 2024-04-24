@@ -46,6 +46,7 @@ public class CsFaqService {
     public void adminFaqDeleteSelected(List<Integer> selectedNo){
             adminCsMapper.deleteFaqByIds(selectedNo);
     }
+
     // admin.cs.faq 글 작성
     public void adminFaqWrite(CsFaqDTO csFaqDTO){
         adminCsMapper.adminFaqWrite(csFaqDTO);

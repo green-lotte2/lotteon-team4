@@ -65,6 +65,13 @@ public class CsFaqController {
         return "redirect:/admin/cs/faq/list";
     }
 
+    // admin.cs.faq 선택삭제
+    @PostMapping("/admin/cs/faq/delete/selectDelete")
+    public String adminFaqDeleteSelected(@RequestParam("selectedNo") List<Integer> selectedNo){
+        csFaqService.adminFaqDeleteSelected(selectedNo);
+        return "redirect:/admin/cs/faq/list";
+    }
+
     // admin.cs.faq 글 작성 페이지
     @GetMapping("/admin/cs/faq/register")
     public String adminFaqRegister(Model model){

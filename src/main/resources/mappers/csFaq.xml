@@ -29,4 +29,13 @@
         VALUES (#{title}, #{content})
     </insert>
 
+    <!-- admin.cs.faq 선택삭제 -->
+    <delete id="deleteFaqByIds" parameterType="java.util.List">
+        DELETE FROM csfaq WHERE no IN
+        <foreach item="id" index="index" collection="selectedNo" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
 </mapper>

@@ -25,6 +25,7 @@ public class MyController {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
+
     //회원정보 변경 폼 (GET)
     @GetMapping("/my/info")
     public String myInfo(Principal principal, Model model) {
@@ -40,12 +41,6 @@ public class MyController {
         return "/my/info";
     }
 
-//    @PostMapping("/my/info")
-//    public String myInfoUpdate(Principal principal, UserUpdateDTO userUpdateDTO, Model model) {
-//        model.addAttribute("userUpdateDTO", userUpdateDTO);
-//
-//        return "redirect:/my/info";
-//    }
 
     @ResponseBody
     @GetMapping("/my/{type}/{value}/{uid}")
@@ -55,4 +50,5 @@ public class MyController {
         log.info("uid={} type={} value={}",uid, type, value );
         return memberService.myInfoUpdate(type, value, uid);
     }
+
 }

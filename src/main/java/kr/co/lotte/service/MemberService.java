@@ -7,8 +7,10 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.SellerDTO;
 import kr.co.lotte.dto.TermsDTO;
 import kr.co.lotte.dto.UserDTO;
+
 import kr.co.lotte.dto.UserUpdateDTO;
 import kr.co.lotte.entity.Points;
+
 import kr.co.lotte.entity.Seller;
 import kr.co.lotte.entity.User;
 import kr.co.lotte.mapper.MemberMapper;
@@ -17,19 +19,23 @@ import kr.co.lotte.repository.MemberRepository;
 import kr.co.lotte.repository.PointsRepository;
 import kr.co.lotte.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,6 +62,7 @@ public class MemberService {
     //이메일 보내기 서비스
     @Value("${spring.mail.username}")//이메일 보내는 사람 주소
     private String sender;
+
     public void sendEmailCode(HttpSession session, String receiver) {
         log.info("sender={}", sender);
 
@@ -108,6 +115,7 @@ public class MemberService {
         points.setEndDateTime(modifiedDate);
         pointsRepository.save(points);
     }
+
     public void insert(SellerDTO sellerDTO) {
         String encodedPass = passwordEncoder.encode(sellerDTO.getSellerPass());
 
@@ -128,7 +136,7 @@ public class MemberService {
             }
             return null;
         }
-        return  null;
+        return null;
     }
 
     public UserDTO findUser(String uid) {
@@ -136,30 +144,19 @@ public class MemberService {
     }
 
     //terms
-    public TermsDTO findTerms(int intPk){
+    public TermsDTO findTerms(int intPk) {
 
         return termsMapper.findTerms(intPk);
     }
 
-    public void myInfoUpdate(Principal principal, UserUpdateDTO userUpdateDTO) {
-        Optional<User> findUser = memberRepository.findById(principal.getName());
-        log.info("findUser={}", findUser);
-
-        User updateUser = findUser.get();
-
-        log.info("user={}",updateUser);
-
-        updateUser.setEmail(userUpdateDTO.getEmail());
-        updateUser.setHp(userUpdateDTO.getHp());
-        updateUser.setZip(userUpdateDTO.getZip());
-        updateUser.setAddr1(userUpdateDTO.getAddr1());
-        updateUser.setAddr2(userUpdateDTO.getAddr2());
-
-        memberRepository.save(updateUser);
-
+    public ResponseEntity<?> myInfoUpdate(String type, String value, String uid) {
+        memberMapper.updateUserForType(type, value, uid);
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", "100");
+        return ResponseEntity.ok().body(map);
     }
 
-
-
-
 }
+
+
+

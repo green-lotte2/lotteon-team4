@@ -24,22 +24,6 @@ public class MyController {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
-    private final AdminService adminService;
-
-    @GetMapping("/my/coupon")
-    public String myCoupon() {
-        return "/my/coupon";
-    }
-
-    @GetMapping("/my/home")
-    public String myHome(Model model) {
-
-        List<BannerDTO> banner5 = adminService.findMY1("MY1");
-        log.info("banner5: {}", banner5);
-        model.addAttribute("banner5", banner5);
-
-        return "/my/home";
-    }
 
 
     //회원정보 변경 폼 (GET)
@@ -65,23 +49,5 @@ public class MyController {
 
     }
 
-    @GetMapping("/my/order")
-    public String myOrder() {
-        return "/my/order";
-    }
 
-    @GetMapping("/my/point")
-    public String myPoint() {
-        return "/my/point";
-    }
-
-    @GetMapping("/my/qna")
-    public String myQna() {
-        return "/my/qna";
-    }
-
-    @GetMapping("/my/review")
-    public String myReview() {
-        return "/my/review";
-    }
 }

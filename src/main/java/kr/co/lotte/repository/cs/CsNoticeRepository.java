@@ -1,4 +1,4 @@
-package kr.co.lotte.repository;
+package kr.co.lotte.repository.cs;
 
 import kr.co.lotte.entity.CsNotice;
 import kr.co.lotte.repository.custom.CsNoticeRepositoryCustom;

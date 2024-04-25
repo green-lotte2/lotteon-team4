@@ -1,12 +1,9 @@
-package kr.co.lotte.repository.impl;
+package kr.co.lotte.repository.impl.cs;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groovy.util.logging.Slf4j;
-import kr.co.lotte.entity.CsNotice;
-import kr.co.lotte.repository.CsNoticeRepository;
 import kr.co.lotte.repository.custom.CsNoticeRepositoryCustom;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -25,6 +25,7 @@
         //////////////////////////////////////////////////////////////////
         ///// 더보기 및 간략히 보기
         //////////////////////////////////////////////////////////////////
+
         $(document).ready(function () {
             // 기본으로 보여질 항목의 개수 설정
             var visibleItems = 3;
@@ -46,6 +47,7 @@
                 });
             });
         });
+
 
     </script>
 
@@ -90,6 +92,7 @@
                             </li>
                         </ul>
                     </nav>
+
                     <div th:each="dtoList , index:${dtoLists}" th:with="cate2=${dtoList.get(0).getCate2()}">
                             <h3>[[${dtoLists[index.index][0].catename}]]</h3>
                         <ul>
@@ -98,6 +101,7 @@
                             </li>
                             <li class="more"><a href="#" id="loadMore">더보기</a></li>
                         </ul>
+
                     </div>
 
                     <aside>

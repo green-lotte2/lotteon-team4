@@ -4,8 +4,7 @@
       layout:decorate="~{/admin/layout/adminLayout.html}">
 
 <section id="admin-cs-faq" layout:fragment="content">
-    <script>
-        window.onload = function() {
+    <script>        window.onload = function() {
             const all = document.getElementById('all');
             const checkAll = document.querySelectorAll('.check');
 
@@ -41,6 +40,7 @@
                 }
             };
         };
+
     </script>
     <nav>
         <h3>FAQ 보기</h3>
@@ -52,7 +52,9 @@
     <section>
         <div>
             <form id="deleteSelectedForm" th:action="@{/admin/cs/faq/delete/selectDelete}" method="post">
+
                 <input type="hidden" id="selectedNoList" name="selectedNoList" />
+
                 <select name="search">
                     <option value="search1">전체</option>
                     <option value="search2">제목</option>
@@ -73,7 +75,9 @@
                         <th>관리</th>
                     </tr>
                     <tr th:each="faq: ${csFaqs}">
+
                         <td class="faq-list-checkbox"><input type="checkbox" name="selectedNoList" class="check" th:value="${faq.no}" /></td>
+
                         <td>[[${faq.no}]]</td>
                         <td>[[${faq.cate}]]</td>
                         <td>[[${faq.title}]]</td>

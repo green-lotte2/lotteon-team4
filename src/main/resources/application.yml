@@ -21,7 +21,6 @@ spring:
             hibernate:
                 format_sql: true
                 show_sql: true
-
     # 이메일 설정
     mail:
         host: smtp.gmail.com
@@ -81,14 +80,16 @@ spring:
                         scope:
                             - email
                             - profile
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
 
 server:
     port: 8080
     servlet:
-        multipart:
-            location: uploads/
-            max-file-size: 10MB
         context-path: /lotteshop
+
 
 # 파일 업로드 설정
 file:

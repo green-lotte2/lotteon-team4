@@ -93,7 +93,9 @@ public class CsFaqService {
 
     // admin.cs.faq 선택삭제
     public void adminFaqDeleteSelected(List<Integer> selectedNo){
+
         adminCsMapper.deleteFaqByIds(selectedNo);
+
     }
 
     // admin.cs.faq 글 작성

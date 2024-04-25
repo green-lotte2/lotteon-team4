@@ -18,4 +18,5 @@ public interface AdminCsMapper {
     public void deleteFaqByIds(List<Integer> selectedNo);
     // admin.cs.faq 글 작성
     public void adminFaqWrite(CsFaqDTO csFaqDTO);
+
 }

@@ -85,7 +85,9 @@
                                         <li class="prodName"><span th:href="@{#}"  onclick="openPopup()">[[${products[index.index].prodName}]] 외 [ [[${orderItems[index.index].size() - 1}]] ]개</span></li>
                                          주문번호 : <span class="ordNo">[[${order.orderNo}]]</span></li>
                                         <li class="prodPrice">[[${order.orderTotalPrice}]]</li>
-                                        <li class="list-item" ><span  class="detailOrder" th:data-orderNo="${order.orderNo}"> 주문 내역 상세 보기</span> </li>
+                                        <li class="list-item" >
+                                            <input type="hidden" th:value="${order.orderNo}" id="aec">
+                                            <span  class="detailOrder" th:value="${order.orderNo}"> 주문 내역 상세 보기</span> </li>
                                     </ul>
                                 </td>
                                 <!--  <td class="status">[[${order.orderState}]]</td>
@@ -99,7 +101,24 @@
                              </tr>
                             </th:block>
                          </table>
+                            <input type="hidden" id="detailOrder">
+                        <script>
+                            window.onload=function (e){
+                                const detailOrders = document.querySelectorAll('.detailOrder');
+                                detailOrders.forEach(function (item){
+                                    item.onclick = function (e){
+                                        const orderNoForMe = document.getElementById('orderNoForMe');
+                                        const aecc = item.closest('li').querySelector('#aec');
+                                        orderNoForMe.value= aecc.value;
+                                        console.log(aecc.value)
+                                        document.getElementById('detailOrder').click();
+                                    }
+                                })
+
+                            }
+                        </script>
                         <div id="popOrder" class="popup ">
+
                             <div>
                                 <nav>
                                     <h1>주문상세</h1>
@@ -108,7 +127,7 @@
                                 <section>
                                     <article class="order">
                                         <h3>주문정보</h3>
-                                        <input type="text" name="orderNo" value="아">
+                                        <input type="hidden" id="orderNoForMe" value="">
                                         <table border="0">
                                             <tr>
                                                 <th>날짜</th>

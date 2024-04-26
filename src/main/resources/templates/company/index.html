@@ -22,7 +22,7 @@
         /* 애니메이션 클래스에 fadeInUp 적용 */
         .fadeInUp {
             animation-name: fadeInUp;
-            animation-duration: 1s;
+            animation-duration: 2s;
         }
 
         /* 슬라이더 영역 */
@@ -39,20 +39,25 @@
             border: none;
             background: #fff;
         }
-        .slider img{
+
+        .slider img {
             height: 400px;
             width: 980px;
         }
-        #blog_title{
+
+        .blog_title {
             border-bottom: 1px solid grey;
             padding-bottom: 5px;
         }
-        #blog_title > a{
+
+        .blog_title > a {
             text-decoration: none;
             color: #1e1e1e;
         }
-        #b_btn{
+
+        #b_btn {
             float: right;
+            cursor: pointer;
         }
 
 
@@ -60,28 +65,39 @@
 
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var titleLinks = document.querySelectorAll('.title-link');
-            var imageLinks = document.querySelectorAll('.image-link');
+            var parentDivs = document.querySelectorAll('.blog_title');
 
-            // 제목 링크 클릭 이벤트 처리
-            titleLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // 기본 동작 방지
-                    var bno = link.getAttribute('data-bno');
-                    console.log('제목 클릭, bno:', bno);
-                    alert('제목 링크를 클릭하였습니다.');
-                });
-            });
+            parentDivs.forEach(function (parentDiv) {
 
-            // 이미지 링크 클릭 이벤트 처리
-            imageLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // 기본 동작 방지
-                    var bno = link.previousElementSibling.getAttribute('data-bno'); // 이전 형제 요소인 제목 링크에서 bno 가져오기
-                    console.log('이미지 클릭, bno:', bno);
-                    alert('이미지를 클릭하였습니다.');
+                parentDiv.addEventListener('click', async function (event) {
+
+                    var target = event.target;
+                    var bno = null;
+                    var cate = null;
+
+                    if (target.classList.contains('title-link')) {
+
+                        event.preventDefault(); // 기본 동작 방지
+                        bno = target.getAttribute('data-bno');
+                        cate = target.getAttribute('data-cate');
+                        console.log('제목 클릭, bno:', bno);
+                        console.log('제목 클릭, cate:', cate);
+                        alert('제목 링크를 클릭하였습니다.');
+
+                    } else if (target.tagName === 'IMG') {
+                        bno = parentDiv.querySelector('.title-link').getAttribute('data-bno');
+                        cate = parentDiv.querySelector('.title-link').getAttribute('data-cate');
+                        alert('이미지 링크를 클릭하였습니다.');
+                        console.log('이미지 클릭, bno:', bno);
+                        console.log('이미지 클릭, cate:', cate);
+
+                    }
+                    const viewURL = `/lotteshop/company/view?cate=${cate}&bno=${bno}`;
+
+                    window.location.href=viewURL;
+
                 });
             });
         });
@@ -153,11 +169,14 @@
                     <div>
                         <p style="font-size: 17px" th:text="${#strings.substring(lists.date, 0, 10)}"></p>
                     </div>
-                    <div id="blog_title">
-                        <a class ="title-link" href="#" style="font-size: 20px;font-weight: bold" th:text="${lists.title}" data-bno="${lists.bno}"></a>
-                        <a class ="img-link" href="#">
+                    <div class="blog_title">
+                        <a class="title-link" href="#" style="font-size: 20px;font-weight: bold"
+                           th:text="${lists.title}" th:data-cate="${lists.cate}" th:data-bno="${lists.bno}"></a>
+
+                        <a>
                             <img id="b_btn" th:src="@{/company/images/button.png}">
                         </a>
+
                     </div>
                     <span><br><br></span>
                 </div>

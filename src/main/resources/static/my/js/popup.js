@@ -14,8 +14,13 @@ $(function(){
     });
 
     // 주문상세 팝업 띄우기
-    $('.latest .info .orderNo > a').click(function(e){
+    $('.detailOrder').click(function(e){
         e.preventDefault();
+        console.log($(this))
+        var vOrdercd = $(this).data("orderNo");
+        console.log('되나?')
+        console.log(vOrdercd)
+        $('#popOrder input[name="orderNo"]').val(vOrdercd);
         $('#popOrder').addClass('on');
     });
 

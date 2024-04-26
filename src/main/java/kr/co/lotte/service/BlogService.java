@@ -23,4 +23,12 @@ public class BlogService {
 
         return blogRepository.findTop5ByOrderByDateDesc();
     }
+
+
+    //배너 번호에 있는 블로그 글 들고오기
+    public BlogDTO findById(int bno){
+        Blog blog = blogRepository.findById(bno).orElse(null);
+
+        return modelMapper.map(blog, BlogDTO.class);
+    }
 }

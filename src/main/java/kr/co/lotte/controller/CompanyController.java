@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.AlgorithmConstraints;
 import java.util.List;
 
 @Slf4j
@@ -39,5 +40,25 @@ public class CompanyController {
     public String culture(){
 
         return "/company/culture";
+    }
+
+
+    @GetMapping("/company/view")
+    public String view(Model model,int bno){
+
+         BlogDTO blogDTO = blogService.findById(bno);
+
+        log.info("blogDTO : "+blogDTO);
+         
+         //번호 받아서 조회
+         model.addAttribute("blogs",blogDTO);
+
+        return "/company/view";
+    }
+
+    @GetMapping("/company/recruit")
+    public String recruit(){
+
+        return "/company/recruit";
     }
 }

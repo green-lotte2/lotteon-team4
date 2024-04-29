@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminControllerForSangdo {
 
     private final AdminServiceForSangdo adminServiceForSangdo;
-
+/*
     @GetMapping("/admin/member/list")
     public String userList(Model model, UserPageRequestDTO userPageRequestDTO) {
 
@@ -38,4 +38,6 @@ public class AdminControllerForSangdo {
     public ResponseEntity<?> putGrade(@RequestBody UserDTO userDTO, HttpServletRequest req){
         return adminServiceForSangdo.updateUserGrade(userDTO);
     }
+
+ */
 }

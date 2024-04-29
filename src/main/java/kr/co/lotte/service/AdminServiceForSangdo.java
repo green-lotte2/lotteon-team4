@@ -26,7 +26,7 @@ public class AdminServiceForSangdo {
 
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
-
+/*
     public UserPageResponseDTO selectsUserForAdmin(UserPageRequestDTO userPageRequestDTO){
 
         Pageable pageable = userPageRequestDTO.getPageable();
@@ -85,5 +85,7 @@ public class AdminServiceForSangdo {
                         .body("not found");
             }
         }
+
+ */
     }
 

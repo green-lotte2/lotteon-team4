@@ -16,5 +16,5 @@ public interface MemberRepository extends JpaRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 
-    public Page<Tuple> selectsUsers(UserPageRequestDTO userPageRequestDTO, Pageable pageable);
+ //   public Page<Tuple> selectsUsers(UserPageRequestDTO userPageRequestDTO, Pageable pageable);
 }

@@ -3,22 +3,19 @@ package kr.co.lotte.controller;
 
 import kr.co.lotte.dto.BlogDTO;
 import kr.co.lotte.entity.Blog;
+import kr.co.lotte.entity.Media;
 import kr.co.lotte.entity.Recruit;
 import kr.co.lotte.service.BlogService;
+import kr.co.lotte.service.MediaService;
 import kr.co.lotte.service.RecruitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.security.AlgorithmConstraints;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +24,7 @@ public class CompanyController {
 
     private final BlogService blogService;
     private final RecruitService recruitService;
+    private final MediaService mediaService;
 
 
     @GetMapping("/company/index")
@@ -110,11 +108,23 @@ public class CompanyController {
     }
 
 
+    //소식과 이야기 페이지 기본페이지 띄우기
     @GetMapping("/company/story")
     public String story(Model model) {
         List<Blog> blogs = blogService.findAll();
         model.addAttribute("card", blogs);
         return "/company/story";
+    }
+
+    //영상 띄우기
+    @GetMapping("/company/media")
+    public String media(Model model){
+
+        List<Media> media = mediaService.findAll();
+
+        model.addAttribute("media", media);
+
+        return "/company/media";
     }
 
 

@@ -152,41 +152,40 @@
                                                         </ol>
                                                     </td>
                                                     <td class="status">[[${orderItem.orderState}]]</td>
-                                                    <td class="confirm" style="text-align: center">
+                                                    <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" class="confirm" style="text-align: center">
                                                         <ol>
                                                         <li th:href="@{#}" class="receive">수취확인</li>
-                                                        <li th:href="@{#}" class="review">상품평</li>
-                                                        <li th:href="@{#}" class="refund">반품신청</li>
-                                                        <li th:href="@{#}" class="exchange">교환신청</li>
+                                                        <li th:if="${orderItem.orderState == '구매 확정'}" th:href="@{#}" class="review">후기 작성</li>
+                                                        <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
                                                         </ol>
                                                     </td>
                                                 </tr>
 
                                             </table>
+                                            <p>배송 준비 이전의 주문은 취소 처리가 되며, 이후의 상품의 경우 배송비(3,000원)가 부가됩니다.</p>
+                                            <br>
                                         </article>
                                         <article class="delivery">
                                             <h3>결제 및 배송정보</h3>
                                             <table border="0">
                                                 <tr>
                                                     <th>최종 결제 금액</th>
-                                                    <td class="request">없음</td>
+                                                    <td class="request" >[[${#numbers.formatCurrency(order.orderTotalPrice)}]] (사용 포인트 : [[${order.point}]] )</td>
                                                 </tr>
+
                                                 <tr>
-                                                    <th>주문자</th>
-                                                    <td class="name">홍길동</td>
+                                                    <th>받으실 분</th>
+                                                    <td class="name">[[${order.sendName}]]</td>
                                                 </tr>
                                                 <tr>
                                                     <th>연락처</th>
-                                                    <td class="hp">010-1234-1001</td>
+                                                    <td class="hp">[[${order.sendHp}]]</td>
                                                 </tr>
                                                 <tr>
                                                     <th>배송지</th>
-                                                    <td class="address">[210**] 부산광역시 부산진구 대연동 121 10층 1004호</td>
+                                                    <td class="address">[ [[${order.zip}]] ]  [[${order.addr1}]] [[${order.addr2}]]</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>배송요청사항</th>
-                                                    <td class="request">없음</td>
-                                                </tr>
+
                                             </table>
                                         </article>
                                     </section>
@@ -195,6 +194,35 @@
                         </th:block>
                         <script>
                             window.onload=function (){
+
+                                //주문취소
+                                const deletes = document.querySelectorAll('#delete');
+
+                                deletes.forEach(function (item){
+                                   item.onclick=async function () {
+                                       const result = await fetchGet('/lotteshop/product/checkOrder?itemNo='+item.getAttribute('data-itemNo'));
+                                       if(result.data == "1"){
+                                           if(confirm('포인트를 사용한 경우 부분 취소가 아닌, 전체 취소만 가능합니다. 그렇게 하시겠습니까?')){
+                                               const result2 = await fetchGet('/lotteshop/product/orderDelete?itemNo='+item.getAttribute('data-itemNo'));
+                                               if(result2.data ==1){
+                                                   alert("취소가 완료되었습니다. (배송비 3000원 결제 완료)");
+                                               }else{
+                                                   alert("취소가 완료되었습니다.")
+                                               }
+                                           }
+                                       }else{
+                                           if(confirm('정말 취소하시겠습니까?')){
+                                               const result2 = await fetchGet('/lotteshop/product/orderDelete?itemNo='+item.getAttribute('data-itemNo'));
+                                               if(result2.data ==1){
+                                                   alert("취소가 완료되었습니다. (배송비 3000원 결제 완료)");
+                                               }else{
+                                                   alert("취소가 완료되었습니다.")
+                                               }
+                                           }
+                                       }
+                                   }
+                                });
+
                                 // 현재 날짜 가져오기
                                 var currentDate = new Date().toISOString().split('T')[0];
 

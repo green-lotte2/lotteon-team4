@@ -1,6 +1,8 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import jakarta.persistence.Transient;
+import jakarta.transaction.Transactional;
 import kr.co.lotte.dto.MainProductsPageRequestDTO;
 import kr.co.lotte.dto.MainProductsPageResponseDTO;
 import kr.co.lotte.dto.ProductsPageRequestDTO;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +27,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class MainService {
     @Autowired
     private ProductsRepository productsRepository;
@@ -76,6 +81,5 @@ public class MainService {
             visitor.setVisitCount(1);
             visitorRepository.save(visitor);
         }
-
     }
 }

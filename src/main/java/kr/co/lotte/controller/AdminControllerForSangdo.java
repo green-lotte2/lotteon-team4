@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminControllerForSangdo {
 
     private final AdminServiceForSangdo adminServiceForSangdo;
-/*
+
     @GetMapping("/admin/member/list")
     public String userList(Model model, UserPageRequestDTO userPageRequestDTO) {
 
@@ -39,5 +40,13 @@ public class AdminControllerForSangdo {
         return adminServiceForSangdo.updateUserGrade(userDTO);
     }
 
- */
+    @GetMapping("/admin/member/detail")
+    public String userDetail(@RequestParam("uid")String uid, Model model){
+        UserDTO userDTO = adminServiceForSangdo.selectUserForAdmin(uid);
+        model.addAttribute("user", userDTO);
+        return "/admin/member/detail";
+    }
+
+
+
 }

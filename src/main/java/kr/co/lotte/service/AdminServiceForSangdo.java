@@ -26,7 +26,7 @@ public class AdminServiceForSangdo {
 
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
-/*
+
     public UserPageResponseDTO selectsUserForAdmin(UserPageRequestDTO userPageRequestDTO){
 
         Pageable pageable = userPageRequestDTO.getPageable();
@@ -86,6 +86,19 @@ public class AdminServiceForSangdo {
             }
         }
 
- */
+
+    public UserDTO selectUserForAdmin(String uid) {
+        // uid에 해당하는 사용자의 정보를 페이징해서 조회합니다.
+        Tuple tuple = memberRepository.selectUser(uid);
+        log.info("selectUser....1: "+ tuple);
+
+        // 튜플을 UserDTO로 변환하는 작업을 수행합니다.
+        User user = tuple.get(0, User.class);
+        Integer totalPrice = tuple.get(1, Integer.class);
+        int totalPriceValue = (totalPrice != null) ? totalPrice : 0;
+        user.setTotalPrice(totalPriceValue);
+
+        return modelMapper.map(user, UserDTO.class);
     }
+}
 

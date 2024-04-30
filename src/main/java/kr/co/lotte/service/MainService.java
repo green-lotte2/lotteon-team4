@@ -1,6 +1,8 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import jakarta.persistence.Transient;
+import jakarta.transaction.Transactional;
 import kr.co.lotte.dto.MainProductsPageRequestDTO;
 import kr.co.lotte.dto.MainProductsPageResponseDTO;
 import kr.co.lotte.dto.ProductsPageRequestDTO;
@@ -24,6 +26,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class MainService {
     @Autowired
@@ -76,6 +79,5 @@ public class MainService {
             visitor.setVisitCount(1);
             visitorRepository.save(visitor);
         }
-
     }
 }

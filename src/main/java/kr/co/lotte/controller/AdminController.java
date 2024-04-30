@@ -51,7 +51,6 @@ public class AdminController {
 
             int ready = map.get("ready");
             int delivery = map.get("delivery");
-            int change = map.get("change");
             int allDelete = map.get("allDelete");
             int delete = map.get("delete");
 
@@ -63,7 +62,6 @@ public class AdminController {
             model.addAttribute("ready", ready);
             model.addAttribute("delivery", delivery);
             model.addAttribute("delete", delete);
-            model.addAttribute("change", change);
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
             return "/admin/index";
@@ -85,14 +83,12 @@ public class AdminController {
             int ready = map.get("ready");
             int delivery = map.get("delivery");
             int delete = map.get("delete");
-            int change = map.get("change");
             int allDelete = map.get("allDelete");
             int visitor = map.get("visitors");
 
             model.addAttribute("ready", ready);
             model.addAttribute("delivery", delivery);
             model.addAttribute("delete", delete);
-            model.addAttribute("change", change);
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
             return "/admin/index2";
@@ -334,4 +330,9 @@ public class AdminController {
     }
 
     //주문 바꾸기
+    @GetMapping("/admin/checkOrder")
+    public void checkOrder(@RequestParam(name = "orderNo")int orderNo , Model model){
+        adminService.changeOrderState(orderNo);
+
+    }
 }

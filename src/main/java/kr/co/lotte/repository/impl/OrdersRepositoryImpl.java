@@ -57,6 +57,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
             results = jpaQueryFactory.select(orders)
                     .from(orders)
                     .where(orders.userId.eq(uid).and(orders.orderDate.between(dateBegin,dateEnd)))
+                    .orderBy(orders.orderNo.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -81,6 +82,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
             results = jpaQueryFactory.select(orders)
                     .from(orders)
                     .where(orders.userId.eq(uid).and(orders.orderDate.between(startDateAsDate,endDateAsDate )))
+                    .orderBy(orders.orderNo.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -102,6 +104,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
             results = jpaQueryFactory.select(orders)
                     .from(orders)
                     .where(orders.userId.eq(uid).and(orders.orderDate.between(start, end)))
+                    .orderBy(orders.orderNo.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -122,6 +125,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
             results = jpaQueryFactory.select(orders)
                     .from(orders)
                     .where(orders.userId.eq(uid).and(orders.orderDate.between(start, end)))
+                    .orderBy(orders.orderNo.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -139,6 +143,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
             results = jpaQueryFactory.select(orders)
                     .from(orders)
                     .where(orders.userId.eq(uid).and(orders.orderDate.between(startDateAsDate, endDateAsDate)))
+                    .orderBy(orders.orderNo.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -155,36 +160,64 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
         LocalDateTime startDate;
         LocalDateTime endDate;
         //선택 날짜 조회
+        if(!requestDTO.getState().equals("모든")) {
+            if (requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != "") {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateBegin = dateFormat.parse(requestDTO.getDateBegin());
+                Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
+                dateEnd.setHours(23);
+                dateEnd.setMinutes(59);
+                dateEnd.setSeconds(59);
 
-        if(requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != ""){
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date dateBegin =  dateFormat.parse(requestDTO.getDateBegin());
-            Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
-            dateEnd.setHours(23);
-            dateEnd.setMinutes(59);
-            dateEnd.setSeconds(59);
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .leftJoin(qProducts)
+                        .on(qProducts.prodNo.eq(orderItems.prodNo))
+                        .where(qProducts.sellerUid.eq(uid).and(orderItems.orderDate.between(dateBegin, dateEnd)).and(orderItems.orderState.eq(requestDTO.getState())))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+            } else {
 
-            results = jpaQueryFactory.select(orderItems)
-                    .from(orderItems)
-                    .leftJoin(qProducts)
-                    .on(qProducts.prodNo.eq(orderItems.prodNo))
-                    .where(qProducts.sellerUid.eq(uid).and(orderItems.orderDate.between(dateBegin,dateEnd)).and(orderItems.orderState.eq(requestDTO.getState())))
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
-        }
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .leftJoin(qProducts)
+                        .on(qProducts.prodNo.eq(orderItems.prodNo))
+                        .where(qProducts.sellerUid.eq(uid).and(orderItems.orderState.eq(requestDTO.getState())))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
 
-       else{
+            }
+        }else{
+            if (requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != "") {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateBegin = dateFormat.parse(requestDTO.getDateBegin());
+                Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
+                dateEnd.setHours(23);
+                dateEnd.setMinutes(59);
+                dateEnd.setSeconds(59);
 
-            results = jpaQueryFactory.select(orderItems)
-                    .from(orderItems)
-                    .leftJoin(qProducts)
-                    .on(qProducts.prodNo.eq(orderItems.prodNo))
-                    .where(qProducts.sellerUid.eq(uid).and(orderItems.orderState.eq(requestDTO.getState())))
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .leftJoin(qProducts)
+                        .on(qProducts.prodNo.eq(orderItems.prodNo))
+                        .where(qProducts.sellerUid.eq(uid).and(orderItems.orderDate.between(dateBegin, dateEnd)))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+            } else {
 
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .leftJoin(qProducts)
+                        .on(qProducts.prodNo.eq(orderItems.prodNo))
+                        .where(qProducts.sellerUid.eq(uid))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+
+            }
         }
         List<OrderItems> content = results.getResults();
         long total = results.getTotal();
@@ -197,30 +230,54 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
         LocalDateTime startDate;
         LocalDateTime endDate;
         //선택 날짜 조회
+        if(!requestDTO.getState().equals("모든")) {
+            if (requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != "") {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateBegin = dateFormat.parse(requestDTO.getDateBegin());
+                Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
+                dateEnd.setHours(23);
+                dateEnd.setMinutes(59);
+                dateEnd.setSeconds(59);
 
-        if(requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != ""){
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date dateBegin =  dateFormat.parse(requestDTO.getDateBegin());
-            Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
-            dateEnd.setHours(23);
-            dateEnd.setMinutes(59);
-            dateEnd.setSeconds(59);
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .where(orderItems.orderDate.between(dateBegin, dateEnd).and(orderItems.orderState.eq(requestDTO.getState())))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+            } else {
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .where(orderItems.orderState.eq(requestDTO.getState()))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
 
-            results = jpaQueryFactory.select(orderItems)
-                    .from(orderItems)
-                    .where(orderItems.orderDate.between(dateBegin,dateEnd).and(orderItems.orderState.eq(requestDTO.getState())))
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
-        }
+            }
+        }else{
 
-        else{
-            results = jpaQueryFactory.select(orderItems)
-                    .from(orderItems)
-                    .where(orderItems.orderState.eq(requestDTO.getState()))
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
+            if (requestDTO.getDateBegin() != null && requestDTO.getDateBegin() != "") {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateBegin = dateFormat.parse(requestDTO.getDateBegin());
+                Date dateEnd = dateFormat.parse(requestDTO.getDateEnd());
+                dateEnd.setHours(23);
+                dateEnd.setMinutes(59);
+                dateEnd.setSeconds(59);
+
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .where(orderItems.orderDate.between(dateBegin, dateEnd))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+            } else {
+                results = jpaQueryFactory.select(orderItems)
+                        .from(orderItems)
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+
+            }
 
         }
         List<OrderItems> content = results.getResults();

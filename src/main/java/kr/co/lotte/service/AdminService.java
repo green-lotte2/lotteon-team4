@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AdminService {
     @Autowired
     private CategoriesRepository categoriesRepository;
@@ -74,7 +75,6 @@ public class AdminService {
         int ready=0;
         int delivery = 0;
         int delete = 0;
-        int change =0;
         int allDelete =0;
 
         List<OrderItems> totalOrders = ordersItemRepository.findAll();
@@ -88,9 +88,7 @@ public class AdminService {
 
             }else if(orderItems.getOrderState().equals("주문 취소")){
                 delete++;
-            }else if(orderItems.getOrderState().equals("교환 요청")){
-                change++;
-            }else if(orderItems.getOrderState().equals("반품 요청")){
+            }else if(orderItems.getOrderState().equals("환불")){
                 allDelete++;
             }
         }
@@ -129,7 +127,6 @@ public class AdminService {
         map.put("ready",ready);
         map.put("delivery",delivery);
         map.put("delete",delete);
-        map.put("change",change);
         map.put("allDelete",allDelete);
         map.put("visitors",visitors);
 
@@ -151,7 +148,6 @@ public class AdminService {
         int ready=0;
         int delivery = 0;
         int delete = 0;
-        int change =0;
         int allDelete =0;
 
         for(OrderItems orderItems : totalOrders){
@@ -162,9 +158,7 @@ public class AdminService {
                 delivery ++;
             }else if(orderItems.getOrderState().equals("주문 취소")){
                 delete++;
-            }else if(orderItems.getOrderState().equals("교환 요청")){
-                change++;
-            }else if(orderItems.getOrderState().equals("반품 요청")){
+            }else if(orderItems.getOrderState().equals("환불")){
                 allDelete++;
             }
 
@@ -194,7 +188,6 @@ public class AdminService {
         map.put("ready",ready);
         map.put("delivery",delivery);
         map.put("delete",delete);
-        map.put("change",change);
         map.put("allDelete",allDelete);
 
         map.put("visitors",visitors);
@@ -880,4 +873,19 @@ public class AdminService {
         return ordersRepository.findById(orderNo).get();
     }
 
+
+    //주문상태변경
+    public ResponseEntity changeOrderState(int orderNo){
+        Map<String , String> map = new HashMap<>();
+        //주문대기이면 배송준비로
+        OrderItems orders = ordersItemRepository.findById(orderNo).get();
+        if(orders.getOrderState().equals("주문 대기")){
+            orders.setOrderState("배송 준비");
+        }else if(orders.getOrderState().equals("배송 준비")){
+            orders.setOrderState("배송 중");
+        }
+        map.put("data","1");
+
+        return  ResponseEntity.ok().body(map);
+    }
 }

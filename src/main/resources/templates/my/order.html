@@ -159,6 +159,11 @@
                                                         <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
                                                         </ol>
                                                     </td>
+                                                    <td th:if="${orderItem.orderState == '주문 취소' || orderItem.orderState == '환불'}">
+                                                        <ol>
+                                                            <li> </li>
+                                                        </ol>
+                                                    </td>
                                                 </tr>
 
                                             </table>

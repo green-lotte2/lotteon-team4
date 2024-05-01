@@ -343,4 +343,55 @@ public class AdminController {
         return adminService.changeOrderStates(map.get("list"));
 
     }
+
+    //매출현황 가보자고
+    @GetMapping("/admin/sale")
+    public String sale(Model model , Authentication authentication, @RequestParam(name = "state") String state){
+        try{
+            //여기는 관리자 (매출은 어떻게 집계하지? order에 totalPrice가 있으니까 그걸로 해볼까?)
+            MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+            Map<String, List<Integer>> map = adminService.saleForAdmin(state);
+            List<Integer> price = map.get("price");
+            List<Integer> order = map.get("order");
+            List<String> days = adminService.forDays(state);
+
+            model.addAttribute("days", days);
+            model.addAttribute("price", price);
+            model.addAttribute("order", order);
+
+        }catch (Exception e){
+            //여기는 판매자
+            MyManagerDetails myManagerDetails =( MyManagerDetails) authentication.getPrincipal();
+            Seller seller = myManagerDetails.getUser();
+            Map<String, List<Integer>> map = adminService.saleForManager(state, seller.getSellerUid());
+            List<Integer> price = map.get("price");
+            List<Integer> order = map.get("order");
+            List<String> days = adminService.forDays(state);
+
+            model.addAttribute("days", days);
+            model.addAttribute("price", price);
+            model.addAttribute("order", order);
+
+        }
+        /*
+        adminService.saleForAdmin(state);
+        List<Integer> listA = new ArrayList<>();
+        listA.add(1);
+        listA.add(2);
+        listA.add(3);
+        List<Integer> listB = new ArrayList<>();
+        listB.add(4);
+        listB.add(5);
+        listB.add(6);
+        List<String> listC = new ArrayList<>();
+        listC.add("1월");
+        listC.add("2월");
+        listC.add("3월");
+        model.addAttribute("listA", listA);
+        model.addAttribute("listB", listB);
+        model.addAttribute("listC", listC);
+
+         */
+        return "/admin/order/sale";
+    }
 }

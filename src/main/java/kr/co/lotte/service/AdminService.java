@@ -912,13 +912,14 @@ public class AdminService {
     }
 
     //판매자 아이디를 이용해 판매자 정보 출력
-    public SellerDTO findSellerInfo(String uid){
+    public SellerDTO findSellerInfo(String uid) {
 
-        Optional<Seller> seller  = sellerRepository.findById(uid);
+        Optional<Seller> seller = sellerRepository.findById(uid);
 
         SellerDTO sellerDTO = modelMapper.map(seller, SellerDTO.class);
 
         return sellerDTO;
+    }
 
     //주문상태변경
     public ResponseEntity changeOrderState(int orderNo){
@@ -989,7 +990,7 @@ public class AdminService {
         }
 
 
-    public Map<String , List<Integer>> saleForAdmin(String state){
+    public Map<String , List<Integer>> saleForAdmin (String state) {
         Map<String , List<Integer>> map = new HashMap<>();
         //매출건수를 어떻게 조회하지?
         //일주일 별

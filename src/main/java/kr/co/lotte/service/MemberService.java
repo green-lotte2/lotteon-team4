@@ -10,9 +10,7 @@ import kr.co.lotte.entity.*;
 
 import kr.co.lotte.mapper.MemberMapper;
 import kr.co.lotte.mapper.TermsMapper;
-import kr.co.lotte.repository.MemberRepository;
-import kr.co.lotte.repository.PointsRepository;
-import kr.co.lotte.repository.SellerRepository;
+import kr.co.lotte.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -48,6 +46,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TermsMapper termsMapper;
     private final PointsRepository pointsRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewImgRepository reviewImgRepository;
 
 
     //회원 등록이 되어 있는지 확인하는 서비스(0또는 1)
@@ -166,17 +166,54 @@ public class MemberService {
         memberMapper.updateUserPassword(userDTO);
     }
 
-    public void rRegister(ReviewDTO reviewDTO){
+    public ResponseEntity<?> rRegister(ReviewDTO reviewDTO) {
+        try {
 
-        Review review = modelMapper.map(reviewDTO, Review.class);
+            Review review = modelMapper.map(reviewDTO, Review.class);
 
-        MultipartFile image1 = reviewDTO.getMultImage1();
+            MultipartFile image1 = reviewDTO.getMultImage1();
 
-        ReviewImgDTO uploadImgDTO = uploadReviewImage(image1);
+            ReviewImgDTO uploadedImage = uploadReviewImage(image1);
+
+
+            if (uploadedImage != null) {
+
+                ReviewImgDTO imageDTO = uploadedImage;
+
+                review.setThumbnail(uploadedImage.getSName());
+            }
+
+
+            log.info("service - rRegister : " + review);
+
+            Review saveReview = reviewRepository.save(review);
+
+            log.info("service - saveReview 저장성공?! : " + saveReview);
+
+            int saveReviewNo = saveReview.getRno();//리뷰저장하면 리뷰번호가 자동으로 생성됨. -> 그거 불러옴
+
+            log.info("service - saveReviewNo : " + saveReviewNo);//리뷰번호 찍어보기
+
+            ReviewImgDTO reviewImgDTO = uploadedImage;
+            reviewImgDTO.setRno(saveReviewNo);
+
+            ReviewImg reviewImg = modelMapper.map(reviewImgDTO, ReviewImg.class);
+
+            reviewImgRepository.save(reviewImg);
+            reviewRepository.flush();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", saveReviewNo);//리뷰 번호임
+
+            return ResponseEntity.ok().body(map);
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(e.getMessage());
+        }
     }
 
     @Value("${file.upload.path}")
     private String fileUploadPath;
+
     public ReviewImgDTO uploadReviewImage(MultipartFile file) {
         // 파일을 저장할 경로 설정
 
@@ -188,19 +225,25 @@ public class MemberService {
                 String originalFileName = file.getOriginalFilename();//원본 파일 네임
                 String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
+                log.info("uploadReviewImage - originalFileName :  잘 들어오나요? : "+originalFileName);
+
                 // 저장될 파일 이름 생성
                 String sName = UUID.randomUUID().toString() + extension;//변환된 파일 이름
 
 
+                log.info("파일 변환 후 이름 - sName : "+sName);
+
                 // 파일 저장 경로 설정
                 java.io.File dest = new File(path, sName);
 
-                        Thumbnails.of(file.getInputStream())
-                                .forceSize(810, 86)//여기를 size에서 forceSize로 강제 사이즈 변환
-                                .toFile(dest);
+                Thumbnails.of(file.getInputStream())
+                        .forceSize(80, 80)//여기를 size에서 forceSize로 강제 사이즈 변환
+                        .toFile(dest);
 
 
-                // 배너 이미지 정보를 담은 DTO 생성 및 반환
+                log.info("service - dest : "+ dest);
+
+                // 리뷰이미지 정보를 담은 DTO 생성 및 반환
                 return ReviewImgDTO.builder()
                         .oName(originalFileName)
                         .sName(sName)

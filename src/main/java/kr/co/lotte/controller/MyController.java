@@ -8,12 +8,17 @@ import kr.co.lotte.repository.MemberRepository;
 import kr.co.lotte.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.LoginContext;
+import java.net.URI;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -73,10 +78,16 @@ public class MyController {
     //리뷰 등록
     @ResponseBody
     @PostMapping("/my/order/write_review")
-    public void write_review(ReviewDTO reviewDTO){
+    public String write_review(ReviewDTO reviewDTO){
 
-        memberService.rRegister(reviewDTO);
+        log.info("여기 들어와지는고니? 여기는 mycontroller");
 
+        log.info("mycontroller - write_review - reviewDTO={}", reviewDTO);
+
+        Object data = memberService.rRegister(reviewDTO);
+
+        log.info(data.toString());
+
+        return "redirect:/my/review?uid="+reviewDTO.getUid();//내가 쓴 리뷰페이지로 이동
     }
-
 }

@@ -2,6 +2,7 @@ package kr.co.lotte.dto;
 
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,9 @@ public class ReviewDTO {
     private String comment;
     private int prodno;
     private int score;
+
+    private MultipartFile multImage1;
+
     private String thumbnail;
 
     private LocalDateTime rdate;

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>롯데ON::4조 관리자 페이지</title>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.ico}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>
@@ -60,7 +61,7 @@
                 <li th:if="${#authentication.principal.user.role == 'ADMIN'}">
                     <a href="#"><i class="fas fa-store" aria-hidden="true"></i>상점관리</a>
                     <ol>
-                        <li><a href="#">판매자현황</a></li>
+                        <li><a th:href="@{/admin/seller/seller_status}">판매자현황</a></li>
                     </ol>
                 </li>
                 <li th:if="${#authentication.principal.user.role == 'ADMIN'}">

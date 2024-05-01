@@ -1,5 +1,6 @@
 package kr.co.lotte.controller;
 
+import kr.co.lotte.dto.ReviewDTO;
 import kr.co.lotte.dto.UserDTO;
 import kr.co.lotte.dto.UserUpdateDTO;
 import kr.co.lotte.entity.User;
@@ -66,4 +67,16 @@ public class MyController {
     public ResponseEntity<?> modifyAddr(@RequestBody UserDTO userDTO) {
         return memberService.updateUserAddr(userDTO);
     }
+
+
+
+    //리뷰 등록
+    @ResponseBody
+    @PostMapping("/my/order/write_review")
+    public void write_review(ReviewDTO reviewDTO){
+
+        memberService.rRegister(reviewDTO);
+
+    }
+
 }

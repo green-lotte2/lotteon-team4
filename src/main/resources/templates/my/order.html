@@ -102,9 +102,47 @@
                             </th:block>
                          </table>
 
-                        <th:block th:each="order , index :${pageResponseDTO.dtoList}">
 
-                            <div id="popOrder" class="popup" >
+
+                        <!-- 리뷰 작성을 위한 모달 -->
+                        <div id="reviewModal" class="modal">
+                            <div class="modal-content">
+                                <span id="close_btn" class="close_btn">&times;</span>
+                                <h3>리뷰 작성</h3>
+                                <form th:action="@{/my/order/write_review}" id="reviewForm" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" id="prodno" name="prodno"/>
+                                    <input type="hidden" id="uid" name="uid"/>
+                                    <div class="form-group">
+                                        <label for="reviewTitle">제목:</label>
+                                        <input type="text" id="reviewTitle" name="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reviewContent">내용:</label>
+                                        <textarea id="reviewContent" name="comment" rows="5" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reviewRating">평점:</label>
+                                        <div class="rating" id="reviewRating">
+                                            <span class="star" data-rating="1">&#9733;</span>
+                                            <span class="star" data-rating="2">&#9733;</span>
+                                            <span class="star" data-rating="3">&#9733;</span>
+                                            <span class="star" data-rating="4">&#9733;</span>
+                                            <span class="star" data-rating="5">&#9733;</span>
+                                        </div>
+                                        <input type="hidden" name="score" id="rating">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reviewImage">이미지 업로드:</label>
+                                        <input type="file" id="reviewImage" name="multImage1">
+                                    </div>
+                                    <button class="btn_review" type="submit">리뷰 작성</button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- 리뷰 작성 모달 끝 -->
+
+                        <th:block th:each="order , index :${pageResponseDTO.dtoList}">
+                            <div id="popOrder" class="popup">
                                 <div>
                                     <nav>
                                         <h1>주문상세</h1>
@@ -155,7 +193,7 @@
                                                     <td class="confirm" style="text-align: center">
                                                         <ol>
                                                         <li th:href="@{#}" class="receive">수취확인</li>
-                                                        <li th:href="@{#}" class="review">상품평</li>
+                                                        <li th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
                                                         <li th:href="@{#}" class="refund">반품신청</li>
                                                         <li th:href="@{#}" class="exchange">교환신청</li>
                                                         </ol>
@@ -230,23 +268,204 @@
                                     }
                                 });
 
-                                        const detailOrders = document.querySelectorAll('.detailOrder');
-                                        const popOrder = document.querySelectorAll('#popOrder');
-                                        detailOrders.forEach(function (item , index){
-                                            item.onclick=function (){
-                                                    popOrder[index].classList.add('on');
+
+                                /*주문 상세 창 띄우기*/
+                                const detailOrders = document.querySelectorAll('.detailOrder');
+                                const popOrder = document.querySelectorAll('#popOrder');
+
+                                detailOrders.forEach(function (item , index){
+                                    item.onclick=function (){
+                                        popOrder[index].classList.add('on');
+                                    }
+                                })
+
+                                /*리뷰 창 띄우기 시작*/
+                                document.querySelectorAll('.review').forEach(function (link) {
+                                    link.addEventListener('click', function (event) {
+                                        const prodNo = link.getAttribute("data-prodno");
+                                        const uid = link.getAttribute("data-uid");
+
+                                        console.log(prodNo); // prodno 값 확인
+                                        console.log(uid);
+
+                                        // 필요한 동작을 수행합니다. 여기서는 팝업창을 없애는 코드를 추가합니다.
+                                        popOrder.forEach(function(pop) {
+                                            pop.classList.remove('on');
+                                        });
+
+                                        event.preventDefault();
+                                        openModal(uid,prodNo);
+
+                                    });
+
+                                });
+
+                                // 사용자가 모달 바깥을 클릭하면 모달이 닫히도록 설정
+                                window.onclick = function(event) {
+                                    var modal = document.getElementById('reviewModal');
+                                    var close = document.getElementById('close_btn');
+
+                                    if (event.target === modal || event.target===close) {
+                                        closeModal();
+                                    }
+                                }
+
+
+                                //모달 띄우기
+                                async function openModal(uid,prodno) {
+                                    document.getElementById('reviewModal').style.display = 'block';
+                                    setModalContent(uid,prodno);
+                                    //const data = await fetchGet(`/lotteshop/admin/seller/${uid}`);
+
+                                }
+
+                                // 모달 닫기
+                                function closeModal() {
+                                    document.getElementById('reviewModal').style.display = 'none';
+                                }
+
+                                // 모달 창이 열릴 때 사용자에게 보여줄 정보 설정
+                                function setModalContent(uid,prodno) {
+                                    document.getElementById('uid').value = uid;
+                                    document.getElementById('prodno').value = prodno;
+
+                                }
+
+
+
+                                //리뷰에 별 색상 스타일
+                                const stars = document.querySelectorAll('.star');
+                                const ratingInput = document.getElementById('rating');
+
+                                stars.forEach(function(star) {
+                                    star.addEventListener('click', function() {
+                                        const ratingValue = parseInt(star.getAttribute('data-rating'));
+                                        ratingInput.value = ratingValue;
+                                        stars.forEach(function(s, index) {
+                                            if (index < ratingValue) {
+                                                s.classList.add('active');
+                                            } else {
+                                                s.classList.remove('active');
                                             }
-                                        })
+                                        });
+                                    });
+                                });
                             }
                         </script>
-
-
 
                         <style>
                             .list-item {
                                 position: relative;
                                 top: 12px; /* 원하는 만큼 조절 */
                             }
+
+                            /* 모달 시작! */
+                            .modal {
+                                display: none;
+                                position: fixed;
+                                z-index: 1000;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                overflow: auto;
+                                background-color: rgba(0, 0, 0, 0.5);
+                            }
+
+                            .modal-content {
+                                background-color: #fff;
+                                margin: 15% auto;
+                                padding: 30px;
+                                border-radius: 10px;
+                                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                                width: 80%;
+                                max-width: 600px;
+                                position: relative;
+                            }
+
+                            h3 {
+                                font-size: 24px;
+                                font-weight: bold;
+                                color: #333;
+                                margin-bottom: 20px;
+                                text-align: center;
+                            }
+
+                            form {
+                                margin-top: 20px;
+                            }
+
+                            .form-group {
+                                margin-bottom: 20px;
+                            }
+
+                            label {
+                                font-size: 18px;
+                                color: #333;
+                                font-weight: bold;
+                                margin-bottom: 5px;
+                                display: block;
+                            }
+
+                            input[type="text"],
+                            input[type="number"],
+                            textarea {
+                                width: 100%;
+                                padding: 10px;
+                                font-size: 16px;
+                                border-radius: 5px;
+                                border: 1px solid #ccc;
+                            }
+
+                            textarea {
+                                resize: vertical;
+                            }
+
+                            button[type="submit"] {
+                                background-color: #007bff;
+                                color: #fff;
+                                border: none;
+                                padding: 10px 20px;
+                                font-size: 18px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                            }
+
+                            button[type="submit"]:hover {
+                                background-color: #0056b3;
+                            }
+
+                            .close_btn {
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                font-size: 24px;
+                                color: #aaa;
+                                cursor: pointer;
+                                transition: color 0.3s;
+                            }
+
+                            .close_btn:hover {
+                                color: #555;
+                            }
+
+
+                            .rating {
+                                display: inline-block;
+                                unicode-bidi: bidi-override;
+                                direction: ltr;/*좌->우로 별 채우기 (반대는 rtl)*/
+                            }
+
+                            .star {
+                                font-size: 25px;
+                                cursor: pointer;
+                                color: #ccc;
+                            }
+
+                            .star.active {
+                                color: gold;
+                            }
+                            /*모달 끝!*/
                         </style>
                          <th:block th:if="${pageResponseDTO.dtoList.size()==0}">
                              <h3 style="text-align: center">내역이 없습니다.</h3>
@@ -284,9 +503,9 @@
                                      <a  th:if="${pageResponseDTO.next}" th:href="@{/my/order( pg=${pageResponseDTO.end+1}, currentMonth=${pageResponseDTO.currentMonth}, oneWeek=${pageResponseDTO.oneWeek}, fifteen=${pageResponseDTO.fifteen})}" class="next">다음</a>
                                  </p>
                              </th:block>
-
-
                          </th:block>
+
+
 
                      </article>
 

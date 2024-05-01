@@ -143,18 +143,30 @@
 
                         }
                         const checkConfirm = document.getElementById('checkConfirm');
-                        checkConfirm.onclick=function (e){
+                        checkConfirm.onclick=async function (e) {
                             e.preventDefault();
                             let list = [];
-                            if(confirm('확인하시겠습니까?')){
+                            if (confirm('확인하시겠습니까?')) {
 
-                                checkboxs.forEach(function (item){
-                                    if(item.checked){
+                                checkboxs.forEach(function (item) {
+                                    if (item.checked) {
                                         list.push(item.getAttribute('data-order'));
                                     }
                                 })
                             }
-                            console.log(list);
+                            if(list.length <= 0){
+                                alert('체크 박스를 선택해주세요.')
+                            }else{
+                                const jsonData = {list: list};
+                                console.log(list);
+                                const result = await fetchPut('/lotteshop/admin/checkOrders', jsonData);
+
+                                if(result != null){
+                                    alert('확인되었습니다.');
+                                    location.reload();
+                                }
+                            }
+
                         }
 
                         //단일확인
@@ -163,10 +175,10 @@
                             item.onclick=async function (e) {
                                 e.preventDefault();
                                 if (confirm('확인하시겠습니까?')) {
-                                    const result = await fetchGet('lotteshop/admin/checkOrder?orderNo=' + item.getAttribute('data-order'));
+                                    const result = await fetchGet('/lotteshop/admin/checkOrder?orderNo=' + item.getAttribute('data-order'));
                                     if(result != null){
                                         alert('확인되었습니다.')
-
+                                        location.reload();
                                     }
                                 }
                             }
@@ -230,7 +242,7 @@
                 <div id="statusFilters">
                     <a th:href="@{/admin/orderList(state='주문 대기')}" style="border: 1px solid gray" >주문 대기</a>
                     <a th:href="@{/admin/orderList(state='배송 준비')}" style="border: 1px solid gray">배송 준비</a>
-                    <a th:href="@{/admin/orderList(state='배송중')}" style="border: 1px solid gray">배송중</a>
+                    <a th:href="@{/admin/orderList(state='배송 중')}" style="border: 1px solid gray">배송 중</a>
                     <a th:href="@{/admin/orderList(state='주문 취소')}" style="border: 1px solid gray">주문 취소</a>
                     <a th:href="@{/admin/orderList(state='환불')}" style="border: 1px solid gray" >환불</a>
                     <a th:href="@{/admin/orderList(state='모든')}" style="border: 1px solid gray">모든 주문 상품</a>
@@ -250,7 +262,8 @@
                                 <!-- <a th:href="@{/product/view(prodno=${products[index.index][0].prodNo})}" class="thumb"><img style="width: 100px; height: 100px" th:src="@{/uploads/__${products[index.index][0].image1}__}" alt=""></a>-->
                                 <ul>
                                     <li class="prodName">[[${products[index.index].prodName}]]</li>
-                                    <li> 주문번호 : [[${order.orderNo}]]</li>
+                                    <li> 주문번호 : [[${order.itemNo}]]</li>
+                                    <li th:if="${products[index.index].color != '' }"> 옵션 : [[${products[index.index].color}]] , [[${products[index.index].size}]]</li>
                                     <li> 수량 : [[${order.itemCount}]]</li>
                                     <li> 남은재고 : [[${products[index.index].prodStock}]]</li>
                                     <li class="list-item" >
@@ -260,8 +273,8 @@
                             </td>
                               <td class="status">[[${order.orderState}]]</td>
                              <td class="confirm" th:if="${pageResponseDTO.state == '주문 대기' || pageResponseDTO.state == '배송 준비'}">
-                                 <input  type="checkbox" id="checkbox" class="receive" th:data-order="${order.orderNo}">
-                                 <a th:href="@{/admin/checkOrder(orderNo=${order.orderNo})}"  id="checkMe" th:data-order="${order.orderNo}">확인</a></input>
+                                 <input  type="checkbox" id="checkbox" class="receive" th:data-order="${order.itemNo}">
+                                 <a th:href="@{/admin/checkOrder(orderNo=${order.orderNo})}"  id="checkMe" th:data-order="${order.itemNo}">확인</a></input>
                              </td>
 
                         </tr>

@@ -331,8 +331,16 @@ public class AdminController {
 
     //주문 바꾸기
     @GetMapping("/admin/checkOrder")
-    public void checkOrder(@RequestParam(name = "orderNo")int orderNo , Model model){
-        adminService.changeOrderState(orderNo);
+    public ResponseEntity checkOrder(@RequestParam(name = "orderNo")int orderNo , Model model){
+        log.info("들어옴!");
+        return adminService.changeOrderState(orderNo);
+
+    }
+    //주문 바꾸기들
+    @PutMapping("/admin/checkOrders")
+    public ResponseEntity checkOrders(@RequestBody Map<String , List<Integer>> map){
+        log.info(map.get("list").toString());
+        return adminService.changeOrderStates(map.get("list"));
 
     }
 }

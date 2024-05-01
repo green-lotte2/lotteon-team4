@@ -888,4 +888,21 @@ public class AdminService {
 
         return  ResponseEntity.ok().body(map);
     }
+
+    public ResponseEntity changeOrderStates(List<Integer> itemNos){
+        Map<String , String> map = new HashMap<>();
+        //주문대기이면 배송준비로
+        for(int orderNo : itemNos){
+            OrderItems orders = ordersItemRepository.findById(orderNo).get();
+            if(orders.getOrderState().equals("주문 대기")){
+                orders.setOrderState("배송 준비");
+            }else if(orders.getOrderState().equals("배송 준비")){
+                orders.setOrderState("배송 중");
+            }
+        }
+
+        map.put("data","1");
+
+        return  ResponseEntity.ok().body(map);
+    }
 }

@@ -193,9 +193,7 @@
                                                     <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" class="confirm" style="text-align: center">
                                                         <ol>
                                                         <li th:href="@{#}" class="receive">수취확인</li>
-
-                                                        <li  th:if="${orderItem.orderState == '구매 확정'}" th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
-                                                        <li th:href="@{#}" class="refund">반품신청</li>
+                                                        <li  th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
                                                         <li th:href="@{#}" class="exchange">교환신청</li>
                                                         <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
                                                         </ol>

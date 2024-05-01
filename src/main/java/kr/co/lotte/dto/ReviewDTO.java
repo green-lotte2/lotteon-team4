@@ -29,5 +29,7 @@ public class ReviewDTO {
     // 리뷰 조회용
     private String nick;
 
+    private String prodname;
+
 
 }

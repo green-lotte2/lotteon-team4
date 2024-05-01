@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface MemberRepositoryCustom {
     public Page<Tuple> selectsUsers(UserPageRequestDTO userPageRequestDTO, Pageable pageable);
     public Tuple selectUser(String uid);
+
+
 }

@@ -4,15 +4,10 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
-import kr.co.lotte.dto.SellerDTO;
-import kr.co.lotte.dto.TermsDTO;
-import kr.co.lotte.dto.UserDTO;
+import kr.co.lotte.dto.*;
 
-import kr.co.lotte.dto.UserUpdateDTO;
-import kr.co.lotte.entity.Points;
+import kr.co.lotte.entity.*;
 
-import kr.co.lotte.entity.Seller;
-import kr.co.lotte.entity.User;
 import kr.co.lotte.mapper.MemberMapper;
 import kr.co.lotte.mapper.TermsMapper;
 import kr.co.lotte.repository.MemberRepository;
@@ -20,6 +15,7 @@ import kr.co.lotte.repository.PointsRepository;
 import kr.co.lotte.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +23,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -169,6 +164,54 @@ public class MemberService {
         userDTO.setPass(encoded);
 
         memberMapper.updateUserPassword(userDTO);
+    }
+
+    public void rRegister(ReviewDTO reviewDTO){
+
+        Review review = modelMapper.map(reviewDTO, Review.class);
+
+        MultipartFile image1 = reviewDTO.getMultImage1();
+
+        ReviewImgDTO uploadImgDTO = uploadReviewImage(image1);
+    }
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
+    public ReviewImgDTO uploadReviewImage(MultipartFile file) {
+        // 파일을 저장할 경로 설정
+
+        String path = new java.io.File(fileUploadPath).getAbsolutePath();
+
+        if (!file.isEmpty()) {
+            try {
+                // 원본 파일 이름과 확장자 추출
+                String originalFileName = file.getOriginalFilename();//원본 파일 네임
+                String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+                // 저장될 파일 이름 생성
+                String sName = UUID.randomUUID().toString() + extension;//변환된 파일 이름
+
+
+                // 파일 저장 경로 설정
+                java.io.File dest = new File(path, sName);
+
+                        Thumbnails.of(file.getInputStream())
+                                .forceSize(810, 86)//여기를 size에서 forceSize로 강제 사이즈 변환
+                                .toFile(dest);
+
+
+                // 배너 이미지 정보를 담은 DTO 생성 및 반환
+                return ReviewImgDTO.builder()
+                        .oName(originalFileName)
+                        .sName(sName)
+                        .build();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null; // 업로드 실패 시 null 반환
     }
 }
 

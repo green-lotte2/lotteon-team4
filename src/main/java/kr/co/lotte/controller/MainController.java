@@ -34,7 +34,9 @@ public class MainController {
     @GetMapping(value = {"/", "/index"})
     public String index(Model model){
 
+
           mainService.upDateVisitor();
+
 
         List<BannerDTO> banner1 = adminService.findMAIN1("MAIN1");
         List<BannerDTO> banner2 = adminService.findMAIN2("MAIN2");

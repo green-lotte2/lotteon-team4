@@ -69,6 +69,8 @@ public class AdminService {
     @Autowired
     private VisitorRepository visitorRepository;
 
+    private final Seller_statusRepository seller_statusRepository;
+
     //mainPage 띄우자
     public  Map<String , Integer> Formain(){
         Map<String , Integer> map = new HashMap<>();
@@ -279,8 +281,8 @@ public class AdminService {
     }
 
 
+    //여기 하다가 말았음!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //(아래는)파일 크기 조정
-
     @Value("${file.upload.path}")
     private String fileUploadPath;
 
@@ -875,6 +877,49 @@ public class AdminService {
     }
 
 
+
+    //판매현황 출력
+    public StatusPageResponseDTO seller_status(CsFaqPageRequestDTO pageRequestDTO){
+
+
+        Pageable pageable = pageRequestDTO.getPageable("status_id");
+
+       Page<Tuple> pageSeller_Status = seller_statusRepository.seller_status(pageRequestDTO ,pageable);
+
+       List<Seller_statusDTO> dtoList = pageSeller_Status.getContent().stream()
+               .map(tuple -> {
+
+                   log.info("tuple : " + tuple);
+
+                   Seller_statusDTO dto = new Seller_statusDTO();
+                   dto.setSellerUid((String) tuple.get(0,String.class)); // 첫 번째 요소는 문자열로 캐스팅하여 id에 설정
+                   dto.setOrderCount(tuple.get(1,Long.class)); // 두 번째 요소는 정수로 캐스팅하여 status에 설정
+                   dto.setTotalPrice(tuple.get(2,Integer.class));
+
+                   log.info("service - page - sellerDTO : " + dto);
+
+                   return dto;
+               })
+               .toList();
+
+       int total = (int) pageSeller_Status.getTotalElements();
+
+       return StatusPageResponseDTO.builder()
+               .pageRequestDTO(pageRequestDTO)
+               .dtoList(dtoList)
+               .total(total)
+               .build();
+    }
+
+    //판매자 아이디를 이용해 판매자 정보 출력
+    public SellerDTO findSellerInfo(String uid){
+
+        Optional<Seller> seller  = sellerRepository.findById(uid);
+
+        SellerDTO sellerDTO = modelMapper.map(seller, SellerDTO.class);
+
+        return sellerDTO;
+
     //주문상태변경
     public ResponseEntity changeOrderState(int orderNo){
         Map<String , String> map = new HashMap<>();
@@ -1017,6 +1062,7 @@ public class AdminService {
             map.put("price", yearPrice);
         }
         return map;
+
 
     }
 }

@@ -1,6 +1,7 @@
 package kr.co.lotte.controller;
 
 
+import com.querydsl.core.Tuple;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
@@ -329,7 +330,41 @@ public class AdminController {
         return "/admin/order/orderView";
     }
 
-    //주문 바꾸기
+
+
+
+
+    //판매자 현황 띄우기
+    @GetMapping("/admin/seller/seller_status")
+    public String seller_status(Model model,CsFaqPageRequestDTO pageRequestDTO){
+
+        StatusPageResponseDTO pageResponseDTO =null;
+
+        pageResponseDTO = adminService.seller_status(pageRequestDTO);
+
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        log.info("adminController - seller_status : "+pageResponseDTO.toString());
+
+
+        return "/admin/seller/seller_status";
+    }
+
+    //판매자 모달창에 띄울 정보들
+    @GetMapping("/admin/seller/{uid}")
+    public ResponseEntity<?> modal(@PathVariable("uid")String uid){
+
+
+        SellerDTO sellerDTO = adminService.findSellerInfo(uid);//판매자 정보
+
+        log.info("adminController - modal - sellerDTO : "+sellerDTO);
+
+        // Json 생성
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", sellerDTO);
+
+        return ResponseEntity.ok().body(resultMap);
+
     @GetMapping("/admin/checkOrder")
     public ResponseEntity checkOrder(@RequestParam(name = "orderNo")int orderNo , Model model){
         log.info("들어옴!");
@@ -393,5 +428,6 @@ public class AdminController {
 
          */
         return "/admin/order/sale";
+
     }
 }

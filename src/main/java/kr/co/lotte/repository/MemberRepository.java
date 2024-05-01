@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +25,6 @@ public interface MemberRepository extends JpaRepository<User, String>, MemberRep
 
     public Page<Tuple> selectsUsers(UserPageRequestDTO userPageRequestDTO, Pageable pageable);
     public Tuple selectUser(String uid);
+
+    List<User> findByRegDateAfter(LocalDate regDate);
 }

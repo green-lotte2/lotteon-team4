@@ -10,6 +10,7 @@ import kr.co.lotte.dto.ProductsPageResponseDTO;
 import kr.co.lotte.entity.Products;
 import kr.co.lotte.entity.SubProducts;
 import kr.co.lotte.entity.Visitor;
+import kr.co.lotte.repository.LikeRepository;
 import kr.co.lotte.repository.OrdersRepository;
 import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.repository.VisitorRepository;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,6 +40,8 @@ public class MainService {
     private VisitorRepository visitorRepository;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private LikeRepository likeRepository;
 
     //히트상품 (많이 판매된 순)
     public List<Products> selectHitProducts(){
@@ -85,6 +89,18 @@ public class MainService {
             visitor.setVisitCount(1);
             visitorRepository.save(visitor);
         }
+    }
+
+
+    public List<Products> hahaha (List<Products> products, String uid){
+        for (Products product : products){
+            if(likeRepository.findByUserIdAndProdNo(uid, product.getProdNo()).isEmpty()){
+                product.setLikeState(0);
+            }else{
+                product.setLikeState(1);
+            }
+        }
+        return products;
     }
 
 }

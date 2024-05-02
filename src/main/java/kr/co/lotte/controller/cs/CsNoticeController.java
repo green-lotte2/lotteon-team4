@@ -8,6 +8,7 @@ import kr.co.lotte.service.cs.CsNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class CsNoticeController {
 
     private static final Logger log = LoggerFactory.getLogger(CsNoticeController.class);
+    @Autowired
     private final CsNoticeService csNoticeService;
 
     // cs.notice.list
@@ -47,12 +49,7 @@ public class CsNoticeController {
     }
 
 
-    // admin notice 뷰 페이지
-    @GetMapping("/admin/cs/notice/view")
-    public String adminNoticeView(){
-
-        return "/admin/cs/notice/view";
-    }
+ 
 
     //admin.cs.notice.reg 폼 불러오기
     @GetMapping("/admin/cs/notice/register")

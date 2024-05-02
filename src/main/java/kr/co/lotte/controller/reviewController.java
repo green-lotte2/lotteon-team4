@@ -1,7 +1,10 @@
 package kr.co.lotte.controller;
 
+import com.querydsl.core.Tuple;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.lotte.dto.ReviewDTO;
+import kr.co.lotte.dto.ReviewPageRequestDTO;
+import kr.co.lotte.dto.ReviewPageResponseDTO;
 import kr.co.lotte.entity.Review;
 import kr.co.lotte.service.MemberService;
 import kr.co.lotte.service.ReviewService;
@@ -57,15 +60,17 @@ public class reviewController {
 
     //내가 작성했던 리뷰들 다 보여주기
     @GetMapping("/my/review")
-    public String myReview(@RequestParam("uid")String uid, Model model) {
+    public String myReview(@RequestParam("uid")String uid, Model model, ReviewPageRequestDTO ReviewPageRequestDTO) {
 
         log.info("myController - myReview - uid={}", uid);
 
-        List<Review> reviews = reviewService.findReview(uid);
+        ReviewPageResponseDTO responseDTO = reviewService.findReview(uid, ReviewPageRequestDTO);
 
-        log.info("mycontroller - myreview - reviews={}", reviews);
+        log.info("mycontroller - myreview - reviews={}", responseDTO.getDtoList2());
 
-        model.addAttribute("reviews", reviews);
+        log.info("mycontroller - myreview - responseDTO={}", responseDTO);
+
+        model.addAttribute("reviews", responseDTO);
 
         return "/my/review";
     }

@@ -27,7 +27,6 @@ public class Review {
     @Transient
     private String nick;
 
-    @Transient
     private String prodname;
 
     @CreationTimestamp

@@ -6,9 +6,11 @@ import kr.co.lotte.dto.OrdersPageResponseDTO;
 import kr.co.lotte.dto.PointsPageRequestDTO;
 import kr.co.lotte.entity.OrderItems;
 import kr.co.lotte.entity.Orders;
+import kr.co.lotte.entity.Review;
 import kr.co.lotte.security.MyUserDetails;
 import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MyServiceForGahee;
+import kr.co.lotte.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyControllerForGahee {
     private final AdminService adminService;
+    private final ReviewService reviewService;
     private final MyServiceForGahee myServiceForGahee;
 
     @GetMapping("/my/coupon")
@@ -41,6 +44,16 @@ public class MyControllerForGahee {
         model.addAttribute("points", myServiceForGahee.forPoint(uid));
         //최근 주문 내역
 
+
+
+
+
+        //상품평 출력
+        List<Review> reviews= reviewService.find_five(uid);
+        log.info("reviews : "+reviews);
+        model.addAttribute("reviews", reviews);
+
+        //배너 출력
         List<BannerDTO> banner5 = adminService.findMY1("MY1");
         log.info("banner5: {}", banner5);
         model.addAttribute("banner5", banner5);

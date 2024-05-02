@@ -47,6 +47,7 @@ public class MainController {
         model.addAttribute("prodDiscount", mainService.selectDiscountProducts());
 
 
+
         log.info("AdminController - banner : "+banner1.toString());
 
         model.addAttribute("banner1", banner1);
@@ -71,4 +72,6 @@ public class MainController {
         result.put("data","1");
         return ResponseEntity.ok().body(result);
     }
+
+
 }

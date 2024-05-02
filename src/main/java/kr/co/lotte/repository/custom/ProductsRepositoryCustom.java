@@ -25,5 +25,7 @@ public interface ProductsRepositoryCustom  {
 
     public Page<Products> searchAllProductsForList(MainProductsPageRequestDTO pageRequestDTO, Pageable pageable);
 
+
     public Page<Like> searchAllLike(ProductsPageRequestDTO pageRequestDTO, Pageable pageable, String uid);
+
 }

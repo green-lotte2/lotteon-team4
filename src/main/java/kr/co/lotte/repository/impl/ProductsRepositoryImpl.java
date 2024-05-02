@@ -136,6 +136,7 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+
     @Override
     public Page<Like> searchAllLike(ProductsPageRequestDTO pageRequestDTO, Pageable pageable, String uid) {
         QueryResults<Like> results = jpaQueryFactory.select(qLike)
@@ -149,6 +150,7 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);
     }
+
 
 
 }

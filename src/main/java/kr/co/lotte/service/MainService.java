@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,7 @@ import java.util.List;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
+@Transactional
 public class MainService {
     @Autowired
     private ProductsRepository productsRepository;
@@ -89,6 +91,7 @@ public class MainService {
         }
     }
 
+
     public List<Products> hahaha (List<Products> products, String uid){
         for (Products product : products){
             if(likeRepository.findByUserIdAndProdNo(uid, product.getProdNo()).isEmpty()){
@@ -99,4 +102,5 @@ public class MainService {
         }
         return products;
     }
+
 }

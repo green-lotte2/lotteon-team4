@@ -4,9 +4,12 @@ package kr.co.lotte.repository.impl;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kr.co.lotte.dto.ReviewDTO;
 import kr.co.lotte.dto.ReviewPageRequestDTO;
+import kr.co.lotte.entity.QProducts;
 import kr.co.lotte.entity.QReview;
 import kr.co.lotte.entity.QUser;
+import kr.co.lotte.entity.Review;
 import kr.co.lotte.repository.custom.ReviewRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +26,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
     private final QReview qReview = QReview.review;
     private final QUser qUser = QUser.user;
+    private final QProducts qProducts = QProducts.products;
 
     // market/newview 리뷰 목록 조회
     @Override
@@ -79,5 +84,25 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
         log.info("리뷰 score별 count 조회 : " + results);
         return results;
     }
+    public Page<Review> findByUid(String uid, ReviewPageRequestDTO pageRequestDTO, Pageable pageable){
 
+
+        log.info("review_impl - uid : "+uid);
+        log.info("review_impl - pageRequestDTO : "+pageRequestDTO);
+        log.info("review_impl - pageable : "+pageable);
+
+        //리뷰테이블의 결과를 출력 후 페이지네이션
+        List<Review> results = jpaQueryFactory
+                .select(qReview)
+                .from(qReview)
+                .where(qReview.uid.eq(uid))
+                .fetch();
+
+        long total = results.size();
+
+        log.info("review_impl - total : "+total);
+
+        // 페이지 처리용 page 객체 리턴
+        return new PageImpl<>(results, pageable, total);
+    }
 }

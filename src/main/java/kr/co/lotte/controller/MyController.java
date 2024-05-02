@@ -1,19 +1,28 @@
 package kr.co.lotte.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.lotte.dto.ReviewDTO;
 import kr.co.lotte.dto.UserDTO;
 import kr.co.lotte.dto.UserUpdateDTO;
+import kr.co.lotte.entity.Review;
 import kr.co.lotte.entity.User;
 import kr.co.lotte.repository.MemberRepository;
 import kr.co.lotte.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.LoginContext;
+import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -68,15 +77,5 @@ public class MyController {
         return memberService.updateUserAddr(userDTO);
     }
 
-
-
-    //리뷰 등록
-    @ResponseBody
-    @PostMapping("/my/order/write_review")
-    public void write_review(ReviewDTO reviewDTO){
-
-        memberService.rRegister(reviewDTO);
-
-    }
 
 }

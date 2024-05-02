@@ -35,6 +35,7 @@ public class MainController {
     public String index(Model model){
 
 
+
           mainService.upDateVisitor();
 
 
@@ -45,6 +46,7 @@ public class MainController {
         model.addAttribute("prodRecommend", mainService.selectRecomendProducts());
         model.addAttribute("prodRecent", mainService.selectRecentProducts());
         model.addAttribute("prodDiscount", mainService.selectDiscountProducts());
+
 
 
         log.info("AdminController - banner : "+banner1.toString());
@@ -71,4 +73,6 @@ public class MainController {
         result.put("data","1");
         return ResponseEntity.ok().body(result);
     }
+
+
 }

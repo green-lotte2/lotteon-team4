@@ -250,6 +250,7 @@ public class MarketController {
 
     }
 
+
     //like
     @GetMapping("/product/like")
     public ResponseEntity like(@RequestParam(name = "userId") String uid , @RequestParam(name = "prodNo") int prodNo){
@@ -263,6 +264,7 @@ public class MarketController {
     public ResponseEntity likeSearch(@RequestParam(name = "userId") String uid , @RequestParam(name = "prodNo") int prodNo){
         return marketService.search(uid,prodNo);
     }
+
 
 
 

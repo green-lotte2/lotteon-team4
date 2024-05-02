@@ -10,9 +10,7 @@ import kr.co.lotte.entity.*;
 
 import kr.co.lotte.mapper.MemberMapper;
 import kr.co.lotte.mapper.TermsMapper;
-import kr.co.lotte.repository.MemberRepository;
-import kr.co.lotte.repository.PointsRepository;
-import kr.co.lotte.repository.SellerRepository;
+import kr.co.lotte.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -48,6 +46,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TermsMapper termsMapper;
     private final PointsRepository pointsRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewImgRepository reviewImgRepository;
 
 
     //회원 등록이 되어 있는지 확인하는 서비스(0또는 1)
@@ -166,53 +166,6 @@ public class MemberService {
         memberMapper.updateUserPassword(userDTO);
     }
 
-    public void rRegister(ReviewDTO reviewDTO){
-
-        Review review = modelMapper.map(reviewDTO, Review.class);
-
-        MultipartFile image1 = reviewDTO.getMultImage1();
-
-        ReviewImgDTO uploadImgDTO = uploadReviewImage(image1);
-    }
-
-    @Value("${file.upload.path}")
-    private String fileUploadPath;
-    public ReviewImgDTO uploadReviewImage(MultipartFile file) {
-        // 파일을 저장할 경로 설정
-
-        String path = new java.io.File(fileUploadPath).getAbsolutePath();
-
-        if (!file.isEmpty()) {
-            try {
-                // 원본 파일 이름과 확장자 추출
-                String originalFileName = file.getOriginalFilename();//원본 파일 네임
-                String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-                // 저장될 파일 이름 생성
-                String sName = UUID.randomUUID().toString() + extension;//변환된 파일 이름
-
-
-                // 파일 저장 경로 설정
-                java.io.File dest = new File(path, sName);
-
-                        Thumbnails.of(file.getInputStream())
-                                .forceSize(810, 86)//여기를 size에서 forceSize로 강제 사이즈 변환
-                                .toFile(dest);
-
-
-                // 배너 이미지 정보를 담은 DTO 생성 및 반환
-                return ReviewImgDTO.builder()
-                        .oName(originalFileName)
-                        .sName(sName)
-                        .build();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null; // 업로드 실패 시 null 반환
-    }
 }
 
 

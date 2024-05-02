@@ -27,6 +27,8 @@ public class Review {
     @Transient
     private String nick;
 
+    private String prodname;
+
     @CreationTimestamp
     private LocalDateTime rdate;
 }

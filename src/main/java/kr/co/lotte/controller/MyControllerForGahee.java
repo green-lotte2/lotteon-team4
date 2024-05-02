@@ -1,9 +1,6 @@
 package kr.co.lotte.controller;
 
-import kr.co.lotte.dto.BannerDTO;
-import kr.co.lotte.dto.OrdersPageRequestDTO;
-import kr.co.lotte.dto.OrdersPageResponseDTO;
-import kr.co.lotte.dto.PointsPageRequestDTO;
+import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.OrderItems;
 import kr.co.lotte.entity.Orders;
 import kr.co.lotte.security.MyUserDetails;
@@ -11,13 +8,15 @@ import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MyServiceForGahee;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -73,6 +72,32 @@ public class MyControllerForGahee {
 
         return "/my/point";
     }
+    @GetMapping("/my/favorite")
+    public String myFavorite(Model model , Authentication authentication , ProductsPageRequestDTO requestDTO) {
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        String uid = userDetails.getUser().getUid();
+        ProductsPageResponseDTO pageResponseDTO = myServiceForGahee.searchLikes(requestDTO, uid);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+        model.addAttribute("productList" , myServiceForGahee.searchProductsLike(pageResponseDTO.getDtoListLikes()));
+        return "/my/favorite";
+    }
+
+    @GetMapping("/my/deleteLike")
+    @ResponseBody
+    public ResponseEntity deleteLike(@RequestParam(name = "prodNo") int prodNo , Authentication authentication ){
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        String uid = userDetails.getUser().getUid();
+        return  myServiceForGahee.deleteLike(uid, prodNo);
+    }
+
+    @PostMapping("/my/deleteLike")
+    @ResponseBody
+    public ResponseEntity deleteLikes(@RequestBody Map<String, List<Integer> > map , Authentication authentication ){
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        String uid = userDetails.getUser().getUid();
+         List<Integer> prodNos = map.get("prodNo");
+        return  myServiceForGahee.deleteLikes(uid, prodNos);
+    }
 
     @GetMapping("/my/qna")
     public String myQna() {
@@ -83,5 +108,7 @@ public class MyControllerForGahee {
     public String myReview() {
         return "/my/review";
     }
+
+
 
 }

@@ -25,7 +25,7 @@ import java.util.List;
 public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
     private  QProducts qProducts = QProducts.products;
     private  QSubProducts subProducts = QSubProducts.subProducts;
-
+    private QLike qLike = QLike.like;
     private final QProdImage qImages = QProdImage.prodImage;
     private final QSeller qSeller = QSeller.seller;
 
@@ -132,6 +132,20 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
                     .fetchResults();
         }
         List<Products> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<Like> searchAllLike(ProductsPageRequestDTO pageRequestDTO, Pageable pageable, String uid) {
+        QueryResults<Like> results = jpaQueryFactory.select(qLike)
+                .from(qLike)
+                .where(qLike.userId.eq(uid))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<Like> content = results.getResults();
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);
     }

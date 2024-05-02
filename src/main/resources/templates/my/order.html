@@ -9,7 +9,7 @@
                 <ul>
                     <span class="menu_else"></span>
                     <li class="on"><a th:href="@{/my/order}">전체주문내역</a></li>
-                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/favorite}">관심상품</a></li>
                     <li><a th:href="@{/my/point}">포인트내역</a></li>
                     <li><a th:href="@{/my/coupon}">쿠폰</a></li>
                     <li><a th:href="@{/my/review}">나의리뷰</a></li>
@@ -190,19 +190,19 @@
                                                         </ol>
                                                     </td>
                                                     <td class="status">[[${orderItem.orderState}]]</td>
-                                                    <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" class="confirm" style="text-align: center">
-                                                        <ol>
-                                                        <li th:href="@{#}" class="receive">수취확인</li>
-                                                        <li  th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
-                                                        <li th:href="@{#}" class="exchange">교환신청</li>
-                                                        <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
-                                                        </ol>
-                                                    </td>
+
                                                     <td th:if="${orderItem.orderState == '주문 취소' || orderItem.orderState == '환불'}">
                                                         <ol>
                                                             <li> </li>
 
-                                                        </ol>
+                                                        </ol> <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" class="confirm" style="text-align: center">
+                                                    <ol>
+                                                        <li th:href="@{#}" class="receive">수취확인</li>
+                                                        <li  th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
+                                                        <li th:href="@{#}" class="exchange">교환신청</li>
+                                                        <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
+                                                    </ol>
+                                                </td>
                                                     </td>
                                                 </tr>
 
@@ -525,7 +525,7 @@
                              <th:block th:if="${pageResponseDTO.dateBegin == null || pageResponseDTO.dateBegin == ''}">
                                  <p class="page">
 
-                                     <a  th:if="${pageResponseDTO.prev}" th:href="@{/my/order(pg=${pageResponseDTO.start - 1}, currentMonth=${pageResponseDTO.currentMonth}, oneWeek=${pageResponseDTO.oneWeek})}" class="prev">이전</a>
+                                     <a  th:if="${pageResponseDTO.prev}" th:href="@{/my/order(pg=${pageResponseDTO.start - 1}, currentMonth=${pageResponseDTO.currentMonth}, oneWeek=${pageResponseDTO.oneWeek}, fifteen=${pageResponseDTO.fifteen})}" class="prev">이전</a>
                                      <th:block th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
                                          <th:block th:if="${num == pageResponseDTO.pg}">
                                              <a th:href="@{/my/order( pg=${num } , currentMonth=${pageResponseDTO.currentMonth}, oneWeek=${pageResponseDTO.oneWeek}, fifteen=${pageResponseDTO.fifteen})}" class="on">[[${num}]]</a>

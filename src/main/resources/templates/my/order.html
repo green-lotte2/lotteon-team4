@@ -12,7 +12,7 @@
                     <!--<li><a href="./favorite.html">관심상품</a></li>-->
                     <li><a th:href="@{/my/point}">포인트내역</a></li>
                     <li><a th:href="@{/my/coupon}">쿠폰</a></li>
-                    <li><a th:href="@{/my/review}">나의리뷰</a></li>
+                    <li ><a th:href="@{/my/review/view(uid=${#authentication.principal.username})}">나의리뷰</a></li>
                     <li><a th:href="@{/my/qna}">문의하기</a></li>
                     <li><a th:href="@{/my/info}">나의설정</a></li>
                 </ul>
@@ -111,6 +111,7 @@
                                 <h3>리뷰 작성</h3>
                                 <form th:action="@{/my/order/write_review}" id="reviewForm" method="post" enctype="multipart/form-data">
                                     <input type="hidden" id="prodno" name="prodno"/>
+                                    <input type="hidden" id="prodname" name="prodname"/>
                                     <input type="hidden" id="uid" name="uid"/>
                                     <div class="form-group">
                                         <label for="reviewTitle">제목:</label>
@@ -193,7 +194,7 @@
                                                     <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" class="confirm" style="text-align: center">
                                                         <ol>
                                                         <li th:href="@{#}" class="receive">수취확인</li>
-                                                        <li  th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}" class="review"  th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
+                                                        <li  th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}" class="review" th:data-prodname="${products[index.index][orderindex.index].prodName}" th:data-uid ="${#authentication.principal.user.uid}" th:data-prodno="${products[index.index][orderindex.index].prodNo}">상품평</li><!--구매확정이 되면 상품평 입력이 가능함-->
                                                         <li th:href="@{#}" class="exchange">교환신청</li>
                                                         <li id="delete" th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}" th:data-itemNo="${orderItem.itemNo}" class="refund">환불(주문취소)신청</li>
                                                         </ol>
@@ -317,11 +318,13 @@
                                 /*리뷰 창 띄우기 시작*/
                                 document.querySelectorAll('.review').forEach(function (link) {
                                     link.addEventListener('click', function (event) {
-                                        const prodNo = link.getAttribute("data-prodno");
+                                        const prodno = link.getAttribute("data-prodno");
                                         const uid = link.getAttribute("data-uid");
+                                        const prodname = link.getAttribute("data-prodname");
 
-                                        console.log(prodNo); // prodno 값 확인
+                                        console.log(prodno); // prodno 값 확인
                                         console.log(uid);
+                                        console.log(prodname);
 
                                         // 필요한 동작을 수행합니다. 여기서는 팝업창을 없애는 코드를 추가합니다.
                                         popOrder.forEach(function(pop) {
@@ -329,11 +332,12 @@
                                         });
 
                                         event.preventDefault();
-                                        openModal(uid,prodNo);
+                                        openModal(uid,prodno,prodname);
 
                                     });
 
                                 });
+
 
                                 // 사용자가 모달 바깥을 클릭하면 모달이 닫히도록 설정
                                 window.onclick = function(event) {
@@ -347,11 +351,9 @@
 
 
                                 //모달 띄우기
-                                async function openModal(uid,prodno) {
+                                async function openModal(uid,prodno,prodname) {
                                     document.getElementById('reviewModal').style.display = 'block';
-                                    setModalContent(uid,prodno);
-                                    //const data = await fetchGet(`/lotteshop/admin/seller/${uid}`);
-
+                                    setModalContent(uid,prodno,prodname);
                                 }
 
                                 // 모달 닫기
@@ -360,13 +362,12 @@
                                 }
 
                                 // 모달 창이 열릴 때 사용자에게 보여줄 정보 설정
-                                function setModalContent(uid,prodno) {
+                                function setModalContent(uid,prodno,prodname) {
                                     document.getElementById('uid').value = uid;
                                     document.getElementById('prodno').value = prodno;
+                                    document.getElementById('prodname').value = prodname;
 
                                 }
-
-
 
                                 //리뷰에 별 색상 스타일
                                 const stars = document.querySelectorAll('.star');

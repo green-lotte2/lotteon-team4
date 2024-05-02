@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/layout/adminLayout.html}">
+
+<section id="admin-cs-faq" layout:fragment="content">
+    <script>
+        // 폼 제출
+        window.onload =function (){
+
+        }
+        function submitForm(){
+            if(confirm('수정하시겠습니까?')){
+                document.getElementById("noticeModifyForm").submit();
+            }
+        }
+    </script>
+    <nav>
+        <h3>NOTICE 수정</h3>
+        <p>
+            HOME > 고객센터 > <strong>NOTICE 관리</strong>
+        </p>
+    </nav>
+    <section class="faq-modify">
+        <article>
+            <form id="noticeModifyForm" th:action="@{/admin/cs/notice/modify}" method="post">
+                <input type="hidden" name="no" th:value="${csnotice.no}">
+                <table class="noticeModify">
+                    <tr>
+                        <td>유형</td>
+                        <td>
+                            <select name="noticeCate">
+                                <option value="customer">[고객서비스]</option>
+                                <option value="event">[이벤트당첨]</option>
+                                <option value="safe">[안전거래]</option>
+                                <option value="danger">[위해상품]</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>제목:</td>
+                        <td class="faq-title">
+                            <input type="text" name="title" style="width: 200px; height: 33px; margin-bottom: 4px;" placeholder="제목을 입력하세요."
+                                   th:value="${csnotice.title}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>내용:</td>
+                        <td>
+                            <textarea name="noticeContent" cols="120" rows="20" placeholder="내용을 입력하세요."
+                                    th:text="${csnotice.content}"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <a th:href="@{/admin/cs/notice/list}" class="cs-write">취소하기</a>
+            <button onclick="submitForm()">수정하기</button>
+        </article>
+    </section>
+</section>
+</html>

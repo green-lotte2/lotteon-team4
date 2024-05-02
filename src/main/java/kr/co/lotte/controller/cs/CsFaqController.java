@@ -36,6 +36,20 @@ public class CsFaqController {
         return "/admin/cs/faq/list";
     }
 
+
+    // admin.faq.list 특정 게시글 출력
+    /*
+    @GetMapping("/admin/cs/faq/list")
+    @ResponseBody
+    public List<CsFaq> getFaqsCate1and2(@RequestParam("cate1")String cate1,
+                                        @RequestParam("cate2")String cate2){
+        log.info("cate1 나와라");
+        log.info("cate2 나와라");
+        return csFaqService.getFaqsCate1and2(cate1, cate2);
+    }
+     */
+
+
     // admin.cs.faq 수정 폼 출력
     @GetMapping("/admin/cs/faq/{no}")
     public String adminFaqModify(@PathVariable int no, Model model){

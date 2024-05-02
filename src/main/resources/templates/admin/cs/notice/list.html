@@ -87,7 +87,9 @@
                         <td th:if="${csNotice.cate2 == 'check'}" style="white-space: nowrap;">점검</td>
                         <td th:if="${csNotice.cate2 == 'news'}" style="white-space: nowrap;">뉴스</td>
 
+
                         <td><a th:href="@{/admin/cs/notice/view(no=${csNotice.no})}">[[${csNotice.title}]]</a></td>
+
                         <td>[[${csNotice.content}]]</td>
                         <td>
                             <a th:href="@{/admin/cs/notice/modify(no=${csNotice.no})}">[수정]</a>

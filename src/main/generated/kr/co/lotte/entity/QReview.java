@@ -21,6 +21,8 @@ public class QReview extends EntityPathBase<Review> {
 
     public final StringPath comment = createString("comment");
 
+    public final StringPath prodname = createString("prodname");
+
     public final NumberPath<Integer> prodno = createNumber("prodno", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> rdate = createDateTime("rdate", java.time.LocalDateTime.class);

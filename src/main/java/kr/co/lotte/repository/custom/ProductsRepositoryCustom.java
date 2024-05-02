@@ -22,4 +22,5 @@ public interface ProductsRepositoryCustom  {
     public Tuple serachOnlyOne(int subProductNo);
 
     public Page<Products> searchAllProductsForList(MainProductsPageRequestDTO pageRequestDTO, Pageable pageable);
+
 }

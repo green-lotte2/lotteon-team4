@@ -33,7 +33,12 @@ public class MainController {
 
     @GetMapping(value = {"/", "/index"})
     public String index(Model model){
-        //mainService.upDateVisitor();
+
+
+
+          mainService.upDateVisitor();
+
+
         List<BannerDTO> banner1 = adminService.findMAIN1("MAIN1");
         List<BannerDTO> banner2 = adminService.findMAIN2("MAIN2");
         // List<BannerDTO> banner3 = adminService.findPRODUCT1("PRODUCT1");
@@ -41,6 +46,7 @@ public class MainController {
         model.addAttribute("prodRecommend", mainService.selectRecomendProducts());
         model.addAttribute("prodRecent", mainService.selectRecentProducts());
         model.addAttribute("prodDiscount", mainService.selectDiscountProducts());
+
 
 
         log.info("AdminController - banner : "+banner1.toString());
@@ -67,4 +73,6 @@ public class MainController {
         result.put("data","1");
         return ResponseEntity.ok().body(result);
     }
+
+
 }

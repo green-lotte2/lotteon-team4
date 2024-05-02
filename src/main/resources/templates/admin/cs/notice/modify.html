@@ -23,6 +23,7 @@
     </nav>
     <section class="faq-modify">
         <article>
+
             <form id="noticeModifyForm" th:action="@{/admin/cs/notice/modify}" method="post">
                 <input type="hidden" name="no" th:value="${csnotice.no}">
                 <table class="noticeModify">
@@ -42,19 +43,24 @@
                         <td class="faq-title">
                             <input type="text" name="title" style="width: 200px; height: 33px; margin-bottom: 4px;" placeholder="제목을 입력하세요."
                                    th:value="${csnotice.title}"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td>내용:</td>
                         <td>
+
                             <textarea name="noticeContent" cols="120" rows="20" placeholder="내용을 입력하세요."
                                     th:text="${csnotice.content}"></textarea>
+
                         </td>
                     </tr>
                 </table>
             </form>
+
             <a th:href="@{/admin/cs/notice/list}" class="cs-write">취소하기</a>
             <button onclick="submitForm()">수정하기</button>
+
         </article>
     </section>
 </section>

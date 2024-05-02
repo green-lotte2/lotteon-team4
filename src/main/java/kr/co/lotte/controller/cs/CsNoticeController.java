@@ -46,6 +46,14 @@ public class CsNoticeController {
         return "/admin/cs/notice/list";
     }
 
+
+    // admin notice 뷰 페이지
+    @GetMapping("/admin/cs/notice/view")
+    public String adminNoticeView(){
+
+        return "/admin/cs/notice/view";
+    }
+
     //admin.cs.notice.reg 폼 불러오기
     @GetMapping("/admin/cs/notice/register")
     public String noticeWrite(){
@@ -58,6 +66,7 @@ public class CsNoticeController {
         csNoticeService.insertCsNotice(csNoticeDTO);
 
         return "redirect:/admin/cs/notice/list";
+
     }
 
     // admin.cs.notice 글 번호로 보기
@@ -78,6 +87,7 @@ public class CsNoticeController {
     // admin.cs.notice 수정 전송
     @PostMapping("/admin/cs/notice/modify")
     public String adminNoticeModify(@RequestParam int no, CsNoticeDTO csNoticeDTO){
+
 
         CsNoticeDTO csNoticeDTO1 = csNoticeService.adminNoticeView(no);
 

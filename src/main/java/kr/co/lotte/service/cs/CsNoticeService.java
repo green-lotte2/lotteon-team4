@@ -40,6 +40,7 @@ public class CsNoticeService {
         log.info("Insert CsNotice : {}", savedNotice.toString());
     }
 
+
     // admin.cs.notice 번호로 글 조회
     public CsNoticeDTO adminNoticeView(int no){
 
@@ -47,11 +48,14 @@ public class CsNoticeService {
         return null;
     }
 
+
     // admin.cs.notice 수정
     public void adminNoticeUpdate(CsNoticeDTO csNoticeDTO) {
 
         // 글 번호 불러오기
+
         int no = csNoticeDTO.getNo();
+
 
         CsNotice csNotice = modelMapper.map(csNoticeDTO, CsNotice.class);
         CsNotice savedNotice = csNoticeRepository.save(csNotice);

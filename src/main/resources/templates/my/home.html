@@ -286,7 +286,8 @@
                             <tr style="text-align: center">
                                 <td >[[${#temporals.format(point.pointDate , 'yyyy-MM-dd')}]]</td>
                                 <td>[[${point.state}]]</td>
-                                <td>[[${point.orderNo}]]</td>
+                                <td th:if="${point.orderNo>=0}">[[${point.orderNo}]]</td>
+                                <td th:if="${point.orderNo<0}"></td>
                                 <td>[[${point.point}]]</td>
                                 <td>[[${point.pointDesc}]]</td>
                                 <td >[[${point.endDateTime}]]</td>

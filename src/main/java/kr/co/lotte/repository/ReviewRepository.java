@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer>, ReviewRepositoryCustom {
 
-    List<Review> findTop5ByUidOrderByRdateDesc(String uid);
+    public List<Review> findTop5ByUidOrderByRdateDesc(String uid);
+
+    int countByOrdernoAndProdnoAndItemno(int orderno, int prodno,int itemno);
 
 }

@@ -63,4 +63,7 @@ public class Products {
 
     @Transient
     private int likeState;
+
+    @Transient
+    private Seller seller;
 }

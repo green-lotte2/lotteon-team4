@@ -309,10 +309,22 @@ public class ReviewService {
         return new ReviewPageResponseDTO(reviewPageRequestDTO , reviews.getSize() , reviews1);
     }
 
+    //최근에 작성한 리뷰 5개만 뽑아오기
     public List<Review> find_five(String uid){
 
-       List<Review> reviews= reviewRepository.findTop5ByUidOrderByRdateDesc(uid);
+        List<Review> reviews= reviewRepository.findTop5ByUidOrderByRdateDesc(uid);
 
         return reviews;
+    }
+
+
+    //리뷰 유효성 검사
+    public int findByorderno(int orderno,int prodno,int itemno){
+
+        int count = reviewRepository.countByOrdernoAndProdnoAndItemno(orderno,prodno,itemno);
+
+        log.info("service - findByorderno - count : "+count);
+
+        return count;
     }
 }

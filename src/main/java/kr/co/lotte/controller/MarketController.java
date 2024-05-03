@@ -83,6 +83,7 @@ public class MarketController {
         //리뷰 조회
         ReviewPageResponseDTO reviewPageResponseDTO = reviewService.selectReviews(prodno,reviewPageRequestDTO);
 
+        log.info("페이지 네이션 할 prodview - reviewPageResponseDTO : "+reviewPageResponseDTO);
 
 
         //리뷰 별점 - 평균, 비율 구하기
@@ -98,12 +99,12 @@ public class MarketController {
     //장바구니 넣기
     @PostMapping("/product/view")
     public ResponseEntity<Map<String, String>> view(@RequestBody Map<String , Object> map){
-            log.info(map.get("itemsCounts").toString());
-            log.info(map.get("itemsNos").toString());
-            List<Integer> nos = (List<Integer>) map.get("itemsNos");
-            List<Integer> counts = (List<Integer>) map.get("itemsCounts");
-            String uid = map.get("userId").toString();
-            return marketService.inserCart(uid, counts , nos);
+        log.info(map.get("itemsCounts").toString());
+        log.info(map.get("itemsNos").toString());
+        List<Integer> nos = (List<Integer>) map.get("itemsNos");
+        List<Integer> counts = (List<Integer>) map.get("itemsCounts");
+        String uid = map.get("userId").toString();
+        return marketService.inserCart(uid, counts , nos);
     };
 
     @ResponseBody
@@ -169,7 +170,7 @@ public class MarketController {
         List<Integer> list = map.get("lists");
         return marketService.deleteCartForBuy(list);
     }
-    
+
     //구매하기2-1 (세션제거, orderItems 넣기)
     @ResponseBody
     @GetMapping("/product/insertItems")
@@ -222,8 +223,15 @@ public class MarketController {
 
     }
 
+    //상품 검색기능
     @GetMapping("/product/search")
-    public String search(){
+    public String search(ProductsPageRequestDTO requestDTO,Model model,HttpSession session){
+
+         ProductsPageResponseDTO searchResult = mainService.searchForProduct(requestDTO, requestDTO.getKeyword());
+
+         log.info("지금 내가 작성한 쿼리문이 잘 돌고 있나 체크 search : "+searchResult);//만약에 검색결과가 없으면...?
+
+        model.addAttribute("searchResult", searchResult);
 
         return "/product/search";
     }
@@ -264,8 +272,5 @@ public class MarketController {
     public ResponseEntity likeSearch(@RequestParam(name = "userId") String uid , @RequestParam(name = "prodNo") int prodNo){
         return marketService.search(uid,prodNo);
     }
-
-
-
 
 }

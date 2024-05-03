@@ -3,11 +3,9 @@ package kr.co.lotte.service;
 import com.querydsl.core.Tuple;
 import jakarta.persistence.Transient;
 import jakarta.transaction.Transactional;
-import kr.co.lotte.dto.MainProductsPageRequestDTO;
-import kr.co.lotte.dto.MainProductsPageResponseDTO;
-import kr.co.lotte.dto.ProductsPageRequestDTO;
-import kr.co.lotte.dto.ProductsPageResponseDTO;
+import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.Products;
+import kr.co.lotte.entity.Seller;
 import kr.co.lotte.entity.SubProducts;
 import kr.co.lotte.entity.Visitor;
 import kr.co.lotte.repository.LikeRepository;
@@ -68,7 +66,6 @@ public class MainService {
         List<Products> dtoList = page.getContent();
         int total = (int) page.getTotalElements();
         return new MainProductsPageResponseDTO(requestDTO, dtoList , total);
-
     }
 
     //방문자수
@@ -99,6 +96,35 @@ public class MainService {
             }
         }
         return products;
+    }
+
+    //상품 검색
+    public ProductsPageResponseDTO searchForProduct(ProductsPageRequestDTO requestDTO, String keyword){
+        Pageable pageable = requestDTO.getPageable("no");
+
+        //키워드를 받아와서 검색 후  페이지 네이션
+        Page<Tuple> page = productsRepository.searchForProduct(requestDTO,pageable,keyword);
+        log.info("상품 검색 - 페이지네이션 적용- seller조인 : "+page.getContent());
+        log.info("mainService -searchForProduct- page : "+page);
+
+        List<Tuple> dtoListBefore =    page.getContent();
+        List<Products> dtoList = dtoListBefore.stream()
+                .map(tuple -> {
+                    Products products = new Products();
+                    products = tuple.get(0, Products.class);
+                    Seller seller = tuple.get(1, Seller.class);
+                    // ProductsDTO에 SellerDTO를 설정한다.
+                    products.setSeller(seller);
+                    return products;
+                }).toList();
+
+        log.info("mainService -searchForProduct- dtoList : "+dtoList);
+
+        int total = (int) page.getTotalElements();
+
+        log.info("mainSerivce - searchForProduct - total : "+total);
+
+        return new ProductsPageResponseDTO(requestDTO,dtoList,total);
     }
 
 }

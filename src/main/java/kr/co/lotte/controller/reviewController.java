@@ -10,16 +10,16 @@ import kr.co.lotte.service.MemberService;
 import kr.co.lotte.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -75,4 +75,20 @@ public class reviewController {
         return "/my/review";
     }
 
+    //리뷰는 한번만 쓰게 하기!(내가 시킨 하나의 상품당 하나의 리뷰)
+    @GetMapping("/review/{orderno}/{prodno}/{itemno}")
+    public ResponseEntity<Map<String, Integer>> rCheck(@PathVariable("orderno") int orderno, @PathVariable("prodno")int prodno, @PathVariable("itemno")int itemno, Model model){
+
+        log.info("review- controller - orderno : "+orderno);
+        log.info("review- controller - prodno : "+prodno);
+        log.info("review- controller - itemno : "+itemno);
+
+        int count = reviewService.findByorderno(orderno,prodno,itemno);
+
+        log.info("review - controller - result : "+count);
+
+        Map<String , Integer> map1 = new HashMap<>();
+        map1.put("count",count);
+        return ResponseEntity.ok().body(map1);
+    }
 }

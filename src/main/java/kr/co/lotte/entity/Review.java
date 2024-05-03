@@ -29,6 +29,9 @@ public class Review {
 
     private String prodname;
 
+    private int orderno;
+    private int itemno;
+
     @CreationTimestamp
     private LocalDateTime rdate;
 }

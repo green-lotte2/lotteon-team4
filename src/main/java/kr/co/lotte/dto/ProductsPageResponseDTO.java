@@ -17,6 +17,7 @@ public class ProductsPageResponseDTO {
     private List<Products> dtoList;
     private List<SubProducts> dtoLists;
     private List<Like> dtoListLikes;
+    private  String keyword;
 
 
     private String cate;
@@ -33,6 +34,7 @@ public class ProductsPageResponseDTO {
         this.size = pageRequestDTO.getSize();
         this.total = total;
         this.dtoList = dtoList;
+        this.keyword=pageRequestDTO.getKeyword();
 
         this.startNo = total - ((pg - 1) * size);
         this.end = (int) (Math.ceil(this.pg / 10.0)) * 10;

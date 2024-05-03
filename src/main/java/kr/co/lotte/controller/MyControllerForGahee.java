@@ -47,10 +47,6 @@ public class MyControllerForGahee {
         model.addAttribute("points", myServiceForGahee.forPoint(uid));
         //최근 주문 내역
 
-
-
-
-
         //상품평 출력
         List<Review> reviews= reviewService.find_five(uid);
         log.info("reviews : "+reviews);
@@ -113,7 +109,7 @@ public class MyControllerForGahee {
     public ResponseEntity deleteLikes(@RequestBody Map<String, List<Integer> > map , Authentication authentication ){
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         String uid = userDetails.getUser().getUid();
-         List<Integer> prodNos = map.get("prodNo");
+        List<Integer> prodNos = map.get("prodNo");
         return  myServiceForGahee.deleteLikes(uid, prodNos);
     }
 

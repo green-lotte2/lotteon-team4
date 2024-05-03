@@ -117,7 +117,8 @@
 
             <!-- 검색결과 그룹박스 -->
             <div class="group">
-                <h3><strong>셔츠</strong>검색결과 <em>(총&nbsp;:&nbsp;<span>20</span>&nbsp;건)</em></h3>
+                <h3><strong th:text="${session.keyword}">셔츠</strong>검색결과 <em>(총&nbsp;:&nbsp;<span th:text="${searchResult.total}">20</span>&nbsp;건)</em></h3>
+
                 <form action="#">
                     <input type="text" name="search"/>
                     <input type="submit" value="검색"/>
@@ -146,73 +147,53 @@
 
             <!-- 검색목록 -->
             <table border="0">
-                <tr>
-                    <td><a href="#" class="thumb"><img src="https://via.placeholder.com/120x120" alt="상품이미지"/></a></td>
+                <tr th:each="result, index:${searchResult.dtoList}">
+                    <td><a th:href="@{/product/view(prodno=${result.prodNo})}" class="thumb"><img th:src="@{/uploads/__${result.image1}__}" alt="상품이미지"/></a></td>
                     <td>
-                        <h3 class="name">상품명</h3>
-                        <a href="#" class="desc">상품 설명</a>
+                        <h3 class="name" th:text="${result.prodName}">상품명</h3>
+                        <a th:href="@{/product/view(prodno=${result.prodNo})}" class="desc" th:text="${result.etc}">상품 설명</a>
                     </td>
                     <td>
                         <ul>
                             <li>
-                                <ins class="dis-price">27,000</ins>
+                                <ins  class="dis-price" th:text="${ #numbers.formatInteger(#numbers.formatDecimal(result.prodPrice * (100 - result.prodDiscount) * 0.01 , 1, 0) , 1 ,'COMMA') }">27,000</ins>
                             </li>
                             <li>
-                                <del class="org-price">30,000</del>
-                                <span class="discount">10%</span>
+                                <del th:if="${result.prodDiscount>0}" class="org-price" th:text="${result.prodPrice}">30,000</del>
+                                <span  th:if="${result.prodDiscount>0}" class="discount" th:text="${result.prodDiscount}">10%</span>
                             </li>
-                            <li><span class="free-delivery">무료배송</span></li>
+                            <li><span th:if="${result.delivery ==0}" class="free-delivery">무료배송</span></li>
+                            <li><span th:if="${result.delivery !=0}" ><i class="fa fa-truck"></i>  [[${result.delivery}]]</span></span></li>
                         </ul>
                     </td>
                     <td>
-                        <h4 class="seller"><i class="fas fa-home"></i>&nbsp;판매자</h4>
+                        <h4 class="seller"><i class="fas fa-home" th:text="${result.sellerName}"></i>&nbsp;</h4>
                         <h5 class="badge power great">판매자등급</h5>
                         <h6 class="rating star3">상품평</h6>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#" class="thumb"><img src="https://via.placeholder.com/120x120" alt="상품이미지"/></a></td>
-                    <td>
-                        <h3 class="name">상품명</h3>
-                        <a href="#" class="desc">상품 설명</a>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>
-                                <ins class="dis-price">27,000</ins>
-                            </li>
-                            <li>
-                                <del class="org-price">30,000</del>
-                                <span class="discount">10%</span>
-                            </li>
-                            <li><span class="free-delivery">무료배송</span></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <h4 class="seller"><i class="fas fa-home"></i>&nbsp;판매자</h4>
-                        <h5 class="badge power great">판매자등급</h5>
-                        <h6 class="rating star3">상품평</h6>
-                    </td>
-                </tr>
+
             </table>
 
             <!-- 상품목록 페이지번호 -->
             <div class="paging">
-            <span class="prev">
-              <a href="#"><&nbsp;이전</a>
-            </span>
-                <span class="num">
-              <a href="#" class="on">1</a>
-              <a href="#">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">7</a>
-            </span>
-                <span class="next">
-              <a href="#">다음&nbsp;></a>
-            </span>
+                        <span class="prev" th:if="${searchResult.prev}">
+                            <a th:href="@{/product/search(pg=${searchResult.start -1}, keyword =${searchResult.getKeyword()} )}"><&nbsp;이전</a>
+                        </span>
+                        <span class="num" th:each="num:${#numbers.sequence(searchResult.start, searchResult.end)}">
+                            <th:block th:if="${num == searchResult.pg}">
+                                 <a th:href="@{/product/search( pg=${num}
+                               , keyword =${searchResult.getKeyword()} )}" class="on">[[${num}]]</a>
+                            </th:block>
+
+                            <th:block th:if="${num != searchResult.pg}">
+                                 <a th:href="@{/product/search( pg=${num} , keyword =${searchResult.getKeyword()})}" >[[${num}]]</a>
+                            </th:block>
+
+                        </span>
+                <span class="next" th:if="${searchResult.next}">
+                            <a th:href="@{/product/search( pg=${searchResult.end+1} , keyword =${searchResult.getKeyword()} )}">다음&nbsp;></a>
+                        </span>
             </div>
 
         </section>

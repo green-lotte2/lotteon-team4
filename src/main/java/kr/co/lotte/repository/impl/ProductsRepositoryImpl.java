@@ -151,6 +151,40 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    //상품 검색 기능
+    public Page<Tuple> searchForProduct(ProductsPageRequestDTO pageRequestDTO, Pageable pageable,String keyword){
+        QueryResults<Tuple> searchProducts= null;
 
 
+        log.info("Impl - searchProducts 쿼리 결과물 : "+searchProducts);
+            /*
+        if(req.Deatil != null && req.datee == ''){
+          searchProducts = jpaQueryFactory
+                    .select(qProducts,qSeller)
+                    .from(qProducts)
+                    .join(qSeller)
+                    .on(qProducts.sellerUid.eq(qSeller.sellerUid))
+                    .where(qProducts.etc.contains(pageable.keyd))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+        }else{ */
+
+        searchProducts = jpaQueryFactory
+                    .select(qProducts,qSeller)
+                    .from(qProducts)
+                    .join(qSeller)
+                    .on(qProducts.sellerUid.eq(qSeller.sellerUid))
+                    .where(qProducts.prodName.contains(keyword))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+
+
+        List<Tuple> content = searchProducts.getResults();
+
+        long total = searchProducts.getTotal();
+
+        return new PageImpl<>(content,pageable,total);
+    }
 }

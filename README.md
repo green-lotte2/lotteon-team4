@@ -26,3 +26,5 @@
 0.1.4-SNAPSHOT : admin 현황 구현, main page 작업 중, 문의하기 작업 중 
 
 0.1.5-SNAPSHOT : 리뷰 table 및 entity 수정 중, 쿠폰 기능 구현 중
+
+0.1.6-SNAPSHOT : 쿠폰 완료, 약관 부분 완료, 리뷰 수정 완료, faq 다 됨

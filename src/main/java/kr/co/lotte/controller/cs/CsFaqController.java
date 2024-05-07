@@ -4,7 +4,10 @@ import groovy.util.logging.Slf4j;
 import kr.co.lotte.dto.CsFaqDTO;
 import kr.co.lotte.dto.CsFaqPageRequestDTO;
 import kr.co.lotte.dto.CsFaqPageResponseDTO;
+import kr.co.lotte.dto.CsNoticeDTO;
 import kr.co.lotte.service.cs.CsFaqService;
+import kr.co.lotte.service.cs.CsNoticeService;
+import kr.co.lotte.service.cs.CsQnaService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +24,20 @@ public class CsFaqController {
 
     private static final Logger log = LoggerFactory.getLogger(CsFaqController.class);
     private final CsFaqService csFaqService;
+    private final CsNoticeService csNoticeService;
+    private final CsQnaService csQnaService;
+
+
 
     @GetMapping(value = {"/cs","/cs/index"} )
-    public String index(){
+    public String index(Model model){
+
+        model.addAttribute("csNotice", csNoticeService.noticeList());
+        model.addAttribute("csQna", csQnaService.qnaList());
+
         return "/cs/index";
     }
+
 
     // admin.faq.list 출력
     @GetMapping("/admin/cs/faq/list")
@@ -116,7 +128,7 @@ public class CsFaqController {
         model.addAttribute("csFaqDTO", csFaqDTO);
         return "/cs/faq/view";
     }
-    
+
     // admin.faq. 특정 글 조회
     @GetMapping("/admin/cs/faq/view/{no}")
     public String adminFaqView(@PathVariable int no, Model model){

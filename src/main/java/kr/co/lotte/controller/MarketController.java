@@ -186,6 +186,7 @@ public class MarketController {
     public ResponseEntity orderBuy(@RequestBody OrdersDTO ordersDTO){
         log.info("이거확인 "+ordersDTO.toString());
         return marketService.insertOrderAndPoint(ordersDTO);
+
     }
 
     //구매하기2( 카트제거 , orderItems 넣기)
@@ -210,8 +211,10 @@ public class MarketController {
     }
 
     @GetMapping("/product/orderSuccess")
-    public String successOrder(@RequestParam(name = "orderNo") int orderNo){
+    public String successOrder(@RequestParam(name = "orderNo") int orderNo, Model model){
 
+        model.addAttribute("orderItems", marketService.findOrderItems(orderNo));
+        model.addAttribute("order", marketService.findOrder(orderNo));
         return "/product/complete";
     }
 

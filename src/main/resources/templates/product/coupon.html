@@ -150,7 +150,6 @@
                             <div style="display: flex; justify-content: space-between; width: 70%;">
                                 <div style="border: 1px solid #ff0000; width: 80%; height:  auto; background-color: white;">
                                     <div style="color: #f34c4c; height: auto; margin-left: 5px;  ">
-                                        <br>
                                         <p style="font-size: large; font-weight: bolder">[[${coupon.discount}]]%</p>
                                         <p style="color: black; ">[[${coupon.couponName}]]</p>
                                         <p style="color: gray">모든 상품 적용</p>
@@ -172,7 +171,7 @@
                 <br>
                 <br>
             </div>
-            <th:block th:if="${#authentication.principal != 'annoymousUser'}">
+            <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                 <input type="hidden" id="user" th:value="${#authentication.principal.user.uid}">
             </th:block>
         </section>

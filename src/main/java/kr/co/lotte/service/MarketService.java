@@ -486,5 +486,16 @@ public class MarketService {
         return ResponseEntity.ok().body(map);
     }
 
+    public List<OrderItems> findOrderItems(int orderNo){
+        List<OrderItems> orderItemsList = ordersItemRepository.findAllByOrderNo(orderNo);
+        for(OrderItems orderItem : orderItemsList){
+            orderItem.setProduct(productRepository.findById(subProductsRepository.findById(orderItem.getProdNo()).get().getProdNo()).get());
+        }
+        return  orderItemsList;
+    }
+
+    public  Orders findOrder(int orderNo){
+      return ordersRepository.findById(orderNo).get();
+    }
 
 }

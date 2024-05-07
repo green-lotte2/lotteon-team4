@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,14 +31,22 @@ public class MarketService {
     private final CartsRepository cartsRepository;
 
     // 장보기 글보기 페이지 - 장보기 게시글 출력
-    public ProductsDTO selectProduct(int prodno){
+    public ProductsDTO selectProduct(int prodno) {
 
-        return modelMapper.map( productRepository.findById(prodno).get() , ProductsDTO.class);
+        return modelMapper.map(productRepository.findById(prodno).get(), ProductsDTO.class);
 
     }
 
+    //리뷰 수를 찍자!
+    public Products findProduct(int prodno) {
 
-    public List<SubProducts> findAllByProdNo(int prodno){
+        Optional<Products> optProduct = productRepository.findById(prodno);
+
+        return modelMapper.map(optProduct, Products.class);
+    }
+
+
+    public List<SubProducts> findAllByProdNo(int prodno) {
 
         //prodno의 모든 데이터를 출력
         List<SubProducts> Options = subProductsRepository.findAllByProdNo(prodno);
@@ -49,48 +54,49 @@ public class MarketService {
         return Options;
     }
 
-    public ResponseEntity selectOption(String value, int prodNo){
+    public ResponseEntity selectOption(String value, int prodNo) {
         List<SubProducts> Options2 = subProductsRepository.findAllByProdNoAndColor(prodNo, value);
         Map<String, List<SubProducts>> map = new HashMap<>();
         map.put("sub", Options2);
-        log.info(Options2.toString()+"?!!!");
+        log.info(Options2.toString() + "?!!!");
         return ResponseEntity.ok().body(map);
     }
 
-    public ResponseEntity inserCart(String userId, List<Integer> counts , List<Integer> subNos){
-        int i=0;
-        for(int count : counts){
+    public ResponseEntity inserCart(String userId, List<Integer> counts, List<Integer> subNos) {
+        int i = 0;
+        for (int count : counts) {
             CartsDTO cartsDTO = new CartsDTO();
             cartsDTO.setCartProdCount(count);
             cartsDTO.setProdNo(subNos.get(i));
             cartsDTO.setUserId(userId);
-            cartsRepository.save(modelMapper.map(cartsDTO , Carts.class));
+            cartsRepository.save(modelMapper.map(cartsDTO, Carts.class));
             i++;
         }
-        Map<String , String> map = new HashMap<>();
-        map.put("result" , "success");
+        Map<String, String> map = new HashMap<>();
+        map.put("result", "success");
         return ResponseEntity.ok().body(map);
     }
 
     //장바구니 삭제
-    public ResponseEntity deleteCart(List<Integer> lists){
-        for(Integer count : lists){
+    public ResponseEntity deleteCart(List<Integer> lists) {
+        for (Integer count : lists) {
             cartsRepository.deleteById(count);
         }
-        Map<String , String> map = new HashMap<>();
-        map.put("result" , "success");
+        Map<String, String> map = new HashMap<>();
+        map.put("result", "success");
         return ResponseEntity.ok().body(map);
     }
 
 
     //카트조회
-    public List<Carts> selectCart(String userId){
+    public List<Carts> selectCart(String userId) {
         return cartsRepository.findAllByUserId(userId);
     }
+
     //카트상품조회
-    public List<SubProducts> selectProducts(List<Integer> subProductsNo){
+    public List<SubProducts> selectProducts(List<Integer> subProductsNo) {
         List<SubProducts> lists = new ArrayList<>();
-        for(int a : subProductsNo){
+        for (int a : subProductsNo) {
             Tuple sub = productRepository.serachOnlyOne(a);
             SubProducts subProducts = sub.get(1, SubProducts.class);
             subProducts.setProducts(sub.get(0, Products.class));
@@ -98,10 +104,11 @@ public class MarketService {
         }
         return lists;
     }
+
     //카트조회(주문을 위한)
-    public List<Carts> selectCarts(List<Integer> cartNos){
+    public List<Carts> selectCarts(List<Integer> cartNos) {
         List<Carts> lists = new ArrayList<>();
-        for(int a : cartNos){
+        for (int a : cartNos) {
             lists.add(cartsRepository.findById(a).get());
         }
         return lists;
@@ -117,12 +124,12 @@ public class MarketService {
     private PointsRepository pointsRepository;
 
     //order table 넣고 포인트 감소
-    public ResponseEntity insertOrderAndPoint(OrdersDTO ordersDTO){
+    public ResponseEntity insertOrderAndPoint(OrdersDTO ordersDTO) {
         ordersDTO.setOrderState("주문 대기");
-       Orders orders= ordersRepository.save(modelMapper.map(ordersDTO , Orders.class));
-        if(ordersDTO.getPoint()>0){
+        Orders orders = ordersRepository.save(modelMapper.map(ordersDTO, Orders.class));
+        if (ordersDTO.getPoint() > 0) {
             User user = memberRepository.findById(ordersDTO.getUserId()).get();
-            user.setTotalPoint(user.getTotalPoint()-ordersDTO.getPoint());
+            user.setTotalPoint(user.getTotalPoint() - ordersDTO.getPoint());
             memberRepository.save(user);
 
             Points points = new Points();
@@ -137,21 +144,21 @@ public class MarketService {
             Points points1 = new Points();
             points1.setUserId(user.getUid());
         }
-        Map<String , Integer> map = new HashMap<>();
-        map.put("orderNo" , orders.getOrderNo());
+        Map<String, Integer> map = new HashMap<>();
+        map.put("orderNo", orders.getOrderNo());
         return ResponseEntity.ok().body(map);
     }
 
     //orderItems 넣고 카트 제거 포인트 추가, 재고 감소
-    public ResponseEntity deleteCartForBuy(List<Integer> lists){
+    public ResponseEntity deleteCartForBuy(List<Integer> lists) {
         int orderNo = lists.get(0);
         lists.remove(0);
         int point = 0;
         String userId = cartsRepository.findById(lists.get(0)).get().getUserId();
 
-        for(int carNo : lists){
+        for (int carNo : lists) {
             Carts carts = cartsRepository.findById(carNo).get();
-            OrderItemsDTO orderItemsDTO  = new OrderItemsDTO();
+            OrderItemsDTO orderItemsDTO = new OrderItemsDTO();
             orderItemsDTO.setOrderNo(orderNo);
             orderItemsDTO.setProdNo(carts.getProdNo());
             orderItemsDTO.setItemCount(carts.getCartProdCount());
@@ -172,10 +179,10 @@ public class MarketService {
             //판매량 증가
             products.setProdSold(products.getProdSold() + orderItemsDTO.getItemCount());
             productRepository.save(products);
-            
-            
+
+
             //orderitems 추가, 카트 제거
-            ordersItemRepository.save(modelMapper.map(orderItemsDTO , OrderItems.class));
+            ordersItemRepository.save(modelMapper.map(orderItemsDTO, OrderItems.class));
             cartsRepository.deleteById(carNo);
         }
         //포인트 적립
@@ -200,19 +207,19 @@ public class MarketService {
         user.setTotalPoint(user.getTotalPoint() + point);
         memberRepository.save(user);
 
-        Map<String , String> map = new HashMap<>();
-        map.put("data" , "success");
+        Map<String, String> map = new HashMap<>();
+        map.put("data", "success");
         return ResponseEntity.ok().body(map);
     }
 
-    public ResponseEntity insertItemsForBuy(List<Integer> nos, List<Integer> counts , int orderNo){
-        int i=0;
+    public ResponseEntity insertItemsForBuy(List<Integer> nos, List<Integer> counts, int orderNo) {
+        int i = 0;
 
         int point = 0;
         String userId = ordersRepository.findById(orderNo).get().getUserId();
 
-        for(int no : nos){
-            OrderItemsDTO orderItemsDTO  = new OrderItemsDTO();
+        for (int no : nos) {
+            OrderItemsDTO orderItemsDTO = new OrderItemsDTO();
             orderItemsDTO.setOrderNo(orderNo);
             orderItemsDTO.setProdNo(no);
             orderItemsDTO.setItemCount(counts.get(i));
@@ -234,7 +241,7 @@ public class MarketService {
             products.setProdSold(products.getProdSold() + orderItemsDTO.getItemCount());
             productRepository.save(products);
 
-            ordersItemRepository.save(modelMapper.map(orderItemsDTO , OrderItems.class));
+            ordersItemRepository.save(modelMapper.map(orderItemsDTO, OrderItems.class));
             i++;
         }
         //포인트 적립
@@ -259,49 +266,49 @@ public class MarketService {
         memberRepository.save(user);
 
 
-        Map<String , String> map = new HashMap<>();
-        map.put("data" , "success");
+        Map<String, String> map = new HashMap<>();
+        map.put("data", "success");
         return ResponseEntity.ok().body(map);
     }
 
     //주문취소/반품
     //일단 확인
-    public ResponseEntity checkOrder(int itemNo){
-        Map<String , String> map = new HashMap<>();
+    public ResponseEntity checkOrder(int itemNo) {
+        Map<String, String> map = new HashMap<>();
 
         OrderItems orderItems = ordersItemRepository.findById(itemNo).get();
         Orders order = ordersRepository.findById(orderItems.getOrderNo()).get();
-        if(order.getPoint() >0){
-            map.put("data","1");
-        }else{
-            map.put("data","0");
+        if (order.getPoint() > 0) {
+            map.put("data", "1");
+        } else {
+            map.put("data", "0");
         }
         return ResponseEntity.ok().body(map);
     }
 
     //주문 취소반품 본격시작
-    public ResponseEntity orderDelete(int itemNo , String uid){
-        Map<String , Integer> map = new HashMap<>();
+    public ResponseEntity orderDelete(int itemNo, String uid) {
+        Map<String, Integer> map = new HashMap<>();
         User user = memberRepository.findById(uid).get();
         OrderItems orderItems = ordersItemRepository.findById(itemNo).get();
         Orders order = ordersRepository.findById(orderItems.getOrderNo()).get();
-        int state =0;
-        if(orderItems.getOrderState().equals("주문 대기")){
-            if(order.getPoint() >0){
+        int state = 0;
+        if (orderItems.getOrderState().equals("주문 대기")) {
+            if (order.getPoint() > 0) {
                 //포인트를 사용한 경우 전체 취소
                 List<OrderItems> lists = ordersItemRepository.findAllByOrderNo(order.getOrderNo());
 
-                for(OrderItems orderItem : lists){
-                    if(orderItem.getOrderState().equals("주문 대기")){
+                for (OrderItems orderItem : lists) {
+                    if (orderItem.getOrderState().equals("주문 대기")) {
                         SubProducts subProducts = subProductsRepository.findById(orderItem.getProdNo()).get();
                         subProducts.setProdStock(subProducts.getProdStock() + orderItem.getItemCount());
                         subProductsRepository.save(subProducts);
-                        orderItem.setOrderState("주문 취소");   
-                    }else{
+                        orderItem.setOrderState("주문 취소");
+                    } else {
                         SubProducts subProducts = subProductsRepository.findById(orderItem.getProdNo()).get();
                         subProducts.setProdStock(subProducts.getProdStock() + orderItem.getItemCount());
                         subProductsRepository.save(subProducts);
-                        state=1;
+                        state = 1;
                         orderItem.setOrderState("환불");
                     }
                     ordersItemRepository.save(orderItem);
@@ -318,7 +325,7 @@ public class MarketService {
 
                 //적립된 포인트는 빼자
                 Points points2 = new Points();
-                Points oldPoint = pointsRepository.findByOrderNoAndState(order.getOrderNo(),"적립");
+                Points oldPoint = pointsRepository.findByOrderNoAndState(order.getOrderNo(), "적립");
                 int old = oldPoint.getPoint();
 
                 points2.setPoint(-old);
@@ -334,7 +341,7 @@ public class MarketService {
                 memberRepository.save(user);
                 pointsRepository.save(points);
                 pointsRepository.save(points2);
-            }else{
+            } else {
                 SubProducts subProducts = subProductsRepository.findById(orderItems.getProdNo()).get();
                 subProducts.setProdStock(subProducts.getProdStock() + orderItems.getItemCount());
                 subProductsRepository.save(subProducts);
@@ -344,9 +351,9 @@ public class MarketService {
                 //적립된 포인트는 빼자
                 Points points2 = new Points();
 
-                int minus = (int)(orderItems.getItemPrice() * orderItems.getItemCount() * 0.01);
+                int minus = (int) (orderItems.getItemPrice() * orderItems.getItemCount() * 0.01);
 
-                points2.setPoint(- minus);
+                points2.setPoint(-minus);
                 points2.setPointDesc("주문 취소 환불");
                 points2.setOrderNo(order.getOrderNo());
                 user.setTotalPoint(user.getTotalPoint() - minus);
@@ -354,20 +361,20 @@ public class MarketService {
 
             }
 
-        }else{
-            state=1;
+        } else {
+            state = 1;
 
-            if(order.getPoint() >0){
+            if (order.getPoint() > 0) {
                 //포인트를 사용한 경우 전체 취소
                 List<OrderItems> lists = ordersItemRepository.findAllByOrderNo(order.getOrderNo());
 
-                for(OrderItems orderItem : lists){
-                    if(orderItem.getOrderState().equals("주문 대기")){
+                for (OrderItems orderItem : lists) {
+                    if (orderItem.getOrderState().equals("주문 대기")) {
                         SubProducts subProducts = subProductsRepository.findById(orderItem.getProdNo()).get();
                         subProducts.setProdStock(subProducts.getProdStock() + orderItem.getItemCount());
                         subProductsRepository.save(subProducts);
                         orderItem.setOrderState("주문 취소");
-                    }else{
+                    } else {
                         SubProducts subProducts = subProductsRepository.findById(orderItem.getProdNo()).get();
                         subProducts.setProdStock(subProducts.getProdStock() + orderItem.getItemCount());
                         subProductsRepository.save(subProducts);
@@ -386,7 +393,7 @@ public class MarketService {
 
                 //적립된 포인트는 빼자
                 Points points2 = new Points();
-                Points oldPoint = pointsRepository.findByOrderNoAndState(order.getOrderNo(),"적립");
+                Points oldPoint = pointsRepository.findByOrderNoAndState(order.getOrderNo(), "적립");
                 int old = oldPoint.getPoint();
 
                 points2.setPoint(-old);
@@ -402,7 +409,7 @@ public class MarketService {
                 memberRepository.save(user);
                 pointsRepository.save(points);
                 pointsRepository.save(points2);
-            }else{
+            } else {
                 SubProducts subProducts = subProductsRepository.findById(orderItems.getProdNo()).get();
                 subProducts.setProdStock(subProducts.getProdStock() + orderItems.getItemCount());
                 subProductsRepository.save(subProducts);
@@ -412,16 +419,16 @@ public class MarketService {
                 //적립된 포인트는 빼자
                 Points points2 = new Points();
 
-                int minus = (int)(orderItems.getItemPrice() * orderItems.getItemCount() * 0.01);
+                int minus = (int) (orderItems.getItemPrice() * orderItems.getItemCount() * 0.01);
 
-                points2.setPoint(- minus);
+                points2.setPoint(-minus);
                 points2.setPointDesc("주문 취소 환불");
                 points2.setOrderNo(order.getOrderNo());
                 user.setTotalPoint(user.getTotalPoint() - minus);
                 memberRepository.save(user);
 
             }
-        
+
         }
         map.put("data", state);
         return ResponseEntity.ok().body(map);
@@ -430,35 +437,36 @@ public class MarketService {
     @Autowired
     private LikeRepository likeRepository;
 
-    public ResponseEntity likeButton(String uid, int prodNo){
-        Map<String , Integer> map =new HashMap<>();
+    public ResponseEntity likeButton(String uid, int prodNo) {
+        Map<String, Integer> map = new HashMap<>();
         int state = 0; //없음
-        if(likeRepository.findByUserIdAndProdNo(uid, prodNo).isEmpty()){
+        if (likeRepository.findByUserIdAndProdNo(uid, prodNo).isEmpty()) {
             Like like = new Like();
             like.setUserId(uid);
             like.setProdNo(prodNo);
             likeRepository.save(like);
-            state=1;
-        }else{
-            likeRepository.deleteByUserIdAndProdNo(uid,prodNo);
-            state=0;
+            state = 1;
+        } else {
+            likeRepository.deleteByUserIdAndProdNo(uid, prodNo);
+            state = 0;
         }
         map.put("data", state);
         return ResponseEntity.ok().body(map);
     }
 
 
-    public ResponseEntity search(String uid, int prodNo){
-        Map<String , Integer> map =new HashMap<>();
+    public ResponseEntity search(String uid, int prodNo) {
+        Map<String, Integer> map = new HashMap<>();
         int state = 0; //없음
-        if(likeRepository.findByUserIdAndProdNo(uid, prodNo).isEmpty()){
-            state=0;
-        }else{
-            state=1;
+        if (likeRepository.findByUserIdAndProdNo(uid, prodNo).isEmpty()) {
+            state = 0;
+        } else {
+            state = 1;
         }
         map.put("data", state);
         return ResponseEntity.ok().body(map);
     }
+
 
 
 }

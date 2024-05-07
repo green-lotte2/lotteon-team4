@@ -7,17 +7,18 @@ import kr.co.lotte.entity.*;
 import kr.co.lotte.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,6 +37,10 @@ public class MyServiceForGahee {
     private SubProductsRepository subProductsRepository;
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private DownloadCouponRepository downloadCouponRepository;
 
     public List<Points> forPoint(String uid) {
         //최근 주문 내역
@@ -119,4 +124,42 @@ public class MyServiceForGahee {
         return ResponseEntity.ok().body(map);
     }
 
+    @Autowired
+    private CouponRepository couponRepository;
+
+    public List<Coupon> searchCoupon(){
+        return couponRepository.findAll();
+    }
+
+
+    public void registerCoupon(CouponDTO couponDTO){
+        couponRepository.save(modelMapper.map(couponDTO,Coupon.class));
+    }
+
+    public List<Coupon> findFutureCoupons() {
+        List<Coupon> allCoupons = couponRepository.findAll();
+        LocalDate currentDate = LocalDate.now();
+        List<Coupon> futureCoupons = allCoupons.stream()
+                .filter(coupon -> LocalDate.parse(coupon.getEndDate()).compareTo(currentDate) >= 0)
+                .collect(Collectors.toList());
+
+        return futureCoupons;
+    }
+
+    public ResponseEntity donwloadCoupon(DownloadCouponDTO downloadCouponDTO){
+        int data = 0;
+        if (downloadCouponRepository.findByCouponCodeAndUid
+                (downloadCouponDTO.getCouponCode(), downloadCouponDTO.getUid()) == null) {
+            downloadCouponRepository.save(modelMapper.map(downloadCouponDTO, DownloadCoupon.class));
+            Coupon coupon = couponRepository.findById(downloadCouponDTO.getCouponCode()).get();
+            coupon.setDownload(coupon.getDownload() +1);
+            couponRepository.save(coupon);
+
+        }else{
+            data =1;
+        }
+        Map<String , Integer> map = new HashMap<>();
+        map.put("data" , data);
+        return ResponseEntity.ok().body(map);
+    }
 }

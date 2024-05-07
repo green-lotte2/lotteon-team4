@@ -29,6 +29,8 @@ public class MarketService {
     private final SubProductsRepository subProductsRepository;
     private final ProductsRepository productRepository;
     private final CartsRepository cartsRepository;
+    private final DownloadCouponRepository downloadCouponRepository;
+    private  final  CouponRepository couponRepository;
 
     // 장보기 글보기 페이지 - 장보기 게시글 출력
     public ProductsDTO selectProduct(int prodno) {
@@ -87,6 +89,16 @@ public class MarketService {
         return ResponseEntity.ok().body(map);
     }
 
+    //쿠폰 조회
+    public List<Coupon> searchCoupon(String uid){
+        List<DownloadCoupon> temp = downloadCouponRepository.findAllByUid(uid);
+        List<Coupon> coupons = new ArrayList<>();
+        for(DownloadCoupon d : temp){
+            Coupon coupon = couponRepository.findById(d.getCouponCode()).get();
+            coupons.add(coupon);
+        }
+        return coupons;
+    }
 
     //카트조회
     public List<Carts> selectCart(String userId) {
@@ -94,13 +106,29 @@ public class MarketService {
     }
 
     //카트상품조회
-    public List<SubProducts> selectProducts(List<Integer> subProductsNo) {
+
+    public List<SubProducts> selectProductsForCart(List<Integer> subProductsNo){
         List<SubProducts> lists = new ArrayList<>();
-        for (int a : subProductsNo) {
+        for(int a : subProductsNo){
             Tuple sub = productRepository.serachOnlyOne(a);
             SubProducts subProducts = sub.get(1, SubProducts.class);
             subProducts.setProducts(sub.get(0, Products.class));
             lists.add(subProducts);
+        }
+        return lists;
+    }
+
+    public List<SubProducts> selectProducts(List<Integer> subProductsNo, List<Integer> counts){
+        List<SubProducts> lists = new ArrayList<>();
+        int tempt =0;
+        for(int a : subProductsNo){
+
+            Tuple sub = productRepository.serachOnlyOne(a);
+            SubProducts subProducts = sub.get(1, SubProducts.class);
+            subProducts.setProducts(sub.get(0, Products.class));
+            subProducts.setCount(counts.get(tempt));
+            lists.add(subProducts);
+            tempt++;
         }
         return lists;
     }
@@ -467,6 +495,17 @@ public class MarketService {
         return ResponseEntity.ok().body(map);
     }
 
+    public List<OrderItems> findOrderItems(int orderNo){
+        List<OrderItems> orderItemsList = ordersItemRepository.findAllByOrderNo(orderNo);
+        for(OrderItems orderItem : orderItemsList){
+            orderItem.setProduct(productRepository.findById(subProductsRepository.findById(orderItem.getProdNo()).get().getProdNo()).get());
+        }
+        return  orderItemsList;
+    }
+
+    public  Orders findOrder(int orderNo){
+      return ordersRepository.findById(orderNo).get();
+    }
 
 
 }

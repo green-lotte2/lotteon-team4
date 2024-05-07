@@ -14,6 +14,9 @@
     <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
     <script th:src="@{/js/index.js}"></script>
+    <style>
+        @import url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff');
+    </style>
 
     <script>
         $(function () {
@@ -34,7 +37,6 @@
                     const link = slider.getAttribute('data-link');
 
 
-                    alert('클릭되었습니다!!!!!!!!.');
                     console.log('bannerNo :' + bannerNo);
 
                     const jsonData = {
@@ -335,10 +337,10 @@
                 <h1><i class="fas fa-crown"></i>베스트상품</h1>
                 <ol th:each="product , index:${prodSolds}" th:if="${index.index <3}">
                     <li>
-                        <a th:href="@{#}">
-                            <div class="thumb">
-                                <i>[[${index.index +1}]]</i>
-                                <img th:src="@{/uploads/__${product.image1}__}" alt="item1"/>
+                        <a th:href="@{/product/view(prodno=${product.prodNo})}" style=" text-align: center">
+                            <div class="thumb" >
+                                <span style="color: red ; font-weight: bolder; text-decoration: underline">[[${index.index +1}]]</span>
+                                <img style="width: 150px ; height: auto;" th:src="@{/uploads/__${product.image1}__}" alt="item1"/>
                             </div>
                             <h2>[[${product.prodName}]]</h2>
                             <th:block th:if="${product.prodDiscount != 0}">
@@ -525,7 +527,7 @@
             <li><a th:href="@{#}">전자금융거래약관</a></li>
         </ul>
         <div>
-            <p><img src="../static/images/footer_logo.png" alt="로고"/></p>
+            <p><img th:src="@{/images/footer_logo.png}" alt="로고"/></p>
             <p>
                 <strong>(주)롯데ON</strong><br/>
                 서울특별시 송파구 올림픽로 300 롯데월드타워 26층 (역삼동 강남파이낸스센터)<br/>

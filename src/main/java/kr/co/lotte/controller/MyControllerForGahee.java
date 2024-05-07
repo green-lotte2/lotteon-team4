@@ -121,20 +121,42 @@ public class MyControllerForGahee {
 
 
     @GetMapping("/product/coupon")
-    public String coupon(){
+    public String coupon(Model model){
+        model.addAttribute("coupons", myServiceForGahee.findFutureCoupons());
         return "/product/coupon";
     }
 
     //쿠폰(admin)
     @GetMapping("/admin/coupon/register")
-    public String couponRegister(Authentication authentication , Model model){
+    public String couponRegister(Authentication authentication , Model model , @RequestParam(name = "code", required = false)String code){
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
         if(!user.getRole().equals("ADMIN")){
             return "/";
         }
-        return "/admin/coupon";
+        if(code == null){
+            code = "0";
+        }
+        //쿠폰이 보여야할텐데... 현재 가능한 것만 보여줄까?
+        model.addAttribute("coupons", myServiceForGahee.searchCoupon());
+
+
+        model.addAttribute("code", code);
+        return "/admin/product/coupon";
     }
+
+    @PostMapping("/admin/coupon/register")
+    public String registerCoupon(CouponDTO coupon){
+        log.info(coupon.toString()+"이거이거");
+        myServiceForGahee.registerCoupon(coupon);
+        return "redirect:/admin/coupon/register?code=100";
+    }
+
+    @PostMapping("/my/coupon/download")
+    public  ResponseEntity downloadCoupon(@RequestBody DownloadCouponDTO downloadCouponDTO){
+    return myServiceForGahee.donwloadCoupon(downloadCouponDTO);
+    };
+
 
 
 

@@ -119,7 +119,7 @@ public class MemberController {
     @GetMapping("/member/signup")
     public String signup(Model model){
         TermsDTO terms = memberService.findTerms(1);
-        model.addAttribute("terms", memberService.findTerms(1));
+        model.addAttribute("terms", terms);
         return "/member/signup";
     }
 

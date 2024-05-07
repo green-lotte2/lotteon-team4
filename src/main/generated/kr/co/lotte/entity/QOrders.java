@@ -23,6 +23,8 @@ public class QOrders extends EntityPathBase<Orders> {
 
     public final StringPath addr2 = createString("addr2");
 
+    public final NumberPath<Integer> delivery = createNumber("delivery", Integer.class);
+
     public final NumberPath<Integer> itemDiscount = createNumber("itemDiscount", Integer.class);
 
     public final StringPath orderAddr = createString("orderAddr");

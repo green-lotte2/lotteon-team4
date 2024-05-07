@@ -38,5 +38,6 @@ public class Orders {
     private String addr2;
     private String payment;
     private int point;
+    private  int delivery;
 
 }

@@ -130,13 +130,24 @@ public class MarketController {
         List<Integer> nos = (List<Integer>) session.getAttribute("nos");
         List<Integer> counts = (List<Integer>) session.getAttribute("counts");
         log.info("nos nonono~ : "+nos);
-        model.addAttribute("subProducts", marketService.selectProducts(nos));
-        model.addAttribute("counts", counts);
+
+        List<SubProducts> tempSubproduct = marketService.selectProducts(nos, counts);
+        Map<String, List<SubProducts>> sellerProductMap = new HashMap<>();
+        for (SubProducts subProduct : tempSubproduct) {
+            String sellerName = subProduct.getProducts().getSellerName();
+            List<SubProducts> productList = sellerProductMap.getOrDefault(sellerName, new ArrayList<>());
+            productList.add(subProduct);
+            sellerProductMap.put(sellerName, productList);
+        }
+        log.info(sellerProductMap.toString() + "here~");
+        model.addAttribute("subProducts", sellerProductMap);
+       // model.addAttribute("counts", counts);
+        model.addAttribute("number", counts.size()); // 이거를 넣음 주문건수 때문에
         model.addAttribute("status", status);
         return "/product/order";
     }
 
-    //바로구매(장바구니 거치고)
+    //바로구매(장바구니 거치고) 이것만 좀 제대로 수정함 아 귀찮아 그냥 구매 카트 등은 이거 코드보고 나중에 수정하자..
     @GetMapping("/product/order2")//
     public String order2( Model model, Authentication authentication, @RequestParam(name = "list") List<Integer> list){
         log.info("list : "+list);
@@ -144,13 +155,27 @@ public class MarketController {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
         model.addAttribute("user", user);
-        List<Carts> cartsList = marketService.selectCarts(list);
 
+        List<Carts> cartsList = marketService.selectCarts(list);
         List<Integer> counts = cartsList.stream().map(item ->   item.getCartProdCount()).toList();
         List<Integer> nos = cartsList.stream().map(item ->   item.getProdNo()).toList();
         model.addAttribute("cartlist", cartsList);
-        model.addAttribute("subProducts", marketService.selectProducts(nos));
-        model.addAttribute("counts", counts);
+
+        List<SubProducts> tempSubproduct = marketService.selectProducts(nos , counts);
+        Map<String, List<SubProducts>> sellerProductMap = new HashMap<>();
+        for (SubProducts subProduct : tempSubproduct) {
+            String sellerName = subProduct.getProducts().getSellerName();
+            List<SubProducts> productList = sellerProductMap.getOrDefault(sellerName, new ArrayList<>());
+            productList.add(subProduct);
+            sellerProductMap.put(sellerName, productList);
+        }
+        log.info(sellerProductMap.toString() + "here~");
+        //쿠폰 리스트도 걍 넘겨주자여기서
+        model.addAttribute( "coupons",marketService.searchCoupon(user.getUid()));
+
+        model.addAttribute("subProducts", sellerProductMap);
+        //  model.addAttribute("counts", counts);
+        model.addAttribute("number", counts.size()); // 이거를 넣음 주문건수 때문에
         model.addAttribute("status", status);
         return "/product/order";
     }
@@ -208,7 +233,7 @@ public class MarketController {
         User user = userDetails.getUser();
         List<Carts> carts = marketService.selectCart(user.getUid());
         List<Integer> subProdnos = carts.stream().map(e -> e.getProdNo()).toList();
-        model.addAttribute("subProducts", marketService.selectProducts(subProdnos));
+        model.addAttribute("subProducts", marketService.selectProductsForCart(subProdnos));
         model.addAttribute("carts", carts);
         return "/product/cart";
 

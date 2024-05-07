@@ -15,8 +15,13 @@
             //4. 상품 재고도 빼야함
 
             //4. 추후 주문 확정시 포인트 적립
-            document.getElementById('buyButton').onclick=function (){
-                forOrder();
+            const searchCoupon = document.getElementById('searchCoupon');
+            const closeButton = document.getElementById('closeButton');
+            searchCoupon.onclick=function (){
+                document.getElementById('couponModal').style.display='block';
+            }
+            closeButton.onclick=function (){
+                document.getElementById('couponModal').style.display='none';
             }
         }
 
@@ -81,6 +86,7 @@
             }
         }
         async function forOrder() {
+            //나중에 배송비랑, receiveName , hp 친구들 추가하기. 유효성 검사까지 귀찮아..!
             var isOk = true;
             const reHp = /^01(?:0|1|[6-9])-(?:\d{4})-\d{4}$/;
             //뭐가필요하냐...
@@ -161,6 +167,7 @@
                     window.location.href='/lotteshop/product/orderSuccess?orderNo='+orderNo;
                 }
             }
+
 
         }
         //// 각 장바구니 품목 가격 합산하는 함수 ////
@@ -337,14 +344,56 @@
             <nav>
                 <h1>주문결제</h1>
                 <p>
-                    HOME > 장바구니 > <strong>주문결제</strong>
+                    HOME >  <strong>주문결제</strong>
                 </p>
+
             </nav>
+
+            <!-- 모달 -->
+            <div id="couponModal" class="couponModal">
+                <!-- 모달 내용 -->
+                <div class="couponModal-content">
+                    <span id="closeButton" class="close">&times;</span>
+                    <!-- 여기에 쿠폰 등록 폼 추가 -->
+                    <h4>쿠폰 목록</h4>
+                        <!--쿠폰쓰 -->
+                        <div th:each="coupon , index:${coupons}" style=" margin-bottom: 10px; margin-top: 50px; display: flex; justify-content: center;">
+                            <div style="display: flex; justify-content: space-between; margin-top: 10px; width: 80%;">
+                                <div style=" width: 70%; height: 120px; display: flex; justify-content: center; align-items: center;">
+                                    <!-- 초록색 박스 -->
+                                    <div style="display: flex; justify-content: space-between; width: 70%;">
+                                        <div style="border: 1px solid #ff0000; width: 80%; height:  auto; background-color: white;">
+                                            <div style="color: #f34c4c; height: auto; margin-left: 5px;  ">
+                                                <br>
+                                                <p style="font-size: large; font-weight: bolder">[[${coupon.discount}]]%</p>
+                                                <p style="color: black; ">[[${coupon.couponName}]]</p>
+                                                <p style="color: gray">모든 상품 적용</p>
+                                                <p style="color: gray">최소  주문 금액 [[${coupon.min}]]</p>
+                                                <p style="color: gray">최대 할인 금액 [[${coupon.max}]]</p>
+                                                <p style="color: gray">~[[${coupon.endDate}]]까지</p>
+                                            </div>
+                                        </div>
+                                        <div style=" display: flex; justify-content: center;  align-items: center; background-color: red; width: 30%; height: auto;">
+                                            <p style="font-size: x-large; color: white">on</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="  align-items: center;  width: 20%; height: 120px;">
+                                    <p>적용</p>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <br>
+                </div>
+            </div>
+
             <th:block th:if="${status == 1}">
                 <th:block th:each="cart , index:${cartlist}">
                 <input type="hidden" name="cartNo" th:value="${cart.getCartNo()}">
                 </th:block>
             </th:block>
+
             <form action="#">
                 <!-- 주문 상품 목록 -->
                 <table>
@@ -362,33 +411,42 @@
                     <tr  class="empty">
                         <td colspan="7">주문하실 상품이 없습니다.</td>
                     </tr>
-                    <tr th:each="subProduct , index:${subProducts}">
+                    <th:block th:each="entry : ${subProducts}"  >
+                        <tr>
+                            <td  colspan="7" th:text="${entry.key}"></td>
+                        </tr>
+                      <tr th:each="subProduct : ${entry.value}">
                         <td>
-                            <article class="orderProd">
-                                <a href="#"><img th:src="@{/uploads/__${subProduct.products.image1}__}" alt=""></a>
-                                <div>
-                                    <h2 th:text="${subProduct.products.prodName}"><a href="#">상품명</a></h2>
-                                    <p th:text="${subProduct.size + '  ' + subProduct.color}">상품설명</p>
-                                </div>
-                            </article>
+                        <article class="orderProd">
+                            <a href="#"><img th:src="@{/uploads/__${subProduct.products.image1}__}" alt=""></a>
+                            <div>
+                                <h2 th:text="${subProduct.products.prodName}"><a href="#">상품명</a></h2>
+                                <p th:text="${subProduct.size + '  ' + subProduct.color}">상품설명</p>
+                            </div>
+                        </article>
                         </td>
-                        <td th:text="${counts[index.index]}"></td>
+                        <td th:text="${subProduct.count }"></td>
                         <td  id="subProductPrice" th:text="${subProduct.prodPrice }"></td>
                         <td id="subProductDiscount" th:text="${subProduct.products.getProdDiscount()}"></td>
                         <td class="delivery" id="subProductDelivery">[[${subProduct.products.delivery}]]</td>
-                        <td id="subProductTotalPrice" th:text="${#numbers.formatDecimal(subProduct.prodPrice * (100 - subProduct.products.prodDiscount) * 0.01 * counts[index.index] ,1,0) }"></td>
-                        <td id="subProductOriginPrice" style="display: none" th:text="${#numbers.formatDecimal(subProduct.prodPrice * counts[index.index] ,1,0) }"></td>
-                        <td id="productsPoint" style="display: none" th:text="${subProduct.products.point * counts[index.index]}"></td>
-                    </tr>
+                        <td id="subProductTotalPrice" th:text="${#numbers.formatDecimal(subProduct.prodPrice * (100 - subProduct.products.prodDiscount) * 0.01 * subProduct.count ,1,0) }"></td>
+                        <td id="subProductOriginPrice" style="display: none" th:text="${#numbers.formatDecimal(subProduct.prodPrice * subProduct.count ,1,0) }"></td>
+                        <td id="productsPoint" style="display: none" th:text="${subProduct.products.point * subProduct.count }"></td>
+                        </tr>
+
+                    </th:block>
+
+
                     </tbody>
                 </table>
+
                 <!-- 최종 결제 정보-->
                 <div class="final">
                     <h2>최종결제 정보</h2>
                     <table border="0">
                         <tr>
                             <td>주문 건수</td>
-                           <td id="totalCount" th:text="${counts.size()}+'건'"></td>
+                           <td id="totalCount" th:text="${number}+'건'"></td>
                         </tr>
                         <tr>
                             <td>총 상품금액</td>
@@ -397,6 +455,10 @@
                         <tr>
                             <td>할인금액</td>
                             <td id="totalDiscount"></td>
+                        </tr>
+                        <tr>
+                            <td>쿠폰할인 금액</td>
+                            <td id="couponDiscount">사용 쿠폰 없음</td>
                         </tr>
                         <tr>
                             <td>배송비</td>
@@ -436,6 +498,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>받는 분</td>
+                            <td><input type="text" name="receiveName" id="receiveName" /></td>
+
+                        </tr>
+                        <tr>
+                            <td>받는 분 휴대폰</td>
+                            <td>
+                                <input type="text" name="receiveHp" id="receiveHp" />
+                                <span>- 포함 입력</span>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>우편번호</td>
                             <td>
                                 <input type="text" id="inputZip" name="zip" readonly/>
@@ -454,11 +528,17 @@
                                 <input type="text" id="inputAddr2" name="addr2"/>
                             </td>
                         </tr>
+                        <tr>
+                            <td>요청사항 </td>
+                            <td>
+                               <textarea></textarea>
+                            </td>
+                        </tr>
                     </table>
                 </article>
 
                 <article class="discount">
-                    <h1>할인정보</h1>
+                    <h1>할인정보  <span>포인트 및 쿠폰 사용시 부분 취소가 불가능하며 전체 주문 취소 및 환불만 가능합니다.</span></h1>
 
                     <div>
                         <p>현재 포인트 : <span class="curPoint" th:text="${user.totalPoint}" ></span>점</p>
@@ -468,7 +548,13 @@
                             <span id="result"></span>
                         </label>
                     </div>
-                    <p>포인트 사용시 부분 취소가 불가능하며 전체 주문 취소 및 환불만 가능합니다.</p>
+                    <div>
+                        <p>쿠폰</p>
+                        <label>
+                            <span></span>
+                            <input type="button" id="searchCoupon" value="조회"><br>
+                        </label>
+                    </div>
                 </article>
 
                 <!-- 결제방법 -->

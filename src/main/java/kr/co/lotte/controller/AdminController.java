@@ -126,7 +126,6 @@ public class AdminController {
             code ="0";
         }
         model.addAttribute("code",code);
-        log.info("adnin!!"+adminService.findTerms(1).getSms());
         model.addAttribute("terms", adminService.findTerms(1));
         return "/admin/config/info";
     }

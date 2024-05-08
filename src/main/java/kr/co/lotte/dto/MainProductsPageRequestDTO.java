@@ -26,7 +26,10 @@ public class MainProductsPageRequestDTO {
     private String cateName1;
     private String cateName2;
     private String cateName3;
+
+    private String keyword;
     private String cate;
+
 
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());

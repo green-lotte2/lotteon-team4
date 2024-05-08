@@ -157,18 +157,17 @@
                 <p>HOME > <span>[[${pageResponseDTO.cateName1}]]</span>
                     <span th:if="${pageResponseDTO.cateName2!='' && pageResponseDTO.cateName2!=null}"> > [[${pageResponseDTO.cateName2}]]</span>
                     <span th:if="${pageResponseDTO.cateName3!= '' && pageResponseDTO.cateName3!=null}"> > [[${pageResponseDTO.cateName3}]]</span>
-
                 </p>
             </nav>
 
             <!-- 정렬 메뉴 -->
             <ul class="sort">
-                <li><a href="#" class="on">판매많은순</a></li>
-                <li><a href="#">낮은가격순</a></li>
-                <li><a href="#">높은가격순</a></li>
-                <li><a href="#">평점높은순</a></li>
-                <li><a href="#">후기많은순</a></li>
-                <li><a href="#">최근등록순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='prodSold')}">판매많은순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='lowPrice')}">낮은가격순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='highPrice')}">높은가격순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='highAvg')}">평점높은순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='highReview')}">후기많은순</a></li>
+                <li><a th:href="@{/product/list(cateName1=${pageResponseDTO.cateName1},cateName2=${pageResponseDTO.cateName2},cateName3=${pageResponseDTO.cateName3}, cate='current')}">최근등록순</a></li>
             </ul>
 
             <!-- 상품목록 -->
@@ -219,22 +218,22 @@
             <!-- 상품목록 페이지번호 -->
             <div class="paging">
                         <span class="prev" th:if="${pageResponseDTO.prev}">
-                            <a th:href="@{/product/list(pg=${pageResponseDTO.start -1}, cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()})}"><&nbsp;이전</a>
+                            <a th:href="@{/product/list(pg=${pageResponseDTO.start -1}, cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()},cate=${pageResponseDTO.cate})}"><&nbsp;이전</a>
                         </span>
                 <span class="num" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
                             <th:block th:if="${num == pageResponseDTO.pg}">
                                  <a th:href="@{/product/list( pg=${num}
-                               , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()})}" class="on">[[${num}]]</a>
+                               , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()},cate=${pageResponseDTO.cate})}" class="on">[[${num}]]</a>
                             </th:block>
 
                             <th:block th:if="${num != pageResponseDTO.pg}">
 
-                                 <a th:href="@{/product/list( pg=${num} , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()})}" >[[${num}]]</a>
+                                 <a th:href="@{/product/list( pg=${num} , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()},,cate=${pageResponseDTO.cate})}" >[[${num}]]</a>
                             </th:block>
 
                         </span>
                 <span class="next" th:if="${pageResponseDTO.next}">
-                            <a th:href="@{/product/list( pg=${pageResponseDTO.end+1} , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()})}">다음&nbsp;></a>
+                            <a th:href="@{/product/list( pg=${pageResponseDTO.end+1} , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()},cate=${pageResponseDTO.cate})}">다음&nbsp;></a>
                         </span>
             </div>
 

@@ -58,6 +58,7 @@ public class MarketController {
         return "/product/list";
     }
 
+    //상품 상세페이지 조회
     @GetMapping("/product/view")
     public String view(Model model, ReviewPageRequestDTO reviewPageRequestDTO) {
 
@@ -274,31 +275,6 @@ public class MarketController {
     public String search(String cate, String keyword, ProductsPageRequestDTO requestDTO, Model model, HttpSession session) {
 
         log.info("cate : " + cate);
-
-
-        if (cate != null && !cate.isEmpty()) {
-
-            requestDTO.setCate(cate);
-
-            requestDTO.setKeyword(keyword);
-
-            log.info("카테 값 넣었어? : "+requestDTO.getCate());
-            log.info("keyword 값 넣었어? : "+requestDTO.getKeyword());
-
-
-        } else {
-
-            if (requestDTO == null) {
-
-                requestDTO = new ProductsPageRequestDTO();
-            }
-
-            if (keyword != null && !keyword.isEmpty()) {
-                requestDTO.setKeyword(keyword);
-            }
-         }
-
-        session.setAttribute("keyword", keyword);
 
         ProductsPageResponseDTO searchResult = mainService.searchForProduct(requestDTO);
 

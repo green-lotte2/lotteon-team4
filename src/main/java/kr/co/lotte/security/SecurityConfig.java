@@ -18,6 +18,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
+
+    private final SecurityUserService securityUserService;//이거 fileterChain 괄호안 httpSecutiry옆에 있던거 옮김
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -67,6 +70,13 @@ public class SecurityConfig {
                 //로그인 시 동일한 세션에 대한 id 변경
                 .changeSessionId());
 
+
+        // 자동로그인 설정
+        // rememberMe 쿠키 확인
+        httpSecurity.rememberMe(config -> config.userDetailsService(securityUserService)
+                .rememberMeParameter("rememberMe")
+                .key("uniqueAndSecret")
+                .tokenValiditySeconds(86400));// 자동 로그인 유효 기간 (초)) 24시간
 
         return httpSecurity.build();
     }

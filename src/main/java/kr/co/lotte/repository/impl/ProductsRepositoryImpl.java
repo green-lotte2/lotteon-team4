@@ -142,8 +142,11 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         String cateName1 = pageRequestDTO.getCateName1();
         String cateName2 = pageRequestDTO.getCateName2();
         String cateName3 = pageRequestDTO.getCateName3();
+
+
         QueryResults<Products> results = null;
-        if (cateName1 != null && cateName2 != null && cateName3 != null && cateName1 != "" && cateName2 != "" && cateName3 != "") {
+
+       if (cateName1 != null && cateName2 != null && cateName3 != null && cateName1 != "" && cateName2 != "" && cateName3 != "") {
             results = jpaQueryFactory.select(qProducts)
                     .from(qProducts)
                     .where(qProducts.cateName1.eq(cateName1).and(qProducts.cateName2.eq(cateName2).and(qProducts.cateName3.eq(cateName3))))

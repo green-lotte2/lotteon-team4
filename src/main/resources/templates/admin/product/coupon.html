@@ -12,9 +12,23 @@
                         if(code === '100'){
                             alert('등록이 되었습니다.');
                         }
+                        const canUse =document.getElementById('canUse');
+                        const end = document.getElementById('end');
+                        canUse.onclick=function (e){
+                            e.preventDefault();
+                            document.location.href='/lotteshop/admin/coupon/register?state=0';
+                        }
+
+                        end.onclick=function (e){
+                            e.preventDefault();
+                            document.location.href='/lotteshop/admin/coupon/register?state=1';
+                        }
+
+
+
                         const button = document.getElementById('couponButton');
                         const couponModal = document.getElementById('couponModal');
-                       const closeButton = document.getEleme ntById('closeButton');
+                       const closeButton = document.getElementById('closeButton');
                         const submitCoupon = document.getElementById('submitCoupon');
                         const form = document.getElementById('formCoupon')
                         // 각 입력 필드에 대한 값을 가져옵니다.
@@ -100,7 +114,7 @@
                             <!-- 여기에 쿠폰 등록 폼 추가 -->
                             <h4>쿠폰 등록</h4>
                             <form th:action="@{/admin/coupon/register}" method="post" style="text-align: center; margin-top: 20px;" id="formCoupon">
-                                <table style="margin: 0 auto;">
+                                <table style="margin: 0 auto; height: auto">
                                     <tr>
                                         <td>쿠폰이름:</td>
                                         <td><input type="text" name="couponName" style="padding: 8px;"></td>
@@ -122,25 +136,30 @@
                                         <td><input type="date"  name="endDate" style="padding: 8px;"></td>
                                     </tr>
                                 </table>
+                                <br>
                                 <button id="submitCoupon" type="submit">등록하기</button>
                             </form>
-
+                        <br>
                         </div>
                     </div>
                     <div>
                         <button id="couponButton">쿠폰 등록</button>
                     </div>
-
+                    <br>
+                    <div style="background-color: #f1f0f0 ; margin-bottom: 0">
+                        <br>
+                        <span id="canUse" style="margin-left: 10px;">유효</span>
+                        <span id="end" style="margin-left: 10px;">만료</span>
+                    </div>
                     <div style="border: 1px solid #efeeee; height: auto; background-color: #f1f0f0">
                         <!--쿠폰쓰 -->
                         <div th:each="coupon , index:${coupons}" style=" margin-bottom: 10px; margin-top: 50px; display: flex; justify-content: center;">
-                            <div style="display: flex; justify-content: space-between; margin-top: 10px; width: 50%;">
+                            <div style="display: flex; justify-content: space-between; margin-top: 30px; width: 70%; height: auto">
                                 <div style=" width: 70%; height: 120px; display: flex; justify-content: center; align-items: center;">
                                     <!-- 초록색 박스 -->
-                                    <div style="display: flex; justify-content: space-between; width: 70%;">
-                                        <div style="border: 1px solid #ff0000; width: 80%; height:  auto; background-color: white;">
+                                    <div style="display: flex; justify-content: space-between; width: 60%;">
+                                        <div style="border: 1px solid #ff0000; width: 70%; height:  auto; background-color: white;">
                                             <div style="color: #f34c4c; height: auto; margin-left: 5px;  ">
-                                                <br>
                                                 <p style="font-size: large; font-weight: bolder">[[${coupon.discount}]]%</p>
                                                 <p style="color: black; ">[[${coupon.couponName}]]</p>
                                                 <p style="color: gray">모든 상품 적용</p>
@@ -155,8 +174,6 @@
                                     </div>
                                 </div>
                                 <div style="  align-items: center;  width: 30%; height: 120px;">
-                                    <p>삭제(X)</p>
-                                    <br>
                                     <p>다운받은 횟수</p>
                                     <p>[[${coupon.download}]]</p>
                                 </div>

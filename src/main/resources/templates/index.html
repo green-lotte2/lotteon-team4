@@ -155,7 +155,7 @@
                         <a th:href="@{/admin/index}">관리자페이지</a>
                     </th:block>
                 </th:block>
-                <a th:href="@{#}">회원가입</a>
+                <a th:href="@{/member/register}">회원가입</a>
                 <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                     <th:block th:if="${#authentication.principal.user.role == 'USER'}">
                         <a th:href="@{/my/home}">마이페이지</a>
@@ -185,11 +185,10 @@
         <div class="menu">
             <div>
                 <ul>
-                    <li><a th:href="@{#}">히트상품</a></li>
-                    <li><a th:href="@{#}">추천상품</a></li>
-                    <li><a th:href="@{#}">최신상품</a></li>
-                    <li><a th:href="@{#}">인기상품</a></li>
-                    <li><a th:href="@{#}">할인상품</a></li>
+                    <li><a th:href="@{/product/list(cate = 'a')}">히트상품</a></li>
+                    <li><a th:href="@{/product/list(cate = 'b')}">추천상품</a></li>
+                    <li><a th:href="@{/product/list(cate = 'c')}">최신상품</a></li>
+                    <li><a th:href="@{/product/list(cate = 'd')}">할인상품</a></li>
                 </ul>
                 <ul>
                     <li><a th:href="@{/cs/notice/list}">공지사항</a></li>
@@ -338,11 +337,11 @@
                 <ol th:each="product , index:${prodSolds}" th:if="${index.index <3}">
                     <li>
                         <a th:href="@{/product/view(prodno=${product.prodNo})}" style=" text-align: center">
-                            <div class="thumb" >
+                            <div class="thumb"  >
                                 <span style="color: red ; font-weight: bolder; text-decoration: underline">[[${index.index +1}]]</span>
                                 <img style="width: 150px ; height: auto;" th:src="@{/uploads/__${product.image1}__}" alt="item1"/>
                             </div>
-                            <h2>[[${product.prodName}]]</h2>
+                            <h2>[[${product.prodName}]]  <span style="color: red; border: 1px solid red" th:if="${product.hit >0}"> HIT</span></h2>
                             <th:block th:if="${product.prodDiscount != 0}">
                                 <div class="org_price">
                                     <del>[[${product.prodPrice}]]</del>
@@ -392,7 +391,9 @@
                         <div class="thumb">
                             <img th:src="@{/uploads/__${product.image2}__}" alt="t1"/>
                         </div>
-                        <h2>[[${product.prodName}]]</h2>
+                        <h2>[[${product.prodName}]]  <span style="color: red; border: 1px solid red" th:if="${product.hit >0}"> HIT</span>
+                        </h2>
+
                         <p>[[${product.etc}]]</p>
                         <th:block th:if="${product.prodDiscount != 0}">
                             <div class="org_price">

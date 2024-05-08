@@ -149,9 +149,66 @@
                 </li>
             </ul>
         </aside>
-
         <section class="list">
+
+            <th:block th:if="${view != 0} ">
+                <nav>
+                    <h1>상품목록</h1>
+                    <p>HOME > <span th:if="${state == 'a'}">히트 상품</span>
+                        <span th:if="${state == 'b'}">추천 상품</span>
+                        <span th:if="${state == 'c'}">최신 상품</span>
+                        <span th:if="${state == 'd'}">할인 상품</span>
+                    </p>
+                </nav>
+                <!-- 상품목록 -->
+                <table border="0">
+                    <tr th:each="product , index:${products}">
+                        <td><a th:href="@{/product/view(prodno=${product.prodNo})}" class="thumb"><img th:src="@{/uploads/__${product.image1}__}" alt="상품이미지"/></a></td>
+                        <td>
+                            <a th:href="@{/product/view(prodno=${product.prodNo})}"> <h3 class="name">[[${product.prodName }]]
+                                <span style="color: red; border: 1px solid red" th:if="${product.hit >0}"> HIT</span></h3></a>
+                            <a href="#" class="desc">[[${product.etc}]]</a>
+                        </td>
+
+                        <th:block th:if="${product.prodDiscount != 0}">
+                            <td>
+                                <ul>
+                                    <li><ins class="dis-price">[[${#numbers.formatDecimal(product.prodPrice * (100 - product.prodDiscount) * 0.01, 1,0 )}]]</ins></li>
+                                    <li>
+                                        <del class="org-price">[[${product.prodPrice}]]</del>
+                                        <span class="discount">[[${product.prodDiscount}]]</span>
+                                    </li>
+                                    <li> <span class="free" th:if="${product.delivery == 0}">무료배송</span></li>
+                                    <li> <span class="free" th:if="${product.delivery != 0}"><i class="fa fa-truck"></i>  [[${product.delivery}]]</span></li>
+                                    <li><span id="like" style="font-size: large" th:data-prodNo="${product.prodNo}" th:if="${product.getLikeState() != 0}">❤️</span></li>
+                                    <li><span id="unlike" style="font-size: large" th:data-prodNo="${product.prodNo}" th:if="${product.getLikeState() == 0}">🤍</span></li>
+                                </ul>
+                            </td>
+                        </th:block>
+                        <th:block th:if="${product.prodDiscount == 0}">
+                            <td>
+                                <ul>
+                                    <li><ins class="dis-price">[[${#numbers.formatDecimal(product.prodPrice * (100 - product.prodDiscount) * 0.01, 1,0 )}]]</ins></li>
+                                    <li> <span class="free" th:if="${product.delivery == 0}">무료배송</span></li>
+                                    <li> <span class="free" th:if="${product.delivery != 0}"><i class="fa fa-truck"></i>  [[${product.delivery}]]</span></li>
+                                    <li><span id="like" style="font-size: large" th:data-prodNo="${product.prodNo}"  th:if="${product.getLikeState() != 0}">❤️</span></li>
+                                    <li><span id="unlike" style="font-size: large"  th:data-prodNo="${product.prodNo}"  th:if="${product.getLikeState() == 0}">🤍</span></li>
+                                </ul>
+                            </td>
+                        </th:block>
+
+                        <td>
+                            <h4 class="seller"><i class="fas fa-home"></i>&nbsp;[[${product.sellerName}]]</h4>
+                            <h5 class="badge power">판매자등급</h5>
+                            <h6 class="rating star1">상품평</h6>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <br>
+            </th:block>
             <!-- 제목, 페이지 네비게이션 -->
+            <th:block th:if="${view == 0}">
             <nav>
                 <h1>상품목록</h1>
                 <p>HOME > <span>[[${pageResponseDTO.cateName1}]]</span>
@@ -176,7 +233,8 @@
                 <tr th:each="product , index:${pageResponseDTO.dtoList}">
                     <td><a th:href="@{/product/view(prodno=${product.prodNo})}" class="thumb"><img th:src="@{/uploads/__${product.image1}__}" alt="상품이미지"/></a></td>
                     <td>
-                       <a th:href="@{/product/view(prodno=${product.prodNo})}"> <h3 class="name">[[${product.prodName}]]</h3></a>
+                       <a th:href="@{/product/view(prodno=${product.prodNo})}"> <h3 class="name">[[${product.prodName }]]
+                           <span style="color: red; border: 1px solid red" th:if="${product.hit >0}"> HIT</span></h3></a>
                         <a href="#" class="desc">[[${product.etc}]]</a>
                     </td>
 
@@ -237,8 +295,9 @@
                             <a th:href="@{/product/list( pg=${pageResponseDTO.end+1} , cateName1 =${pageResponseDTO.getCateName1()} , cateName2 = ${pageResponseDTO.getCateName2() }, cateName3=${pageResponseDTO.getCateName3()})}">다음&nbsp;></a>
                         </span>
             </div>
-
+            </th:block>
         </section>
     </main>
+
 </div>
 </html>

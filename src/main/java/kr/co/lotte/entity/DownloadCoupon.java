@@ -18,5 +18,6 @@ public class DownloadCoupon {
     private int pk;
     private  int couponCode;
     private  String uid;
+    private  int state;
 
 }

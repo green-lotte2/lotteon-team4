@@ -3,6 +3,7 @@
       layout:decorate="~{/layout/productLayout}">
 
 <div class="container" layout:fragment="content">
+
         <script>
             window.onload=async function () {
                 const likes = document.querySelectorAll('#like');
@@ -47,6 +48,23 @@
 
 
         </script>
+    <script>
+        window.onload = function (){
+            $(document).ready(function () {
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 300) {
+                        $('#btnTop').fadeIn();
+                    } else {
+                        $('#btnTop').fadeOut();
+                    }
+                });
+                $('#btnTop').click(function () {
+                    $('html, body').animate({scrollTop: 0}, 400);
+                    return false;
+                });
+            });
+        }
+    </script>
     <main id="product">
         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
             <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">

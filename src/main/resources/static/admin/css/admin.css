@@ -752,11 +752,11 @@ button[type=submit] {
 /*****************************************/
 #admin-cs-faq table td.faq-list-checkbox{
     text-align: center;
-    width: 36px;
+    width: 5px;
 }
 #admin-cs-faq table th.faq-list-checkbox{
     text-align: center;
-    width: 36px;
+    width: 5px;
 }
 #admin-cs-faq .paging{
     width: 100%;

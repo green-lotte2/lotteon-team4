@@ -6,8 +6,10 @@ import kr.co.lotte.dto.BannerDTO;
 import kr.co.lotte.dto.SellerDTO;
 import kr.co.lotte.dto.TermsDTO;
 import kr.co.lotte.dto.UserDTO;
+import kr.co.lotte.entity.Policy;
 import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MemberService;
+import kr.co.lotte.service.PolicyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AdminService adminService;
+    private final PolicyService policyService;
 
     @GetMapping("/member/join")
     public String join() {
@@ -136,10 +139,22 @@ public class MemberController {
      * 여기부터는 판매자
      */
 
+    //약관 동의 페이지 매핑
+    @GetMapping("/member/signupseller")
+    public String signupSeller(Model model){
+        Policy policy = policyService.buyerPolicy(2L);
+        model.addAttribute("policy", policy);
+        return "/member/signupSeller";
+    }
+
+    @PostMapping("/member/signupseller")
+    public String signupSeller(){
+        return "redirect:/member/registerSeller";
+    }
     //판매자 회원가입 페이지 매핑
     @GetMapping("/member/registerseller")
     public String registerSeller() {
-        return "/member/registerSeller";
+        return "/member/registerseller";
     }
 
     @PostMapping("/member/registerseller")

@@ -62,25 +62,33 @@
                             <a th:href="@{/admin/config/finance}">전자금융거래 약관 | </a>
                             <a th:href="@{/admin/config/location}">위치정보이용 약관 | </a>
                             <a th:href="@{/admin/config/privacy}">개인정보수집 방침 | </a>
-                            <form name="formSubmit" th:action="@{/admin/info/modify}" method="post">
+                            <form name="formSubmit" th:action="@{/admin/policy/modify/{id}(id=${policy.id})}" method="post">
                             <br>
-                                <input type="hidden" th:value="${terms.intPk}">
+                                <input type="hidden" th:value="${policy.id}">
                             <table>
                                 <tr>
-                                    <td>1조</td>
-                                    <td><textarea name="terms" style="width: calc(100%) ; height: 150px" th:text="${terms.terms}"></textarea></td>
+                                    <td>제1장</td>
+                                    <td><textarea name="chapter1" style="width: calc(100%) ; height: 150px" th:text="${policy.chapter1}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>2조</td>
-                                    <td><textarea name="terms2" style="width: calc(100%); height: 150px" th:text="${terms.terms2}"></textarea></td>
+                                    <td>제2장</td>
+                                    <td><textarea name="chapter2" style="width: calc(100%); height: 150px" th:text="${policy.chapter2}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>3조</td>
-                                    <td><textarea name="privacy" style="width: calc(100%); height: 150px" th:text="${terms.privacy}"></textarea></td>
+                                    <td>제3장</td>
+                                    <td><textarea name="chapter3" style="width: calc(100%); height: 150px" th:text="${policy.chapter3}"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td>마케팅 수신</td>
-                                    <td><textarea name="sms" style="width: calc(100%); height: 150px" th:text="${terms.sms}"></textarea></td>
+                                    <td>제4장</td>
+                                    <td><textarea name="chapter4" style="width: calc(100%); height: 150px" th:text="${policy.chapter4}"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>제5장</td>
+                                    <td><textarea name="chapter5" style="width: calc(100%); height: 150px" th:text="${policy.chapter5}"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>제6장</td>
+                                    <td><textarea name="chapter6" style="width: calc(100%); height: 150px" th:text="${policy.chapter6}"></textarea></td>
                                 </tr>
                             </table>
                             </form>

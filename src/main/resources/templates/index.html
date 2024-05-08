@@ -80,6 +80,7 @@
         }
 
         // 문의하기 로그인, 비로그인 상태에 따라
+            try{
         const question = document.getElementById('question');
         question.onclick = function (e){
             e.preventDefault();
@@ -91,6 +92,9 @@
                 alert('로그인 후 이용할 수 있습니다.');
             }
         }
+            }catch (e){
+
+            }
             ////////////////////////////////////
         //////////////////btnTop, Home//////////////////
             ////////////////////////////////////

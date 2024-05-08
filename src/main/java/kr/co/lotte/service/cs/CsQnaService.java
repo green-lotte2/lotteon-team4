@@ -53,4 +53,13 @@ public class CsQnaService {
         return modelMapper.map(csQna, CsQnaDTO.class);
     }
 
+    // admin.cs.qna 대답
+    public void adminQnaComment(CsQnaDTO csQnaDTO){
+        // 번호로 부르기
+        int no = csQnaDTO.getNo();
+
+        CsQna csQna = modelMapper.map(csQnaDTO, CsQna.class);
+        CsQna savedCsQna = csQnaRepository.save(csQna);
+
+    }
 }

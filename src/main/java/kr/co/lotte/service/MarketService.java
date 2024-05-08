@@ -91,7 +91,7 @@ public class MarketService {
 
     //쿠폰 조회
     public List<Coupon> searchCoupon(String uid){
-        List<DownloadCoupon> temp = downloadCouponRepository.findAllByUid(uid);
+        List<DownloadCoupon> temp = downloadCouponRepository.findAllByStateAndUid(0, uid);
         List<Coupon> coupons = new ArrayList<>();
         for(DownloadCoupon d : temp){
             Coupon coupon = couponRepository.findById(d.getCouponCode()).get();
@@ -151,9 +151,15 @@ public class MarketService {
     @Autowired
     private PointsRepository pointsRepository;
 
+
     //order table 넣고 포인트 감소
     public ResponseEntity insertOrderAndPoint(OrdersDTO ordersDTO) {
         ordersDTO.setOrderState("주문 대기");
+        if(ordersDTO.getCouponDiscount() >0){
+            DownloadCoupon downloadCoupon = downloadCouponRepository.findByCouponCodeAndUid(ordersDTO.getCouponCode(), ordersDTO.getUserId());
+            downloadCoupon.setState(2);
+            downloadCouponRepository.save(downloadCoupon);
+        }
         Orders orders = ordersRepository.save(modelMapper.map(ordersDTO, Orders.class));
         if (ordersDTO.getPoint() > 0) {
             User user = memberRepository.findById(ordersDTO.getUserId()).get();

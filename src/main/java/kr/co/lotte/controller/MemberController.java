@@ -10,6 +10,8 @@ import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Session;
+import org.apache.catalina.authenticator.SavedRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +35,10 @@ public class MemberController {
     }
 
     @GetMapping("/member/login")
-    public String login(Model model) {
+    public String login(Model model , HttpServletRequest request) {
+        String previousUrl = request.getHeader("Referer");
+        HttpSession session = request.getSession();
+        session.setAttribute("previousUrl", previousUrl);
 
         List<BannerDTO> banner4 = adminService.findMEMBER1("MEMBER1");
         model.addAttribute("banner4", banner4);

@@ -42,19 +42,40 @@ public class MarketController {
 
     @GetMapping("/product/list")
     public String list(Model model, MainProductsPageRequestDTO requestDTO, @AuthenticationPrincipal MyUserDetails userDetails) {
-        MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProducts(requestDTO);
-        List<Products> products = pageResponseDTO.getDtoList();
-        try {
-            User user = userDetails.getUser();
-            List<Products> newProducts = mainService.hahaha(products, user.getUid());
-            pageResponseDTO.setDtoList(newProducts);
-        } catch (Exception e) {
-            for (Products p : products) {
-                p.setLikeState(0);
+        int view = 0;
+        if(requestDTO.getCate() == "" || requestDTO.getCate() == null){
+            MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProducts(requestDTO);
+            List<Products> products = pageResponseDTO.getDtoList();
+            try {
+                User user = userDetails.getUser();
+                List<Products> newProducts = mainService.hahaha(products, user.getUid());
+                pageResponseDTO.setDtoList(newProducts);
+            } catch (Exception e) {
+                for (Products p : products) {
+                    p.setLikeState(0);
+                }
+                pageResponseDTO.setDtoList(products);
             }
-            pageResponseDTO.setDtoList(products);
+            model.addAttribute("view", view);
+            model.addAttribute("pageResponseDTO", pageResponseDTO);
+        }else{
+            view = 1;
+            List<Products> products = mainService.searchListForCate(requestDTO.getCate());
+            try {
+                User user = userDetails.getUser();
+                products  = mainService.hahaha(products, user.getUid());
+            } catch (Exception e) {
+                for (Products p : products) {
+                    p.setLikeState(0);
+                }
+            }
+            model.addAttribute("state", requestDTO.getCate());
+            model.addAttribute("products", products);
+            model.addAttribute("view", view);
+
         }
-        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+
         return "/product/list";
     }
 
@@ -157,6 +178,9 @@ public class MarketController {
             sellerProductMap.put(sellerName, productList);
         }
         log.info(sellerProductMap.toString() + "here~");
+
+        //쿠폰 리스트도 걍 넘겨주자여기서
+        model.addAttribute( "coupons",marketService.searchCoupon(user.getUid()));
         model.addAttribute("subProducts", sellerProductMap);
        // model.addAttribute("counts", counts);
         model.addAttribute("number", counts.size()); // 이거를 넣음 주문건수 때문에

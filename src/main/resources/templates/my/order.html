@@ -213,7 +213,10 @@
                                         <td th:if="${orderItem.orderState != '주문 취소' && orderItem.orderState != '환불'}"
                                             class="confirm" style="text-align: center">
                                             <ol>
-                                                <li th:href="@{#}" class="receive">수취확인</li>
+                                                <li id="orderCheck"
+                                                    th:if="${orderItem.orderState != '구매확정' &&
+                                                    orderItem.orderState != '환불' &&
+                                                     orderItem.orderState != '주문 취소'}" th:data-itemNo="${orderItem.itemNo}" class="receive">수취확인</li>
                                                 <li th:if="${orderItem.orderState == '구매확정'}" th:href="@{#}"
                                                     class="review" th:data-orderno="${order.orderNo}"
                                                     th:data-itemno="${orderItem.itemNo}"
@@ -244,22 +247,22 @@
                                     배송비 <span th:if="${order.delivery != 0}" class="request">[[${#numbers.formatCurrency(order.delivery)}]]></span>
                                 <span th:if="${order.delivery == 0}" class="request">무료</span>
                                   포인트 사용  <span  th:if="${order.point != 0}"> [[${#numbers.formatCurrency(order.point)}]] </span>
-                                    <span  th:if="${order.point == 0}"> X</span>
+                                    <span  th:if="${order.point == 0}"> 사용X </span>
                                     쿠폰 사용 <span th:if="${order.couponDiscount != 0}"> [[${#numbers.formatCurrency(order.couponDiscount)}]]</span>
-                                    <span th:if="${order.couponDiscount == 0}">X</span>
+                                    <span th:if="${order.couponDiscount == 0}"> 사용X </span>
                                     상품 할인 금액 <span th:if="${order.getItemDiscount() != 0}">[[${#numbers.formatCurrency(order.getItemDiscount)}]]</span>
-                                    <span th:if="${order.getItemDiscount() == 0}">X</span>
+                                    <span th:if="${order.getItemDiscount() == 0}"> 사용X </span>
                                     = 최종 결제 금액 <span style="color: red; font-weight: bolder"> [[${#numbers.formatCurrency(order.orderTotalPrice)}]]</span>
                                 </h3>
                                 <table border="0" style="width: 100%">
 
                                     <tr>
                                         <th>받으실 분</th>
-                                        <td class="name">[[${order.sendName}]]</td>
+                                        <td class="name">[[${order.receiveName}]]</td>
                                     </tr>
                                     <tr>
                                         <th>연락처</th>
-                                        <td class="hp">[[${order.sendHp}]]</td>
+                                        <td class="hp">[[${order.receiveHp}]]</td>
                                     </tr>
                                     <tr style="width: auto">
                                         <th>배송지</th>
@@ -282,6 +285,7 @@
 
                     //주문취소
                     const deletes = document.querySelectorAll('#delete');
+                    const orderChecks = document.querySelectorAll('#orderCheck');
 
                     deletes.forEach(function (item) {
                         item.onclick = async function () {
@@ -291,8 +295,10 @@
                                     const result2 = await fetchGet('/lotteshop/product/orderDelete?itemNo=' + item.getAttribute('data-itemNo'));
                                     if (result2.data == 1) {
                                         alert("취소가 완료되었습니다. (배송비 3000원 결제 완료)");
+                                        location.reload();
                                     } else {
                                         alert("취소가 완료되었습니다.")
+                                        location.reload();
                                     }
                                 }
                             } else {
@@ -300,8 +306,10 @@
                                     const result2 = await fetchGet('/lotteshop/product/orderDelete?itemNo=' + item.getAttribute('data-itemNo'));
                                     if (result2.data == 1) {
                                         alert("취소가 완료되었습니다. (배송비 3000원 결제 완료)");
+                                        location.reload();
                                     } else {
                                         alert("취소가 완료되었습니다.")
+                                        location.reload();
                                     }
                                 }
                             }

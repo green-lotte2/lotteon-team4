@@ -23,6 +23,8 @@ public class QDownloadCoupon extends EntityPathBase<DownloadCoupon> {
 
     public final NumberPath<Integer> pk = createNumber("pk", Integer.class);
 
+    public final NumberPath<Integer> state = createNumber("state", Integer.class);
+
     public final StringPath uid = createString("uid");
 
     public QDownloadCoupon(String variable) {

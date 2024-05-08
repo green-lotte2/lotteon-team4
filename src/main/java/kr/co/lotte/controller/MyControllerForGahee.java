@@ -1,5 +1,6 @@
 package kr.co.lotte.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.OrderItems;
 import kr.co.lotte.entity.Orders;
@@ -35,18 +36,35 @@ public class MyControllerForGahee {
     private final MyServiceForGahee myServiceForGahee;
 
     @GetMapping("/my/coupon")
-    public String myCoupon() {
+    public String myCoupon(Model model , Authentication authentication , @RequestParam(name = "state", required = false) String states) {
+        if(states == null){
+            states ="0";
+        }
+        int state = Integer.parseInt(states);
+
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        String uid = userDetails.getUser().getUid();
+        model.addAttribute("coupons", myServiceForGahee.findDownloadCouponByUid(state, uid));
         return "/my/coupon";
     }
 
 
     @GetMapping("/my/home")
-    public String myHome(Model model , Authentication authentication) {
+    public String myHome(Model model , Authentication authentication , HttpSession session) {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         String uid = userDetails.getUser().getUid();
         //포인트 넣어주고
         model.addAttribute("points", myServiceForGahee.forPoint(uid));
+
+
         //최근 주문 내역
+        List<Orders> orders = myServiceForGahee.searchOrdersForHome(uid);
+        model.addAttribute("orders", orders);
+        List<List<OrderItems>> orderItems = myServiceForGahee.searchOrderItems(orders);
+        //subitems (subProdNo가 나올 것이고...)
+        model.addAttribute("orderItems", myServiceForGahee.searchOrderItems(orders));
+        //prod image
+        model.addAttribute("products",myServiceForGahee.searchProducts(orderItems));
 
         //상품평 출력
         List<Review> reviews= reviewService.find_five(uid);
@@ -58,6 +76,11 @@ public class MyControllerForGahee {
         log.info("banner5: {}", banner5);
         model.addAttribute("banner5", banner5);
 
+        //쿠폰 유효기간 설정
+        myServiceForGahee.checkCoupon(uid);
+
+        //home네비에 있는 친구들
+        myServiceForGahee.forMyHome(uid, session);
         return "/my/home";
     }
 
@@ -128,7 +151,8 @@ public class MyControllerForGahee {
 
     //쿠폰(admin)
     @GetMapping("/admin/coupon/register")
-    public String couponRegister(Authentication authentication , Model model , @RequestParam(name = "code", required = false)String code){
+    public String couponRegister(Authentication authentication , Model model , @RequestParam(name = "code", required = false)String code ,
+                                 @RequestParam(name = "state", required = false) String states){
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
         if(!user.getRole().equals("ADMIN")){
@@ -138,7 +162,11 @@ public class MyControllerForGahee {
             code = "0";
         }
         //쿠폰이 보여야할텐데... 현재 가능한 것만 보여줄까?
-        model.addAttribute("coupons", myServiceForGahee.searchCoupon());
+        if(states == null){
+            states = "0";
+        }
+        int state = Integer.parseInt(states);
+        model.addAttribute("coupons", myServiceForGahee.searchCoupon(state));
 
 
         model.addAttribute("code", code);
@@ -156,6 +184,7 @@ public class MyControllerForGahee {
     public  ResponseEntity downloadCoupon(@RequestBody DownloadCouponDTO downloadCouponDTO){
     return myServiceForGahee.donwloadCoupon(downloadCouponDTO);
     };
+
 
 
 

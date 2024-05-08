@@ -33,6 +33,8 @@ public class QCoupon extends EntityPathBase<Coupon> {
 
     public final NumberPath<Integer> min = createNumber("min", Integer.class);
 
+    public final NumberPath<Integer> state = createNumber("state", Integer.class);
+
     public QCoupon(String variable) {
         super(Coupon.class, forVariable(variable));
     }

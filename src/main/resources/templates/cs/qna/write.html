@@ -121,6 +121,8 @@
             <h2>회원 관련 문의내용 입니다.</h2>
           </nav>
           <form th:action="@{/cs/qna/write}" method="post">
+            <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}" />
+            <input type="hidden" name="status" th:value="검토중" />
             <table>
               <tr>
                 <td>문의유형</td>

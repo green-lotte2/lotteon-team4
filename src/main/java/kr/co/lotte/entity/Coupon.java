@@ -28,5 +28,6 @@ public class Coupon {
     private  int max;
     private String endDate;
     private  int download;
+    private  int state;
 
 }

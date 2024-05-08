@@ -733,6 +733,26 @@
 
                         }
                     </script>
+                    <script>
+                        ////////////////////////////////////////////////////////
+                        //////btnTop, Home 버튼 설정////////////////////////////
+                        ////////////////////////////////////////////////////////
+                        window.onload = function (){
+                            $(document).ready(function () {
+                                $(window).scroll(function () {
+                                    if ($(this).scrollTop() > 400) {
+                                        $('#btnTop').fadeIn();
+                                    } else {
+                                        $('#btnTop').fadeOut();
+                                    }
+                                });
+                                $('#btnTop').click(function () {
+                                    $('html, body').animate({scrollTop: 0}, 400);
+                                    return false;
+                                });
+                            });
+                        }
+                    </script>
                     <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                         <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">
                     </th:block>

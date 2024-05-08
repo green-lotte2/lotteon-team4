@@ -6,10 +6,14 @@ import kr.co.lotte.dto.BannerDTO;
 import kr.co.lotte.dto.SellerDTO;
 import kr.co.lotte.dto.TermsDTO;
 import kr.co.lotte.dto.UserDTO;
+import kr.co.lotte.entity.Policy;
 import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.MemberService;
+import kr.co.lotte.service.PolicyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Session;
+import org.apache.catalina.authenticator.SavedRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AdminService adminService;
+    private final PolicyService policyService;
 
     @GetMapping("/member/join")
     public String join() {
@@ -34,7 +39,10 @@ public class MemberController {
     }
 
     @GetMapping("/member/login")
-    public String login(Model model) {
+    public String login(Model model , HttpServletRequest request) {
+        String previousUrl = request.getHeader("Referer");
+        HttpSession session = request.getSession();
+        session.setAttribute("previousUrl", previousUrl);
 
         List<BannerDTO> banner4 = adminService.findMEMBER1("MEMBER1");
         model.addAttribute("banner4", banner4);
@@ -170,10 +178,22 @@ public class MemberController {
      * 여기부터는 판매자
      */
 
+    //약관 동의 페이지 매핑
+    @GetMapping("/member/signupseller")
+    public String signupSeller(Model model){
+        Policy policy = policyService.buyerPolicy(2L);
+        model.addAttribute("policy", policy);
+        return "/member/signupSeller";
+    }
+
+    @PostMapping("/member/signupseller")
+    public String signupSeller(){
+        return "redirect:/member/registerSeller";
+    }
     //판매자 회원가입 페이지 매핑
     @GetMapping("/member/registerseller")
     public String registerSeller() {
-        return "/member/registerSeller";
+        return "/member/registerseller";
     }
 
     @PostMapping("/member/registerseller")

@@ -1,6 +1,7 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.*;
@@ -41,6 +42,8 @@ public class MyServiceForGahee {
     private ModelMapper modelMapper;
     @Autowired
     private DownloadCouponRepository downloadCouponRepository;
+    @Autowired
+    private  MemberRepository memberRepository;
 
     public List<Points> forPoint(String uid) {
         //최근 주문 내역
@@ -65,6 +68,10 @@ public class MyServiceForGahee {
         List<Orders> dtoList = page.getContent();
         int total = (int) page.getTotalElements();
         return new OrdersPageResponseDTO(requestDTO, dtoList, total);
+    }
+
+    public List<Orders> searchOrdersForHome(String uid){
+        return ordersRepository.findTop3ByUserIdOrderByOrderNoDesc(uid);
     }
 
     public List<List<OrderItems>> searchOrderItems(List<Orders> orders) {
@@ -127,8 +134,8 @@ public class MyServiceForGahee {
     @Autowired
     private CouponRepository couponRepository;
 
-    public List<Coupon> searchCoupon(){
-        return couponRepository.findAll();
+    public List<Coupon> searchCoupon(int state){
+        return couponRepository.findAllByState(state);
     }
 
 
@@ -137,12 +144,7 @@ public class MyServiceForGahee {
     }
 
     public List<Coupon> findFutureCoupons() {
-        List<Coupon> allCoupons = couponRepository.findAll();
-        LocalDate currentDate = LocalDate.now();
-        List<Coupon> futureCoupons = allCoupons.stream()
-                .filter(coupon -> LocalDate.parse(coupon.getEndDate()).compareTo(currentDate) >= 0)
-                .collect(Collectors.toList());
-
+        List<Coupon> futureCoupons = couponRepository.findAllByState(0);
         return futureCoupons;
     }
 
@@ -161,5 +163,43 @@ public class MyServiceForGahee {
         Map<String , Integer> map = new HashMap<>();
         map.put("data" , data);
         return ResponseEntity.ok().body(map);
+    }
+
+    //쿠폰
+    public  void checkCoupon(String uid){
+        List<DownloadCoupon> downloadCoupon = downloadCouponRepository.findAllByUid(uid);
+        for(DownloadCoupon downloadCoupon1 : downloadCoupon){
+            Coupon coupon = couponRepository.findById(downloadCoupon1.getCouponCode()).get();
+            if(coupon.getState() == 1 && downloadCoupon1.getState() == 0){
+                downloadCoupon1.setState(1);
+                downloadCouponRepository.save(downloadCoupon1);
+            }
+        }
+    }
+
+    //mypageCoupon
+    public List<Coupon> findDownloadCouponByUid(int state, String uid){
+       List<DownloadCoupon> downloadCoupons = downloadCouponRepository.findAllByStateAndUid(state, uid);
+       List<Coupon> couponList = new ArrayList<>();
+       for (DownloadCoupon downloadCoupon : downloadCoupons) {
+           Coupon coupon = couponRepository.findById(downloadCoupon.getCouponCode()).get();
+           couponList.add(coupon);
+       }
+       return couponList;
+    }
+
+    //myPage 주문 배송 등
+    public void forMyHome(String uid, HttpSession session){
+        //주문배송
+        int order = ordersRepository.findALLByUserId(uid).size();
+        session.setAttribute("homeOrder", order);
+        //할인쿠폰
+        int coupon = downloadCouponRepository.findAllByStateAndUid(0, uid).size();
+        session.setAttribute("homeCoupon", coupon);
+
+        //포인트
+        int point = memberRepository.findById(uid).get().getTotalPoint();
+        session.setAttribute("homePoint", point);
+        //문의내역 (나중에)
     }
 }

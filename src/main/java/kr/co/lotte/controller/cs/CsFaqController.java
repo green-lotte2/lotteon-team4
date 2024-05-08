@@ -4,7 +4,6 @@ import groovy.util.logging.Slf4j;
 import kr.co.lotte.dto.CsFaqDTO;
 import kr.co.lotte.dto.CsFaqPageRequestDTO;
 import kr.co.lotte.dto.CsFaqPageResponseDTO;
-import kr.co.lotte.dto.CsNoticeDTO;
 import kr.co.lotte.service.cs.CsFaqService;
 import kr.co.lotte.service.cs.CsNoticeService;
 import kr.co.lotte.service.cs.CsQnaService;
@@ -117,7 +116,7 @@ public class CsFaqController {
         List<List<CsFaqDTO>> dtoLists = csFaqService.getFaqArticles(cate1);
         log.info("dtoLists.size() : " + dtoLists.size());
         model.addAttribute("dtoLists", dtoLists);
-        return "/cs/faq/user";
+        return "list";
     }
 
     // cs.faq.view 출력

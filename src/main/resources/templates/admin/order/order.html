@@ -234,6 +234,7 @@
                 </nav>
                 <!-- 상품등록 컨텐츠 시작 -->
                 <form th:action="@{/admin/orderList}">
+                    <input type="hidden" name="state" th:value="${pageResponseDTO.state}">
                     <input type="date" name="dateBegin" min="[LAST_DATE]" max="[CURRENT_DATE]" required>
                     <span>~</span>
                     <input type="date" name="dateEnd" max="[CURRENT_DATE]" required>

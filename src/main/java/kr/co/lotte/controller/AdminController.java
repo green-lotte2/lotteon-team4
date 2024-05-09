@@ -144,7 +144,11 @@ public class AdminController {
         return "redirect:/admin/config/info?code=100";
     }
 
-
+    @PostMapping("/admin/product/subOptionModify")
+    public ResponseEntity modifyOption(@RequestBody Map<String, List<SubProductsDTO>> map){
+        List<SubProductsDTO> list = map.get("list");
+        return adminService.modifyOptions(list);
+    }
 
     //product
     @GetMapping("/admin/product/list")
@@ -234,6 +238,14 @@ public class AdminController {
         adminService.productRegister(productsDTO);
       return  "redirect:/admin/product/register?code=100";
     }
+
+    @PostMapping("/admin/product/modify")
+    public String modify( ProductsDTO productsDTO){
+        log.info(productsDTO.toString());
+        adminService.productModify(productsDTO);
+        return  "redirect:/admin/product/modify?code=200&prodNo="+productsDTO.getProdNo();
+    }
+
 
 
     @ResponseBody

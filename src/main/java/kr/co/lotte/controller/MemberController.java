@@ -39,10 +39,12 @@ public class MemberController {
     }
 
     @GetMapping("/member/login")
-    public String login(Model model , HttpServletRequest request) {
+    public String login(Model model , HttpServletRequest request, @RequestParam(name = "success", required = false)String success) {
         String previousUrl = request.getHeader("Referer");
         HttpSession session = request.getSession();
-        session.setAttribute("previousUrl", previousUrl);
+        if(session.getAttribute("previousUrl") == null && success == null) {
+            session.setAttribute("previousUrl", previousUrl);
+        }
 
         List<BannerDTO> banner4 = adminService.findMEMBER1("MEMBER1");
         model.addAttribute("banner4", banner4);

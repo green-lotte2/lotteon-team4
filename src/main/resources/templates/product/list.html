@@ -47,6 +47,7 @@
             }
 
         </script>
+
     <main id="product">
         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
             <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">

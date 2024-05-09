@@ -88,6 +88,30 @@ public class MemberController {
 
         return ResponseEntity.ok().body(resultMap);
     }
+    @ResponseBody
+    @GetMapping("/seller/check/{type}/{value}")
+    public ResponseEntity<?> checkSeller(HttpSession session,
+                                       @PathVariable("type") String type,
+                                       @PathVariable("value") String value) {
+
+        log.info("memberController.......");
+        log.info("type={}", type);
+        log.info("value={}", value);
+        int count = memberService.selectCountSeller(type, value);
+
+        log.info("count={}", count);
+
+        if (type.equals("sellerEmail") && count <= 0) {
+            log.info("sellerEmail={}", value);
+            memberService.sendEmailCode(session, value);
+        }
+
+        //Json 생성
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", count);
+
+        return ResponseEntity.ok().body(resultMap);
+    }
 
     //findId
     @ResponseBody
@@ -188,7 +212,7 @@ public class MemberController {
 
     @PostMapping("/member/signupseller")
     public String signupSeller(){
-        return "redirect:/member/registerSeller";
+        return "redirect:/member/registerseller";
     }
     //판매자 회원가입 페이지 매핑
     @GetMapping("/member/registerseller")

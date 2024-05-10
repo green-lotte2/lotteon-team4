@@ -9,10 +9,7 @@ import kr.co.lotte.entity.*;
 import kr.co.lotte.repository.CartsRepository;
 import kr.co.lotte.repository.OrderItemsRepository;
 import kr.co.lotte.security.MyUserDetails;
-import kr.co.lotte.service.MainService;
-import kr.co.lotte.service.MarketService;
-import kr.co.lotte.service.MemberService;
-import kr.co.lotte.service.ReviewService;
+import kr.co.lotte.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,7 @@ public class MarketController {
     private final MarketService marketService;
     private final MemberService memberService;
     private final ReviewService reviewService;
+    private final ProductQnaService productQnaService;
 
     @Autowired
     private final MainService mainService;
@@ -86,6 +84,9 @@ public class MarketController {
         int prodno = reviewPageRequestDTO.getProdno();
 
         log.info("prodno 값 : " + reviewPageRequestDTO.getProdno());
+
+        //qna 조회
+        model.addAttribute("prodQna", productQnaService.productQnas());
 
         //상품 조회
         ProductsDTO productsDTO = marketService.selectProduct(prodno);

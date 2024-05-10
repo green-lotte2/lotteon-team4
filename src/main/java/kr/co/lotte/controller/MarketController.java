@@ -43,8 +43,8 @@ public class MarketController {
     @GetMapping("/product/list")
     public String list(Model model, MainProductsPageRequestDTO requestDTO, @AuthenticationPrincipal MyUserDetails userDetails) {
         int view = 0;
-        if(requestDTO.getBoard() == "" || requestDTO.getBoard() == null){
-            MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProducts(requestDTO);
+    if(requestDTO.getSeller() != "" && requestDTO.getSeller() != null){
+            MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProductsForSeller(requestDTO);
             List<Products> products = pageResponseDTO.getDtoList();
             try {
                 User user = userDetails.getUser();
@@ -58,7 +58,25 @@ public class MarketController {
             }
             model.addAttribute("view", view);
             model.addAttribute("pageResponseDTO", pageResponseDTO);
-        }else{
+            return "/product/list2";
+
+
+    }    else if(requestDTO.getBoard() == "" || requestDTO.getBoard() == null){
+        MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProducts(requestDTO);
+        List<Products> products = pageResponseDTO.getDtoList();
+        try {
+            User user = userDetails.getUser();
+            List<Products> newProducts = mainService.hahaha(products, user.getUid());
+            pageResponseDTO.setDtoList(newProducts);
+        } catch (Exception e) {
+            for (Products p : products) {
+                p.setLikeState(0);
+            }
+            pageResponseDTO.setDtoList(products);
+        }
+        model.addAttribute("view", view);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);}
+    else{
             view = 1;
             List<Products> products = mainService.searchListForCate(requestDTO.getBoard());
             try {
@@ -351,6 +369,13 @@ public class MarketController {
     @GetMapping("/product/completeOrder")
     public ResponseEntity completeOrder(@RequestParam(name = "itemNo") int itemNo) {
         return marketService.completeOrder(itemNo);
+    }
+
+    //장바구니 수량변경
+    @GetMapping("/product/modifyCount")
+    public ResponseEntity modifyCount(@RequestParam(name = "count")int count, @RequestParam(name="cartNo") int cartNo ){
+        return marketService.modifyCount(count, cartNo);
+
     }
 
 }

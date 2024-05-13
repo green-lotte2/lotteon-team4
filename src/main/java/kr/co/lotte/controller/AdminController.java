@@ -115,11 +115,10 @@ public class AdminController {
     @GetMapping("/admin/config/banner")
     public String banner(Model model) {
 
-        List<BannerDTO> banner1 = adminService.findMAIN1("MAIN1");
-        List<BannerDTO> banner2 = adminService.findMAIN2("MAIN2");
-        List<BannerDTO> banner3 = adminService.findPRODUCT1("PRODUCT1");
-        List<BannerDTO> banner4 = adminService.findMEMBER1("MEMBER1");
-        List<BannerDTO> banner5 = adminService.findMY1("MY1");
+        List<BannerDTO> banner1 = adminService.findCateBanner("MAIN1");
+        List<BannerDTO> banner2 = adminService.findCateBanner("MAIN2");
+        List<BannerDTO> banner3 = adminService.findCateBanner("PRODUCT1");
+        List<BannerDTO> banner4 = adminService.findCateBanner("MY1");
 
         log.info("AdminController - banner : " + banner1.toString());
 
@@ -127,7 +126,6 @@ public class AdminController {
         model.addAttribute("banner2", banner2);
         model.addAttribute("banner3", banner3);
         model.addAttribute("banner4", banner4);
-        model.addAttribute("banner5", banner5);
 
         return "/admin/config/banner";
     }
@@ -333,25 +331,36 @@ public class AdminController {
     }
 
     @GetMapping("/banner/active")
-    public String bannerActive(@RequestParam("bannerNo") String bannerNo, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> bannerActive(@RequestParam("bannerNo") String bannerNo, RedirectAttributes redirectAttributes) {
 
         log.info("bannerNo : " + bannerNo);//배너번호 잘 넘어옴
 
-        BannerDTO bannerDTO = adminService.findById(bannerNo);//배너번호를 이용해서 설정하기 내용은 읽어오기!
+        Map<String, Object> result = new HashMap<>();
 
-        log.info("status값 확인 : " + bannerDTO);//status 변경되었는지 확인하기
+        try {
 
-        return "redirect:/admin/config/banner";
+            BannerDTO banner = adminService.findById(bannerNo);//배너번호를 이용해서 설정하기 내용은 읽어오기!
 
+            return ResponseEntity.ok(banner);
+
+        } catch (AdminService.SomeException e) {
+            // SomeException 예외 발생 시 처리
+
+            log.info(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @GetMapping("/banner/inactive")
-    public String bannerInactive(@RequestParam("bannerNo") String bannerNo) {
+    public ResponseEntity<?> bannerInactive(@RequestParam("bannerNo") String bannerNo) {
 
+        Map<String, Object> result = new HashMap<>();
 
         adminService.findByIdForDelete(bannerNo);//status 0으로 바꾸기
 
-        return "redirect:/admin/config/banner";
+        result.put("success", 1);
+        return ResponseEntity.ok().body(result);
     }
 
 
@@ -397,12 +406,39 @@ public class AdminController {
 
         pageResponseDTO = adminService.seller_status(pageRequestDTO);
 
+        List<Seller> sellerList =  adminService.waitingSellers();
+
+        model.addAttribute("sellerList",sellerList);
+
         model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        log.info("판매자 리스트(temp) : "+sellerList);
 
         log.info("adminController - seller_status : " + pageResponseDTO.toString());
 
 
         return "/admin/seller/seller_status";
+    }
+
+    //판매자 상태 바꾸기(TEMP->MANAGER)
+    @GetMapping("/admin/sellerTrans")
+    public ResponseEntity<?> trans(String sellerUid){
+
+        Seller seller = adminService.changeRole(sellerUid);
+
+        Map<String, String> result = new HashMap<>();
+
+        if(seller!=null){
+
+            result.put("result", "1");
+            return ResponseEntity.ok().body(result);
+
+        }else{
+
+            result.put("result", "0");
+            return ResponseEntity.ok().body(result);
+
+        }
     }
 
     //판매자 모달창에 띄울 정보들
@@ -577,4 +613,5 @@ public class AdminController {
 
         return "redirect:/admin/blogList";//여기서는 전체 글로 이동
     }
+
 }

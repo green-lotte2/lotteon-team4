@@ -24,6 +24,7 @@ public class ProductQna {
     private String status1;
     private String cate;
     private String content;
+    private String answer;
     private String status2;
 
     @CreationTimestamp
@@ -38,6 +39,7 @@ public class ProductQna {
         productQna.setStatus1(status1);
         productQna.setCate(cate);
         productQna.setContent(content);
+        productQna.setAnswer(answer);
         productQna.setStatus2(status2);
         productQna.setRdate(rdate);
         return productQna;

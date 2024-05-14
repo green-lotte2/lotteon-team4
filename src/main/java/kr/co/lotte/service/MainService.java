@@ -1,6 +1,7 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import jakarta.transaction.Transactional;
 import kr.co.lotte.dto.*;
@@ -49,7 +50,12 @@ public class MainService {
     @Autowired
     private PointsRepository pointsRepository;
 
+    @Autowired
+    private KeywordRepository keywordRepository;
 
+    public List<String> findHotKeyword(){
+        return keywordRepository.findFirst10ByOrderByCountDesc().stream().map(e -> e.getKeyword()).toList();
+    }
 
     //히트상품 변경
     public void updateHit(){
@@ -83,10 +89,27 @@ public class MainService {
     //상품어쩌고정렬
     public MainProductsPageResponseDTO searchListProducts(MainProductsPageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable("no");
-        Page<Products> page = productsRepository.searchAllProductsForList(requestDTO, pageable);
-        List<Products> dtoList = page.getContent();
+        Page<Tuple> page = productsRepository.searchAllProductsForList(requestDTO, pageable);
+        List<Tuple> dtoListBefore = page.getContent();
+
+        List<Products> dtoList = dtoListBefore.stream()
+                .map(tuple -> {
+                    Products products = new Products();
+                    products = tuple.get(0, Products.class);
+                    Seller seller = tuple.get(1, Seller.class);
+                    // ProductsDTO에 SellerDTO를 설정한다.
+                    products.setSeller(seller);
+
+                    return products;
+                }).toList();
+
+        log.info("mainService -searchListProducts- dtoList : "+dtoList);
+
         int total = (int) page.getTotalElements();
-        return new MainProductsPageResponseDTO(requestDTO, dtoList , total);
+
+        log.info("mainSerivce - searchListProducts - total : "+total);
+
+        return new MainProductsPageResponseDTO(requestDTO, dtoList, total);
     }
     //종류별로 정렬
     public List<Products> searchListForCate(String cate){

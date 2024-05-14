@@ -30,6 +30,7 @@ public class MarketController {
     private final MarketService marketService;
     private final MemberService memberService;
     private final ReviewService reviewService;
+    private final AdminService adminService;
     private final ProductQnaService productQnaService;
 
     @Autowired
@@ -41,6 +42,9 @@ public class MarketController {
     @GetMapping("/product/list")
     public String list(Model model, MainProductsPageRequestDTO requestDTO, @AuthenticationPrincipal MyUserDetails userDetails) {
         int view = 0;
+
+        log.info("requestDTO의 seller에 뭐가 있는지 확인 : "+requestDTO.getSeller());
+
     if(requestDTO.getSeller() != "" && requestDTO.getSeller() != null){
             MainProductsPageResponseDTO pageResponseDTO = mainService.searchListProductsForSeller(requestDTO);
             List<Products> products = pageResponseDTO.getDtoList();
@@ -103,11 +107,19 @@ public class MarketController {
 
         log.info("prodno 값 : " + reviewPageRequestDTO.getProdno());
 
+        //배너 조회
+        List<BannerDTO> banner3 = adminService.findCateBanner("PRODUCT1");
+
+        model.addAttribute("banner3", banner3);
+
         //qna 조회
         model.addAttribute("prodQna", productQnaService.productQnas());
 
         //상품 조회
         ProductsDTO productsDTO = marketService.selectProduct(prodno);
+        //그거 저장
+        marketService.updateProductSearchCount(prodno);
+
 
         //subProducts에서 prodno로 조회, color과 size의 리스트를 들고 온다
         List<SubProducts> Options = marketService.findAllByProdNo(prodno);
@@ -139,7 +151,6 @@ public class MarketController {
         ReviewPageResponseDTO reviewPageResponseDTO = reviewService.selectReviews(prodno, reviewPageRequestDTO);
 
         log.info("페이지 네이션 할 prodview - reviewPageResponseDTO : " + reviewPageResponseDTO);
-
 
         //리뷰 별점 - 평균, 비율 구하기
         ReviewRatioDTO reviewRatioDTO = reviewService.selectForRatio(prodno);
@@ -318,6 +329,7 @@ public class MarketController {
     public String search(String cate, String keyword, ProductsPageRequestDTO requestDTO, Model model, HttpSession session) {
 
         log.info("cate : " + cate);
+        marketService.updateKeyword(keyword);
 
         ProductsPageResponseDTO searchResult = mainService.searchForProduct(requestDTO);
 

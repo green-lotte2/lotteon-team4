@@ -62,7 +62,10 @@
                     <option value="search3">유형</option>
                     <option value="search4">제목+내용</option>
                 </select>
+
                 <span ></span>
+                <br>
+                <br>
                 <table border="0">
                     <tr>
                         <th><input type="checkbox" name="all" id="all"></th>
@@ -98,13 +101,15 @@
                     </tr>
                 </table>
                 <div>
+                    <br>
                     <input type="button" value="선택삭제" id="selectDelete"/>
                 </div>
             </form>
             <div>
                 <a class="cs-write" style="float: right" th:href="@{/admin/cs/notice/register}">공지 작성</a>
             </div>
-            <div class="paging">
+            <br>
+            <div class="paging" style="text-align: center">
                         <span class="prev" th:if="${csNotice.prev}">
                             <a th:href="@{/admin/cs/notice/list(pg=${csNotice.start -1}, cate1=${csNotice.getCate1()} , cate2=${csNotice.getCate2()})}"><&nbsp;이전</a>
                         </span>

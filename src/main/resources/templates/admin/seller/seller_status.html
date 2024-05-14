@@ -225,26 +225,29 @@
             <tr th:each="status:${pageResponseDTO.dtoList}">
                 <td th:text="${status.sellerUid}">판매자1</td>
                 <td th:text="${status.orderCount}">100</td>
-                <td th:text="${status.totalPrice}">$10,000</td>
+                <td th:text="${#numbers.formatInteger(status.totalPrice,1,'COMMA')}">$10,000</td>
                 <td>
                     <a class="sellerInfo" href="#" th:data-sellerUid="${status.sellerUid}">상세히 보기</a>
                 </td>
             </tr>
         </table>
-
-        <p class="paging">
-            <th:block th:if="${pageResponseDTO.prev}">
+        <br>
+        <div class="paging">
+            <span class="prev" th:if="${pageResponseDTO.prev}">
                 <a th:href="@{/admin/seller/seller_status(pg=${pageResponseDTO.start - 1})}">이전</a>
-
-            </th:block>
-            <th:block th:each="n : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
-                <a th:href="@{/admin/seller/seller_status(pg=${n})}" th:text="${n}"></a>
-
-            </th:block>
-            <th:block th:if="${pageResponseDTO.next}">
+            </span>
+            <span class="num" th:each="n : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                <th:block th:if="${n == pageResponseDTO.getRpg()}">
+                      <a th:href="@{/admin/seller/seller_status(pg=${n})}" class="on" th:text="${n}"></a>
+                </th:block>
+                <th:block th:if="${n != pageResponseDTO.getRpg()}">
+                      <a th:href="@{/admin/seller/seller_status(pg=${n})}"  th:text="${n}"></a>
+                </th:block>
+            </span>
+            <span class="next" th:if="${pageResponseDTO.next}">
                 <a th:href="@{/admin/seller/seller_status(pg=${pageResponseDTO.end + 1})}">다음</a>
-            </th:block>
-        </p>
+            </span>
+        </div>
 
         <!-- 모달 팝업 -->
         <div id="myModal" class="modal">

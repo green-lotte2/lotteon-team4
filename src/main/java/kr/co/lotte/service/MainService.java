@@ -1,6 +1,7 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import jakarta.transaction.Transactional;
 import kr.co.lotte.dto.*;
@@ -49,7 +50,12 @@ public class MainService {
     @Autowired
     private PointsRepository pointsRepository;
 
+    @Autowired
+    private KeywordRepository keywordRepository;
 
+    public List<String> findHotKeyword(){
+        return keywordRepository.findFirst10ByOrderByCountDesc().stream().map(e -> e.getKeyword()).toList();
+    }
 
     //히트상품 변경
     public void updateHit(){

@@ -16,7 +16,6 @@
 
             e.preventDefault();
 
-
             const bannerNo = Banner.getAttribute('data-bannerNo');
             const link = Banner.getAttribute('data-link');
 
@@ -108,7 +107,7 @@
                     <td class="date" th:text="${#temporals.format(review.getRdate(),'yyyy-MM-dd')}">2024-12-12</td>
                 </tr>
                 <tr th:if="${reviews.dtoList2.size()}==0">
-                    <td colspan="5" style="text-align: center">작성한 리뷰가 없습니다.</td>
+                    <td colspan="6" style="text-align: center">작성한 리뷰가 없습니다.</td>
                 </tr>
             </table>
 

@@ -393,7 +393,7 @@
                         <span class="delivery" th:if="${product.delivery!=0}">배송비 : [[${product.delivery}]]</span>
                         <span>
                             <b class="arrival"
-                               th:text="${#temporals.format(#temporals.createNow().plusDays(2), 'MM-dd')}"
+                               th:text="${#temporals.format(#temporals.createNow().plusDays(3), 'MM-dd')}"
                                style="font-size: 20px"></b> 도착
                             예정
                         </span>
@@ -440,7 +440,7 @@
 
 
                             //Q&A 스크롤 이동//
-                            const QA_view = document.getElementsByClassName('QA_view')[0];
+                            const QA_view = document.getElementsByClassName('view-qna')[0];
                             const info_QA = document.getElementsByClassName('info_QA')[0];
                             info_QA.onclick = function (e) {
                                 e.preventDefault();
@@ -936,27 +936,21 @@
                             </select>
                         </nav>
 
-                        <!---배너시작-->
                         <th:block th:if="${banner3 != null and !banner3.isEmpty()}">
                             <th:block th:each="banner : ${banner3}">
-                                <div id="bannerTop" class="on" th:style="'background-color:' + ${banner.color}">
-                                    <article>
-                                        <a class="MainBanner" th:href="${banner.link}" th:if="${banner.status} == 1" th:data-bannerNo="${banner.bannerNo}"
-                                           th:data-link="${banner.link}">
-                                            <img class="bannerImg" th:src="@{/uploads/__${banner.img_1200}__}"/>
-                                        </a>
-                                    </article>
-                                </div>
+                                <article>
+                                    <a class="Banner" th:href="${banner.link}" th:if="${banner.status} == 1" th:data-bannerNo="${banner.bannerNo}"
+                                       th:data-link="${banner.link}">
+                                        <img class="bannerImg" th:src="@{/uploads/__${banner.img_456}__}"/>
+                                    </a>
+                                </article>
                             </th:block>
                         </th:block>
-
-                        <th:block th:unless="${banner3 != null and !banner3.isEmpty()}"></th:block>
-                        <!--배너끝-->
-
 
                         <div class="option-container" id="option-container">
 
                         </div>
+
                         <div class="button">
                             <input type="button" class="cart" id="cartSub" value="장바구니"/>
                             <input type="button" class="order" id="cartBuy" value="구매하기"/>
@@ -971,19 +965,17 @@
                     <th:block th:if="${options.size()==1}" th:each="option , index:${options}">
 
                         <!--배너 시작-->
-
                         <th:block th:if="${banner3 != null and !banner3.isEmpty()}">
                             <th:block th:each="banner : ${banner3}">
-                                    <article>
-                                        <a class="Banner" th:href="${banner.link}" th:if="${banner.status} == 1" th:data-bannerNo="${banner.bannerNo}"
-                                           th:data-link="${banner.link}">
-                                            <img class="bannerImg" th:src="@{/uploads/__${banner.img_456}__}"/>
-                                        </a>
-                                    </article>
+                                <article>
+                                    <a class="Banner" th:href="${banner.link}" th:if="${banner.status} == 1" th:data-bannerNo="${banner.bannerNo}"
+                                       th:data-link="${banner.link}">
+                                        <img class="bannerImg" th:src="@{/uploads/__${banner.img_456}__}"/>
+                                    </a>
+                                </article>
                             </th:block>
                         </th:block>
 
-                        <th:block th:unless="${banner3 != null and !banner3.isEmpty()}"></th:block>
                         <!--배너 끝-->
 
 
@@ -1006,6 +998,7 @@
                             <em>총 상품금액</em>
                         </div>
                     </th:block>
+
 
                 </div>
             </article>
@@ -1183,7 +1176,6 @@
                                 <span th:text="${#temporals.format(review.rdate,'yyyy.MM.dd')}"
                                       style="color: gray">24.03.22</span><br>
                                 <span th:text="${review.getProdoption()}" style="color: gray"></span>
-
                             </p>
                             <div class="reviewContent">
                                 <p>[[${review.comment}]]</p>
@@ -1223,7 +1215,7 @@
             <!-- Q&A 내용 -->
             <br/><br/>
             <article id="view-qna-article" style="width: 953px; height: 100%; ">
-            <div id="view-qna">
+            <div id="view-qna" class="view-qna">
                 <div>
                     <div class="product-qna-title1">
                         <strong style="margin-left: 20px; font-weight: 600; font-size: 24px;">Q&A</strong><span>(943)</span>
@@ -1386,8 +1378,6 @@
                     <span class="qna-modal-close">&times;</span>
                 </div>
             </div>
-
-
         </section>
         <!-- 상품 상세페이지 끝 -->
     </main>

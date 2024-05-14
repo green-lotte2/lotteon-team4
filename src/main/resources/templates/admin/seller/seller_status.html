@@ -12,7 +12,7 @@
         }
 
         #admin-index table {
-            width:70%;
+            width: 70%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -84,7 +84,8 @@
         .close_btn:hover {
             color: #555;
         }
-        .paging{
+
+        .paging {
             text-align: center;
         }
     </style>
@@ -104,35 +105,36 @@
             });
 
             //승인버튼 클릭시, temp->Manager로 판매자로 승격
-            document.querySelectorAll('.approval').forEach(function (button){
-                button.addEventListener('click',async function (event){
+            document.querySelectorAll('.approval').forEach(function (button) {
+                button.addEventListener('click', async function (event) {
 
                     event.preventDefault();
                     //sellerUid 넘겨주기!
                     const sellerUid = event.target.getAttribute('data-sellerNo');
 
-                    console.log("sellerNo : "+sellerUid);//sellerID 잘 나옴
+                    console.log("sellerNo : " + sellerUid);//sellerID 잘 나옴
 
                     const data = await fetchGet(`/lotteshop/admin/sellerTrans?sellerUid=${sellerUid}`);
 
                     console.log(data.result);
 
-                    if(data.result=="1"){
+                    if (data.result == "1") {
 
                         alert("판매자 권한이 변환되었습니다.");
 
-                        //window.location.href=`/lotteshop/admin/seller_status`;
-                    }else{
-                        alert("판매자 권한 변경에 실패했습니다.");
+                        window.location.href = `/lotteshop/admin/seller/seller_status`;
+
+                    } else {
+                        alert("판매자 권한 변경에 실패했습니다");
                     }
                 })
             })
 
             // 사용자가 모달 바깥을 클릭하면 모달이 닫히도록 설정
-            window.onclick = function(event) {
+            window.onclick = function (event) {
                 var modal = document.getElementById('myModal');
                 var btn = document.getElementsByClassName('close_btn')[0];
-                if (event.target === modal || event.target===btn) {
+                if (event.target === modal || event.target === btn) {
                     closeModal();
                 }
             }
@@ -207,7 +209,7 @@
                 <td th:text="${sellers.sellerSaNumber}">사업자번호</td>
                 <td th:text="${sellers.sellerDHp}">전화번호</td>
                 <td>
-                    <button id="approval" class = "approval" th:data-sellerNo="${sellers.sellerUid}">승인</button>
+                    <button id="approval" class="approval" th:data-sellerNo="${sellers.sellerUid}">승인</button>
                 </td>
             </tr>
             <tr th:if="${sellerList == null or #lists.isEmpty(sellerList)}">
@@ -219,7 +221,7 @@
         <br><br>
         <h1>판매자 현황</h1>
         <table>
-             <tr>
+            <tr>
                 <th>판매자 이름</th>
                 <th>주문건수</th>
                 <th>매출 현황</th>
@@ -263,7 +265,7 @@
                 <p>사업자번호: <span id="sellerSaNumber"></span></p>
                 <p>대표전화 : <span id="companyHp"></span></p>
                 <p>이 메 일 : <span id="companyEmail"></span></p>
-                <p>주   소  : <span id="companyAddr"></span></p>
+                <p>주 소 : <span id="companyAddr"></span></p>
             </div>
         </div>
         <!--모달 팝업 끝!-->

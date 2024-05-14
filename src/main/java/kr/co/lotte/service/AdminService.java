@@ -324,6 +324,10 @@ public class AdminService {
             }
         }
         products.setRegProdDate(old.getRegProdDate());
+
+        List<SubProducts> subProducts = subProductsRepository.findAllByProdNo(products.getProdNo());
+        products.setProdPrice(subProducts.get(0).getProdPrice());
+
         productsRepository.save(products);
 
         Map<String, Integer> map = new HashMap<>();

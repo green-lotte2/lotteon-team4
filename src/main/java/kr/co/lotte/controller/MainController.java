@@ -47,6 +47,8 @@ public class MainController {
         //hit상품 변경
         mainService.updateHit();
 
+        model.addAttribute("searches", mainService.findHotKeyword());
+
         List<BannerDTO> banner1 = adminService.validateBanner("MAIN1");
         List<BannerDTO> banner2 = adminService.validateBanner("MAIN2");
         model.addAttribute("prodSolds", mainService.selectHitProducts());

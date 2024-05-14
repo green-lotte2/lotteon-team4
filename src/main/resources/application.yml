@@ -86,6 +86,8 @@ spring:
             max-file-size: 10MB
             max-request-size: 10MB
 server:
+    error:
+        path: /error/500.html
     port: 8080
     servlet:
         context-path: /lotteshop

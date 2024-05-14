@@ -13,6 +13,7 @@ import kr.co.lotte.security.MyManagerDetails;
 import kr.co.lotte.security.MyUserDetails;
 import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.BlogService;
+import kr.co.lotte.service.MemberService;
 import kr.co.lotte.service.cs.CsNoticeService;
 import kr.co.lotte.service.cs.CsQnaService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,8 @@ public class AdminController {
     private final CsNoticeService csNoticeService;
     private final CsQnaService csQnaService;
     private final BlogService blogService;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping(value = {"/admin/index", "/admin"})
     public String adminIndex(Authentication authentication, Model model) {
@@ -428,9 +431,17 @@ public class AdminController {
 
         Map<String, String> result = new HashMap<>();
 
+        String email = seller.getSellerEmail();
+
+        log.info("AdminController - trans - email : " + email);
+
         if(seller!=null){
 
             result.put("result", "1");
+
+            //이메일 보내기
+           memberService.sendEmailForSeller(email);
+
             return ResponseEntity.ok().body(result);
 
         }else{
@@ -613,5 +624,4 @@ public class AdminController {
 
         return "redirect:/admin/blogList";//여기서는 전체 글로 이동
     }
-
 }

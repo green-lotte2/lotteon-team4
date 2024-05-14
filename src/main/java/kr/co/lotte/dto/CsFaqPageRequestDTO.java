@@ -27,6 +27,9 @@ public class CsFaqPageRequestDTO {
   private String cate2;
   private String cate;
 
+
+  private String group;
+
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());
     }

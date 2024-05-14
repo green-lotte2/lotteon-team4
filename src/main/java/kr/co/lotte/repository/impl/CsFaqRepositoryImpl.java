@@ -105,6 +105,31 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    @Override
+    public Page<CsQna> searchAllCsQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid) {
+        QueryResults<CsQna> results =null;
+        String cate1 = pageRequestDTO.getCate1();
+        if(cate1 != null && cate1 != ""){
+            results = jpaQueryFactory.select( csQna)
+                    .from( csQna)
+                    .where(csQna.cate1.eq(cate1).and(csQna.writer.eq(uid)))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+
+        }else{
+            results = jpaQueryFactory.select( csQna)
+                    .from( csQna)
+                    .where(csQna.writer.eq(uid))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+        }
+        List<CsQna> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
     // prodQna 페이징처리
     @Override
     public Page<ProductQna> searchAllProdQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable) {
@@ -121,6 +146,31 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
         }else{
             results = jpaQueryFactory.select( productQna)
                     .from( productQna)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+        }
+        List<ProductQna> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<ProductQna> searchAllProdQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid) {
+        QueryResults<ProductQna> results =null;
+        String cate = pageRequestDTO.getCate();
+        if(cate != null && cate != ""){
+            results = jpaQueryFactory.select( productQna)
+                    .from( productQna)
+                    .where(productQna.cate.eq(cate).and(productQna.uid.eq(uid)))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
+
+        }else{
+            results = jpaQueryFactory.select( productQna)
+                    .from( productQna)
+                    .where(productQna.uid.eq(uid))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();

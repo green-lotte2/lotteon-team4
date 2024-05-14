@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ProductQnaRepository extends JpaRepository<ProductQna, Integer> {
     List<ProductQna> findAll();
-
+    List<ProductQna> findAllByUid(String uid);
 }

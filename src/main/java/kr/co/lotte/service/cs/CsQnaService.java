@@ -49,6 +49,14 @@ public class CsQnaService {
         return new CsFaqPageResponseDTO(dtoLists, requestDTO, total);
     }
 
+    public CsFaqPageResponseDTO getQnaCate1andCate2(CsFaqPageRequestDTO requestDTO, String uid){
+        Pageable pageable = requestDTO.getPageable("no");
+        Page<CsQna> lists = csFaqRepository.searchAllCsQna(requestDTO, pageable, uid);
+        List<CsQna> dtoLists = lists.getContent();
+        int total = (int) lists.getTotalElements();
+        return new CsFaqPageResponseDTO(dtoLists, requestDTO, total);
+    }
+
     // cs.qna.view 뷰페이지
     public CsQnaDTO qnaView(int no){
 

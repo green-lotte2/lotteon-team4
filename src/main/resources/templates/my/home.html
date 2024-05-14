@@ -203,9 +203,36 @@
                                 })
                                 .catch(err => console.log(err))
                         }
+
+                        // 문의하기 출력
+
+                            $(document).ready(function() {
+                            $('#btnQna').click(function() {
+                                var group = 'qna'; // 1:1 문의
+                                updateQnaGroup(group);
+                            });
+
+                            $('#btnProductQna').click(function() {
+                            var group = 'product'; // 상품 문의
+                            updateQnaGroup(group);
+                        });
+
+                            function updateQnaGroup(group) {
+                            $.ajax({
+                            type: 'GET',
+                            url: '/my/home?group=' + group,
+                            success: function(data) {
+                            // 성공적으로 응답을 받았을 때 실행할 코드
+                            $('#qnaSection').html(data); // 응답을 해당 섹션에 업데이트
+                        },
+                            error: function() {
+                            // 오류 발생 시 실행할 코드
+                            console.log('Error occurred while updating Q&A group.');
+                        }
+                        });
+                        }
+                        });
                     }
-
-
                 </script>
 
                 <style>
@@ -445,7 +472,11 @@
 
                     <article class="qna">
                         <h3>문의내역</h3>
-                        <a th:href="@{#}" class="more">더보기</a>
+                        <a th:href="@{/my/qna}" class="more">더보기</a>
+                        <a th:if="${adminCsQna.getGruop() == 'qna'}" th:href="@{/my/home}"  style="border: 1px solid gray; font-size: 15px; padding: 2px; background-color: greenyellow">1:1 문의하기</a>
+                        <a th:if="${adminCsQna.getGruop() != 'qna'}" th:href="@{/my/home}"  style="border: 1px solid gray; font-size: 15px; padding: 2px">1:1 문의하기</a>
+                        <a th:if="${adminCsQna.getGruop() == 'product'}" th:href="@{/my/home(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px; background-color: greenyellow" >상품 문의</a>
+                        <a th:if="${adminCsQna.getGruop() != 'product'}" th:href="@{/my/home(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px">상품 문의</a>
                         <table border="0">
                             <tr>
                                 <th>번호</th>
@@ -455,30 +486,26 @@
                                 <th>작성일</th>
                                 <th>상태</th>
                             </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>고객센터</td>
-                                <td>주문/결제</td>
-                                <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-                                <td>2024-12-12</td>
-                                <td><span class="notAnswerYet">검토중</span></td>
+                            <th:block th:if="${adminCsQna.getGruop() == 'product'}" >
+                            <tr th:each="prodQna, index : ${adminCsQna.dtoList4}">
+                                <td th:text="${prodQna.no}"></td>
+                                <td th:text="${prodQna.cate}"></td>
+                                <td></td>
+                                <td th:text="${prodQna.content}"></td>
+                                <td th:text="${prodQna.rdate}"></td>
+                                <td>답변 대기중</td>
                             </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>고객센터</td>
-                                <td>주문/결제</td>
-                                <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-                                <td>2024-12-12</td>
-                                <td><span class="answered">답변완료</span></td>
+                            </th:block>
+                            <th:block th:if="${adminCsQna.getGruop() != 'product'}">
+                            <tr th:each="csQna, index : ${adminCsQna.dtoList3}">
+                                <td th:text="${csQna.no}"></td>
+                                <td th:text="${csQna.cate1}"></td>
+                                <td></td>
+                                <td th:text="${csQna.content}"></td>
+                                <td th:text="${csQna.rdate}"></td>
+                                <td>답변 대기중</td>
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>판매자게시판</td>
-                                <td>배송</td>
-                                <td>배송기간이 보통 얼마나 걸리나요?</td>
-                                <td>2024-12-12</td>
-                                <td><span class="answered">답변완료</span></td>
-                            </tr>
+                            </th:block>
                         </table>
                     </article>
 

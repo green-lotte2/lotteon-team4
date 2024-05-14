@@ -33,4 +33,12 @@ public class ProductQnaService {
         int total = (int) lists.getTotalElements();
         return new CsFaqPageResponseDTO(dtoLists, total, requestDTO);
     }
+
+    public CsFaqPageResponseDTO getProdQnaCate(CsFaqPageRequestDTO requestDTO, String uid){
+        Pageable pageable = requestDTO.getPageable("no");
+        Page<ProductQna> lists = csFaqRepository.searchAllProdQna(requestDTO, pageable, uid);
+        List<ProductQna> dtoLists = lists.getContent();
+        int total = (int) lists.getTotalElements();
+        return new CsFaqPageResponseDTO(dtoLists, total, requestDTO);
+    }
 }

@@ -111,6 +111,10 @@ public class MainService {
 
         return new MainProductsPageResponseDTO(requestDTO, dtoList, total);
     }
+
+    @Autowired
+    private  SellerRepository sellerRepository;
+
     //종류별로 정렬
     public List<Products> searchListForCate(String cate){
         List<Products> lists = new ArrayList<>();
@@ -122,6 +126,9 @@ public class MainService {
             lists = productsRepository.findFirst8ByOrderByProdNoDesc();
         }else {
             lists = productsRepository.findFirst8ByDiscount();
+        }
+        for(Products p : lists){
+            p.setSeller(sellerRepository.findById(p.getSellerUid()).get());
         }
         return lists;
     }

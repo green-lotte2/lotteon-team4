@@ -213,9 +213,9 @@
 
             <!-- 검색목록 -->
             <table border="0">
-                <tr th:each="result, index:${searchResult.dtoList}">
-                    <td><a th:href="@{/product/view(prodno=${result.prodNo})}" class="thumb"><img
-                            th:src="@{/uploads/__${result.image1}__}" alt="상품이미지"/></a></td>
+                <tr th:each="result, index:${searchResult.dtoList}" >
+                    <td><a  th:href="@{/product/view(prodno=${result.prodNo})}" class="thumb"><img
+                            style="height: 120px"    th:src="@{/uploads/__${result.image1}__}" alt="상품이미지"/></a></td>
                     <td>
                         <h3 class="name" th:text="${result.prodName}">상품명</h3>
                         <a th:href="@{/product/view(prodno=${result.prodNo})}" class="desc" th:text="${result.etc}">상품
@@ -265,6 +265,7 @@
                         </div>
                     </td>
                 </tr>
+
             </table>
 
             <!-- 상품목록 페이지번호 -->

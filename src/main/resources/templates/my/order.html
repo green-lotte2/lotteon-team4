@@ -121,12 +121,8 @@
                 <div class="modal-content">
                     <span id="close_order" class="close_btn">&times;</span>
                     <h3>주문 취소 환불</h3>
-                    <form th:action="@{#}" id="reviewForm" method="post">
-                        <input type="hidden" id="prodno" name="prodNo"/>
-                        <input type="hidden" id="prodname" name="prodname"/>
-                        <input type="hidden" id="uid" name="uid"/>
-                        <input type="hidden" id="orderno" name="orderno"/>
-                        <input type="hidden" id="itemno" name="itemno"/>
+                    <form th:action="@{#}"  method="post">
+
 
                         <div class="form-group">
                             <label for="reviewTitle">내역 </label>

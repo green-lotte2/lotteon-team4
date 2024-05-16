@@ -23,7 +23,7 @@
         function showPopularSearches() {
             var searchs = [[${searches}]]
             var container = document.getElementById("popularSearches");
-            var delay = 1000; // 각 검색어가 나타나는 시간 간격 (2초)
+            var delay = 2000; // 각 검색어가 나타나는 시간 간격 (2초)
 
             // searchs 배열을 순회하며 검색어를 하나씩 출력
             for (var i = 0; i < searchs.length; i++) {
@@ -43,7 +43,7 @@
             };
 
             showPopularSearches();
-            setInterval(showPopularSearches, 10000);
+            setInterval(showPopularSearches, 20000);
 
                 $(function () {
 

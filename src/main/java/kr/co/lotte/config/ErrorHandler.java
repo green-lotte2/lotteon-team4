@@ -10,7 +10,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(TemplateInputException.class)
     public String handleTemplateInputException(TemplateInputException e) {
-        return e.getMessage()+"되나/>?";
+        return "/error/error";
     }
 
     @ExceptionHandler(Exception.class)

@@ -16,31 +16,29 @@
     </ul>
     <section>
         <script>
-            window.onload=function (){
 
-                window.onload = function (){
+                window.onload = function () {
 
 
-                const canUse = document.getElementById('canUse');
-                const end = document.getElementById('end');
-                const used = document.getElementById('used');
+                    const canUse = document.getElementById('canUse');
+                    const end = document.getElementById('end');
+                    const used = document.getElementById('used');
 
-                canUse.onclick=function (e){
-                    e.preventDefault();
-                    document.location.href='/lotteshop/my/coupon?state=0';
+                    canUse.onclick = function (e) {
+                        e.preventDefault();
+                        document.location.href = '/lotteshop/my/coupon?state=0';
+                    }
+
+                    end.onclick = function (e) {
+                        e.preventDefault();
+                        document.location.href = '/lotteshop/my/coupon?state=1';
+                    }
+
+                    used.onclick = function (e) {
+                        e.preventDefault();
+                        document.location.href = '/lotteshop/my/coupon?state=2';
+                    }
                 }
-
-                end.onclick=function (e){
-                    e.preventDefault();
-                    document.location.href='/lotteshop/my/coupon?state=1';
-                }
-
-                used.onclick=function (e){
-                    e.preventDefault();
-                    document.location.href='/lotteshop/my/coupon?state=2';
-                }
-
-            }
         </script>
 
         <article>

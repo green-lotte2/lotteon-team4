@@ -3,7 +3,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
 
-<section id="admin-cs-" layout:fragment="content">
+
+<section id="admin-cs-faq" layout:fragment="content">
+
     <script>
         window.onload = function() {
             const all = document.getElementById('all');
@@ -66,7 +68,7 @@
                 <span ></span>
                 <br>
                 <br>
-                <table border="0">
+                <table class="cs-qna-faq-list" border="0">
                     <tr>
                         <th><input type="checkbox" name="all" id="all"></th>
                         <th>번호</th>
@@ -77,7 +79,7 @@
                         <th>관리</th>
                     </tr>
                     <tr th:each="csNotice, index : ${csNotice.dtoList2}">
-                        <td class="notice-list-checkbox"><input type="checkbox" name="selectedNoList" class="check"/></td>
+                        <td class="faq-list-checkbox"><input type="checkbox" name="selectedNoList" class="check"/></td>
                         <td>[[${csNotice.no}]]</td>
 
                         <td th:if="${csNotice.cate1 == 'customer'}" style="white-space: nowrap;">고객서비스</td>

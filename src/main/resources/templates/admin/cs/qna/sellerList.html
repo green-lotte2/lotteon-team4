@@ -48,7 +48,7 @@
 
     </script>
     <nav>
-        <h3>FAQ 보기</h3>
+        <h3>Q&A 보기</h3>
         <p>
             HOME > 고객센터 > <strong>FAQ 관리</strong>
         </p>
@@ -80,14 +80,11 @@
                         <td th:if="${prodQna.cate == 'use'}" style="white-space: nowrap">[사용설명]</td>
                         <td th:if="${prodQna.cate == 'color'}" style="white-space: nowrap">[디자인/색상]</td>
                         <td th:if="${prodQna.cate == 'etc'}" style="white-space: nowrap">[기타]</td>
-
                         <td th:text="${prodQna.content}"></td>
-
                         <td>
                             <a th:href="@{/admin/cs/qna/reply(no=${prodQna.no})}">[답변]</a>
                             <a th:href="@{/admin/cs/qna/delete/{no}(no=${prodQna.no})}" onclick="return confirm('삭제하시겠습니까?')">[삭제]</a>
                         </td>
-
                         <td>
                             <th:block th:if="${prodQna.status1 == '답변 대기중'}">
                                 <p style="font-size: 16px; color: #0D3A46"  th:text="${prodQna.status1}"></p>

@@ -189,7 +189,7 @@ main table span {
 footer {
     width: 100%;
     height: 60px;
-    background: #0d3a46;
+    background: #240750;
 }
 
 footer > div {
@@ -603,6 +603,8 @@ button[type=submit] {
 #admin-config-banner section > table  tr > td:nth-child(9) {width: 80px;}
 #admin-config-banner section > table  tr > td:nth-child(10) {width: 80px;}
 #admin-config-banner section > table  tr > td:nth-child(11) {width: 100px;}
+
+#memeGa > table  tr > td:nth-child(1) {width: 20px;}
 
 #admin-config-banner section > table img.thumb {width: 60px;}
 #admin-config-banner section > table ul > li {line-height: 19px;}

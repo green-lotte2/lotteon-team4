@@ -83,6 +83,9 @@
                 })
                 .then(data => {
                     console.log(data);//잘 받은 데이터 확인가능
+                    alert("활성화가 되었습니다.");
+                    window.location.href=`/lotteshop/admin/config/banner`;
+
                 })
                 .catch(error => {
                     console.error('Error:', error.message);
@@ -105,7 +108,7 @@
                         alert('배너가 비활성화되었습니다.');
                         window.location.href=`/lotteshop/admin/config/banner`;
                     } else {
-                        alert('배너 비활성화에 실패하였습니다.');
+                        alert('배너 활성화에 실패하였습니다.');
                     }
                 })
                 .catch(error => {

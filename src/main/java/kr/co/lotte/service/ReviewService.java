@@ -315,7 +315,6 @@ public class ReviewService {
     //리뷰이미지 저장
     public ReviewImgDTO uploadReviewImage(MultipartFile file) {
         // 파일을 저장할 경로 설정
-
         String path = new java.io.File(fileUploadPath).getAbsolutePath();
 
         if (!file.isEmpty()) {

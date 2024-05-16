@@ -80,4 +80,18 @@ public class CsQnaService {
         ProductQna savedProductQna = productQnaRepository.save(productQna);
         return modelMapper.map(savedProductQna, ProductQna.class);
     }
+
+
+    //qna 삭제
+    public void delete(int no){
+
+        csQnaRepository.deleteById(no);
+
+    }
+
+    public void delete2(int no){
+
+        productQnaRepository.deleteById(no);
+
+    }
 }

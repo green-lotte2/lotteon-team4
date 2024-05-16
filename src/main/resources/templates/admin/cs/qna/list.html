@@ -235,7 +235,7 @@
                             <td class="date" th:text="${#strings.substring(prodQna.rdate,0,10)}"></td>
                             <td>
                                 <a th:href="@{/admin/cs/qna/reply2(no=${prodQna.no})}">[답변]</a>
-                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${prodQna.no})}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
+                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${prodQna.no}, type=1)}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
                             </td>
                             <td class="status">
                                 <th:block th:if="${prodQna.status1 == '답변 대기중'}">
@@ -267,7 +267,7 @@
                             <td class="date" th:text="${csQna.rdate}"></td>
                             <td>
                                 <a th:href="@{/admin/cs/qna/reply(no=${csQna.no})}">[답변]</a>
-                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${csQna.no})}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
+                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${csQna.no},  type=2)}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
                             </td>
                             <td class="status">
                                 <th:block th:if="${csQna.status == '답변 대기중'}">

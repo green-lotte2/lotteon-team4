@@ -4,6 +4,7 @@ import jakarta.mail.Session;
 import jakarta.servlet.http.HttpSession;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.*;
+import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.repository.cs.CsQnaRepository;
 import kr.co.lotte.security.MyUserDetails;
 import kr.co.lotte.service.AdminService;
@@ -38,6 +39,7 @@ public class MyControllerForGahee {
     private final MyServiceForGahee myServiceForGahee;
     private final CsQnaService csQnaService;
     private final ProductQnaService productQnaService;
+    private final ProductsRepository productsRepository;
 
     @GetMapping("/my/coupon")
     public String myCoupon(Model model , Authentication authentication , @RequestParam(name = "state", required = false) String states) {
@@ -176,7 +178,7 @@ public class MyControllerForGahee {
 
         // 나의 문의 출력
         CsFaqPageResponseDTO pageResponseDTO =null;
-        if(requestDTO.getGroup() == null || requestDTO.getGroup() == "") {
+        if(requestDTO.getGroup() == null || requestDTO.getGroup() == "" || requestDTO.getGroup().equals("qna")) {
             requestDTO.setGroup("qna");
          pageResponseDTO = csQnaService.getQnaCate1andCate2(requestDTO, uid);
        }else{
@@ -193,6 +195,15 @@ public class MyControllerForGahee {
         return "/my/qna";
     }
 
+    @GetMapping("/my/answer")
+    public ResponseEntity answer(@RequestParam(name = "no")int no){
+        return  productQnaService.getProdQna(no);
+    }
+
+    @GetMapping("/my/answer2")
+    public ResponseEntity answer2(@RequestParam(name = "no")int no){
+        return  productQnaService.getProdQna2(no);
+    }
 
     @GetMapping("/product/coupon")
     public String coupon(Model model){

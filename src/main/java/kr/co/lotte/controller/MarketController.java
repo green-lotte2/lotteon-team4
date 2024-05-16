@@ -101,7 +101,7 @@ public class MarketController {
 
     //상품 상세페이지 조회
     @GetMapping("/product/view")
-    public String view(Model model, ReviewPageRequestDTO reviewPageRequestDTO) {
+    public String view(Model model, ReviewPageRequestDTO reviewPageRequestDTO , CsFaqPageRequestDTO csFaqPageRequestDTO) {
 
         int prodno = reviewPageRequestDTO.getProdno();
 
@@ -113,7 +113,7 @@ public class MarketController {
         model.addAttribute("banner3", banner3);
 
         //qna 조회
-        model.addAttribute("prodQna", productQnaService.productQnas());
+        model.addAttribute("prodQna", productQnaService.productQnas(csFaqPageRequestDTO , prodno));
 
         //상품 조회
         ProductsDTO productsDTO = marketService.selectProduct(prodno);

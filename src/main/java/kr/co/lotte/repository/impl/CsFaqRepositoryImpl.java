@@ -89,6 +89,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( csQna)
                     .from( csQna)
                     .where(csQna.cate1.eq(cate1))
+                    .orderBy(csQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -96,6 +97,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
         }else{
             results = jpaQueryFactory.select( csQna)
                     .from( csQna)
+                    .orderBy(csQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -113,6 +115,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( csQna)
                     .from( csQna)
                     .where(csQna.cate1.eq(cate1).and(csQna.writer.eq(uid)))
+                    .orderBy(csQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -121,6 +124,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( csQna)
                     .from( csQna)
                     .where(csQna.writer.eq(uid))
+                    .orderBy(csQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -139,6 +143,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( productQna)
                     .from( productQna)
                     .where(productQna.cate.eq(cate))
+                    .orderBy(productQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -146,6 +151,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
         }else{
             results = jpaQueryFactory.select( productQna)
                     .from( productQna)
+                    .orderBy(productQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -163,6 +169,7 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( productQna)
                     .from( productQna)
                     .where(productQna.cate.eq(cate).and(productQna.uid.eq(uid)))
+                    .orderBy(productQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
@@ -171,10 +178,28 @@ public class CsFaqRepositoryImpl implements CsRepositoryCustom {
             results = jpaQueryFactory.select( productQna)
                     .from( productQna)
                     .where(productQna.uid.eq(uid))
+                    .orderBy(productQna.rdate.desc())
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
         }
+        List<ProductQna> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<ProductQna> searchAllProdQnaSeller(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid) {
+        QueryResults<ProductQna> results =null;
+        String cate = pageRequestDTO.getCate();
+
+            results = jpaQueryFactory.select( productQna)
+                    .from( productQna)
+                    .where(productQna.sellerUid.eq(uid))
+                    .orderBy(productQna.rdate.desc())
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetchResults();
         List<ProductQna> content = results.getResults();
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);

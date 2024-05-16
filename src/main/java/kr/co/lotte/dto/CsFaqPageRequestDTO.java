@@ -23,6 +23,11 @@ public class CsFaqPageRequestDTO {
     @Builder.Default
     private  int size =10;
 
+    @Builder.Default
+    private  int size2 =5;
+
+
+
   private String cate1;
   private String cate2;
   private String cate;
@@ -30,7 +35,13 @@ public class CsFaqPageRequestDTO {
 
   private String group;
 
+    private  int prodno;
+
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());
+    }
+
+    public Pageable getPageable2(String sort){
+        return PageRequest.of(this.pg - 1, this.size2, Sort.by(sort).descending());
     }
 }

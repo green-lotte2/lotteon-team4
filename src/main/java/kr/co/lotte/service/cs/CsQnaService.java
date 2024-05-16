@@ -76,6 +76,7 @@ public class CsQnaService {
 
     // prod.view.qna 저장
     public ProductQna writeProdQna(ProductQna productQna){
+        productQna.setStatus1("답변 대기중");
         ProductQna savedProductQna = productQnaRepository.save(productQna);
         return modelMapper.map(savedProductQna, ProductQna.class);
     }

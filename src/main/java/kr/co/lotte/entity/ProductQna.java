@@ -30,6 +30,9 @@ public class ProductQna {
     @CreationTimestamp
     private String rdate;
 
+    @Transient
+    private String productName;
+
     public ProductQna toEntity(){
         ProductQna productQna = new ProductQna();
         productQna.setNo(no);

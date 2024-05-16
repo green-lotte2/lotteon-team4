@@ -58,8 +58,7 @@ public class AdminController {
     @GetMapping(value = {"/admin/index", "/admin"})
     public String adminIndex(Authentication authentication, Model model, HttpSession session) {
 
-        model.addAttribute("csNotice", csNoticeService.noticeList());
-        model.addAttribute("csQna", csQnaService.qnaList());
+
 
         try {
             //여기는 관리자
@@ -85,6 +84,8 @@ public class AdminController {
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
 
+            model.addAttribute("csNotice", csNoticeService.noticeList());
+            model.addAttribute("csQna", csQnaService.qnaList());
 
 
             return "/admin/index";
@@ -118,13 +119,16 @@ public class AdminController {
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
 
+
             model.addAttribute("prodQna", productQnaService.prodSellerQna(uid));
+
 
             return "/admin/index2";
         }
 
     }
-
+    ///판매자 FAQ 수정 (판매자 상품 문의만 뜨도록(where.qFQA.equl(seller.uid(selluid)) + 답변)
+    //상품상세보기 리뷰 (해당 상품만 뜨도록 여기는 where조건을 equal.prodNo(.../))
     //config
     @GetMapping("/admin/config/banner")
     public String banner(Model model) {

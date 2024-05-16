@@ -14,6 +14,45 @@
 
                     const Banner = document.getElementsByClassName('Banner')[0];
 
+                    const productAnswers = document.querySelectorAll('#productAnswer');
+                        const button = document.getElementById('couponButton');
+                        const couponModal = document.getElementById('couponModal');
+                        const closeButton = document.getElementById('closeButton');
+                    const qnaAnswers = document.querySelectorAll('#csQnaAnswer');
+
+                        qnaAnswers .forEach(function (item){
+                            item.onclick = async function (e) {
+                                e.preventDefault();
+                                console.log(item.getAttribute('data-no'));
+                                couponModal.style.display = 'block';
+                                const result = await fetchGet('/lotteshop/my/answer2?no=' + item.getAttribute('data-no'));
+                                document.getElementById('question').innerText = '제목 : '+ result.data.title;
+                                document.getElementById('contents').innerText = '질문 : '+ result.data.content;
+                                if(result.data.comment != null)
+                                {
+                                    document.getElementById('answer').innerText = '답변 : '+ result.data.comment;
+                                }
+                            }
+                        })
+
+                    productAnswers.forEach(function (item){
+                        item.onclick = async function (e) {
+                            e.preventDefault();
+                            console.log(item.getAttribute('data-no'));
+                            couponModal.style.display = 'block';
+                            const result = await fetchGet('/lotteshop/my/answer?no=' + item.getAttribute('data-no'));
+                            document.getElementById('question').innerText = '질문 : '+ result.data.content;
+                            if(result.data.answer != null)
+                            {
+                                document.getElementById('answer').innerText = '답변 : '+ result.data.answer;
+                            }
+                        }
+                    })
+
+                        closeButton.onclick = function (e) {
+                            couponModal.style.display = 'none';
+                        }
+
                     Banner.onclick = function (e){
 
                         e.preventDefault();
@@ -85,23 +124,22 @@
                             <a th:if="${adminCsQna.getGruop() != 'product'}" th:href="@{/my/qna(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px">상품 문의</a>
 
                         </h3>
-
+                        <th:block th:if="${adminCsQna.getGruop() == 'product' }">
                         <table border="0">
                             <tr>
                                 <th>번호</th>
                                 <th>문의채널</th>
-                                <th>문의유형</th>
-                                <th>제목</th>
+                                <th>상품명</th>
+                                <th>내용</th>
                                 <th>작성일</th>
                                 <th>상태</th>
                             </tr>
-                            <th:block th:if="${adminCsQna.getGruop() == 'product' }">
                             <tr  th:each="prodQna, index : ${adminCsQna.dtoList4}">
                                 <td class="no" th:text="${prodQna.no}"></td>
                                 <td class="cate" th:text="${prodQna.cate}"></td>
-                                <td class="type"></td>
-                                <td class="tit" th:text="${prodQna.content}"></td>
-                                <td class="date" th:text="${prodQna.rdate}"></td>
+                                <td class="type" th:text="${prodQna.productName}"></td>
+                                <td class="tit"><a  th:text="${prodQna.content}"  th:data-no="${prodQna.no}" id="productAnswer"></a></td>
+                                <td class="date" th:text="${#strings.substring(prodQna.rdate , 0,10)}" > </td>
                                 <td class="status">
                                     <th:block th:if="${prodQna.status1 == '답변 대기중'}">
                                         <p style="font-size: 16px; color: #0D3A46"  th:text="${prodQna.status1}"></p>
@@ -111,15 +149,26 @@
                                     </th:block>
                                 </td>
                             </tr>
+
+                        </table>
                             </th:block>
                             <th:block th:if="${adminCsQna.getGruop() != 'product' }">
+                                <table border="0">
+                                    <tr>
+                                        <th>번호</th>
+                                        <th>문의채널</th>
+                                        <th>문의유형</th>
+                                        <th>제목</th>
+                                        <th>작성일</th>
+                                        <th>상태</th>
+                                    </tr>
                                 <tr  th:each="csQna, index : ${adminCsQna.dtoList3}">
                                     <td class="no" th:text="${csQna.no}"></td>
 
                                     <td class="cate" th:text="${csQna.cate1}"></td>
                                     <td class="type" th:text="${csQna.cate2}"></td>
-                                    <td class="tit" th:text="${csQna.title}"></td>
-                                    <td class="date" th:text="${csQna.rdate}"></td>
+                                    <td class="tit" > <a  th:text="${csQna.title}"  th:data-no="${csQna.no}" id="csQnaAnswer"></a></td>
+                                    <td class="date" th:text="${#strings.substring(csQna.rdate , 0,10)}"></td>
 
                                     <td class="status">
                                         <th:block th:if="${csQna.status == '답변 대기중'}">
@@ -131,9 +180,48 @@
                                     </td>
 
                                 </tr>
+                                </table>
                             </th:block>
-                        </table>
+
                     </article>
+                    <!-- 모달 -->
+                    <div id="couponModal" class="couponModal">
+                        <!-- 모달 내용 -->
+                        <div class="couponModal-content">
+                            <span id="closeButton" class="close">&times;</span>
+                            <!-- 여기에 쿠폰 등록 폼 추가 -->
+                            <h4>내용 </h4>
+                            <br>
+                            <br>
+                            <p style="font-size: 15px" id="question"></p>
+                            <br>
+                            <br>
+                            <p style="font-size: 15px" id="contents"></p>
+                            <br>
+                            <br>
+                            <p style="font-size: 15px" id="answer">답변 : 아직 답변이 등록되지 않았습니다.</p>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <p class="page" style="text-align: center">
+                        <a th:if="${adminCsQna.prev}"
+                           th:href="@{/my/qna(pg=${adminCsQna.start - 1}, group=${adminCsQna.getGruop()} )}"
+                           class="prev">이전</a>
+                        <th:block th:each="num:${#numbers.sequence(adminCsQna.start, adminCsQna.end)}">
+                            <th:block th:if="${num == adminCsQna.pg}">
+                                <a th:href="@{/my/qna( pg=${num } , group=${adminCsQna.getGruop()} )}"
+                                  style="color: blue">[[${num}]]</a>
+                            </th:block>
+                            <th:block th:if="${num != adminCsQna.pg}">
+                                <a th:href="@{/my/qna( pg=${num } , group=${adminCsQna.getGruop()} )}">[[${num}]]</a>
+                            </th:block>
+                        </th:block>
+                        <a th:if="${adminCsQna.next}"
+                           th:href="@{/my/qna( pg=${adminCsQna.end+1},group=${adminCsQna.getGruop()})}"
+                           class="next">다음</a>
+                    </p>
+                    <br>
                 </section>
 
             </div>

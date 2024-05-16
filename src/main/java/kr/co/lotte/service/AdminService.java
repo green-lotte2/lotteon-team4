@@ -1,9 +1,6 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.dto.*;
@@ -21,11 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.PanelUI;
-
 import org.springframework.data.domain.Pageable;
 
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,7 +27,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,6 +68,9 @@ public class AdminService {
     private TermsRepository termsRepository;
     @Autowired
     private TermsMapper termsMapper;
+    @Autowired
+    private ProductQnaRepository productQnaRepository;
+
 
     //mainPage 띄우자
     public Map<String, Integer> Formain() {
@@ -178,7 +174,6 @@ public class AdminService {
             }
         }
 
-
         //회원가입
         int users = memberRepository.findAll().size();
 
@@ -188,7 +183,14 @@ public class AdminService {
         String formattedDate = currentDate.format(formatter);
         int visitors = visitorRepository.findById(formattedDate).get().getVisitCount();
 
-        //신규게시물
+        // 신규게시물
+        int totalArticle = 0;
+
+        List<ProductQna> prodQnas = productQnaRepository.findBySellerUid(storUid);
+        for (ProductQna prodQna : prodQnas) {
+            totalArticle += prodQna.getNo();
+        }
+
         map.put("count", count);
         map.put("total", total);
         map.put("user", users);
@@ -196,7 +198,7 @@ public class AdminService {
         map.put("delivery", delivery);
         map.put("delete", delete);
         map.put("allDelete", allDelete);
-
+        map.put("totalArticle", totalArticle);
         map.put("visitors", visitors);
         return map;
     }

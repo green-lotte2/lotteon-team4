@@ -26,6 +26,11 @@ public class ProductQnaService {
         return productQnaRepository.findAll();
     }
 
+    public List<ProductQna> prodSellerQna(String sellerUid){
+
+        return productQnaRepository.findBySellerUid(sellerUid);
+    };
+
     public CsFaqPageResponseDTO getProdQnaCate(CsFaqPageRequestDTO requestDTO){
         Pageable pageable = requestDTO.getPageable("no");
         Page<ProductQna> lists = csFaqRepository.searchAllProdQna(requestDTO, pageable);

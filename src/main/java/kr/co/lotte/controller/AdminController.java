@@ -14,6 +14,7 @@ import kr.co.lotte.security.MyUserDetails;
 import kr.co.lotte.service.AdminService;
 import kr.co.lotte.service.BlogService;
 import kr.co.lotte.service.MemberService;
+import kr.co.lotte.service.ProductQnaService;
 import kr.co.lotte.service.cs.CsNoticeService;
 import kr.co.lotte.service.cs.CsQnaService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class AdminController {
     private AdminService adminService;
     private final CsNoticeService csNoticeService;
     private final CsQnaService csQnaService;
+    private final ProductQnaService productQnaService;
     private final BlogService blogService;
     @Autowired
     private MemberService memberService;
@@ -94,6 +96,9 @@ public class AdminController {
             int count = map.get("count");
             int total = map.get("total");
             int user = map.get("user");
+            int totalArticle = map.get("totalArticle");
+
+            model.addAttribute("totalArticle", totalArticle);
             model.addAttribute("count", count);
             model.addAttribute("total", total);
             model.addAttribute("user", user);
@@ -109,6 +114,9 @@ public class AdminController {
             model.addAttribute("delete", delete);
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
+
+            model.addAttribute("prodQna", productQnaService.prodSellerQna(uid));
+
             return "/admin/index2";
         }
 

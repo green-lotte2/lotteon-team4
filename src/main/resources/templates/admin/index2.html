@@ -71,8 +71,8 @@
                         <article>
                             <ul>
                                 <li style="font-size: 20px; color: #343434;" th:each="prodQna, index : ${prodQna}" th:if="${index.index} &lt; 5">
-                                    <a th:text="${#strings.substring(prodQna.content,0,10)}"></a>
-                                    <span style="float: right" class="date" th:text="${#strings.prodQna.rdate}"></span>
+                                    <a th:text="${prodQna.content}"></a>
+                                    <span style="float: right" class="date" th:text="${#strings.substring(prodQna.rdate,0,10)"></span>
                                 </li>
                             </ul>
                         </article>

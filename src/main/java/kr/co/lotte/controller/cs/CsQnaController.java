@@ -163,4 +163,20 @@ public class CsQnaController {
         }
     }
 
+
+
+    @GetMapping("/admin/cs/qna/delete")
+    public String delete(@RequestParam(name = "prodQnaNo") int prodQnaNo,@RequestParam(name = "type")  int type){
+
+        log.info("prodQnaNo :"+prodQnaNo);
+        if(type == 1){
+            csQnaService.delete2(prodQnaNo);
+        }else{
+            csQnaService.delete(prodQnaNo);
+        }
+
+
+        return "redirect:/admin/cs/qna/list";
+    }
+
 }

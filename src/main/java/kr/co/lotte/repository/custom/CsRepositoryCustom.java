@@ -16,4 +16,5 @@ public interface CsRepositoryCustom {
     public Page<CsQna> searchAllCsQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid);
     public Page<ProductQna> searchAllProdQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable);
     public Page<ProductQna> searchAllProdQna(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid);
+    public Page<ProductQna> searchAllProdQnaSeller(CsFaqPageRequestDTO pageRequestDTO, Pageable pageable, String uid);
 }

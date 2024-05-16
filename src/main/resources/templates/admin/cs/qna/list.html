@@ -169,9 +169,9 @@
 
     </script>
     <nav>
-        <h3>CS_FAQ 보기</h3>
+        <h3>QNA 보기</h3>
         <p>
-            HOME > 고객센터 > <strong>FAQ 관리</strong>
+            HOME > 고객센터 > <strong>QNA 관리</strong>
         </p>
     </nav>
 
@@ -179,8 +179,21 @@
         <div>
             <form id="deleteSelectedForm" th:action="@{/admin/cs/qna/delete/selectDelete}" method="post">
                 <input type="hidden" id="selectedNoList" name="selectedNoList" />
+
+            </form>
+
+
+            <article>
+                <th:block th:if="${#authentication.principal.user.role == 'ADMIN'}">
+                <h3>
+                    <a th:if="${adminCsQna.getGruop() == 'qna'}" th:href="@{/admin/cs/qna/list}" style="border: 1px solid gray; font-size: 15px; padding: 2px; background-color: greenyellow">1:1 문의하기</a>
+                    <a th:if="${adminCsQna.getGruop() != 'qna'}" th:href="@{/admin/cs/qna/list}" style="border: 1px solid gray; font-size: 15px; padding: 2px">1:1 문의하기</a>
+                    <a th:if="${adminCsQna.getGruop() == 'product'}" th:href="@{/admin/cs/qna/list(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px; background-color: greenyellow" >상품 문의</a>
+                    <a th:if="${adminCsQna.getGruop() != 'product'}" th:href="@{/admin/cs/qna/list(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px">상품 문의</a>
+                </h3>
+
                 <!-- 카테고리별 조회 -->
-                <div>
+                <div th:if="${adminCsQna.getGruop() != 'product'}">
                     <select name="qnaCate1"  id="qnaCate1" onchange="firstOption()">
                         <option>유형1</option>
                         <option value="user">회원</option>
@@ -200,38 +213,30 @@
                     </select>
                     <input type="button" id="search" value="검색"/>
                 </div>
-
-            </form>
-
-            <nav>
-                <h3>상품_FAQ 보기</h3>
-            </nav>
-
-            <article>
-                <h3>
-                    <a th:if="${adminQna.getGruop() == 'qna'}" th:href="@{/admin/cs/qna/list}" style="border: 1px solid gray; font-size: 15px; padding: 2px; background-color: greenyellow">1:1 문의하기</a>
-                    <a th:if="${adminQna.getGruop() != 'qna'}" th:href="@{/admin/cs/qna/list}" style="border: 1px solid gray; font-size: 15px; padding: 2px">1:1 문의하기</a>
-                    <a th:if="${adminQna.getGruop() == 'product'}" th:href="@{/admin/cs/qna/list(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px; background-color: greenyellow" >상품 문의</a>
-                    <a th:if="${adminQna.getGruop() != 'product'}" th:href="@{/admin/cs/qna/list(group = product)}" style="border: 1px solid gray; font-size: 15px;  padding: 2px">상품 문의</a>
-
-                </h3>
-
-                <table border="0">
-                    <tr>
-                        <th>번호</th>
-                        <th>문의채널</th>
-                        <th>문의유형</th>
-                        <th>제목</th>
-                        <th>작성일</th>
-                        <th>상태</th>
-                    </tr>
-                    <th:block th:if="${adminQna.getGruop() == 'product' }">
-                        <tr  th:each="prodQna, index : ${adminQna.dtoList4}">
-                            <td class="no" th:text="${prodQna.no}"></td>
+                </th:block >
+                <br>
+                    <th:block th:if="${adminCsQna.getGruop() == 'product' }">
+                        <table border="0" id="productCss">
+                            <tr>
+                                <th style="width: 20px">번호</th>
+                                <th>문의채널</th>
+                                <th>상품명</th>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>관리</th>
+                                <th>상태</th>
+                            </tr>
+                        <tr  th:each="prodQna, index : ${adminCsQna.dtoList4}">
+                            <td style="width: 20px" class="nonono" th:text="${prodQna.no}"></td>
                             <td class="cate" th:text="${prodQna.cate}"></td>
-                            <td class="type"></td>
+                            <td th:if="${prodQna.productName.length()<5}" class="type" th:text="${prodQna.productName}"></td>
+                            <td th:if="${prodQna.productName.length()>=5}" class="type" th:text="${#strings.substring(prodQna.productName,0,4)+'..'}"></td>
                             <td class="tit" th:text="${prodQna.content}"></td>
-                            <td class="date" th:text="${prodQna.rdate}"></td>
+                            <td class="date" th:text="${#strings.substring(prodQna.rdate,0,10)}"></td>
+                            <td>
+                                <a th:href="@{/admin/cs/qna/reply2(no=${prodQna.no})}">[답변]</a>
+                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${prodQna.no})}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
+                            </td>
                             <td class="status">
                                 <th:block th:if="${prodQna.status1 == '답변 대기중'}">
                                     <p style="font-size: 16px; color: #0D3A46"  th:text="${prodQna.status1}"></p>
@@ -241,16 +246,29 @@
                                 </th:block>
                             </td>
                         </tr>
+                        </table>
                     </th:block>
-                    <th:block th:if="${adminQna.getGruop() != 'product' }">
-                        <tr  th:each="csQna, index : ${adminQna.dtoList3}">
-                            <td class="no" th:text="${csQna.no}"></td>
-
+                    <th:block th:if="${adminCsQna.getGruop() != 'product' }">
+                        <table border="0">
+                            <tr>
+                                <th  style="width: 20px;">번호</th>
+                                <th>문의채널</th>
+                                <th>문의유형</th>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>관리</th>
+                                <th>상태</th>
+                            </tr>
+                        <tr  th:each="csQna, index : ${adminCsQna.dtoList3}">
+                            <td style="width: 20px;" class="no" th:text="${csQna.no}"></td>
                             <td class="cate" th:text="${csQna.cate1}"></td>
                             <td class="type" th:text="${csQna.cate2}"></td>
                             <td class="tit" th:text="${csQna.title}"></td>
                             <td class="date" th:text="${csQna.rdate}"></td>
-
+                            <td>
+                                <a th:href="@{/admin/cs/qna/reply(no=${csQna.no})}">[답변]</a>
+                                <a th:href="@{/admin/cs/qna/delete(prodQnaNo=${csQna.no})}" onclick="return confirm('정말 삭제하시겠습니까?')">[삭제]</a>
+                            </td>
                             <td class="status">
                                 <th:block th:if="${csQna.status == '답변 대기중'}">
                                     <p style="font-size: 16px; color: #0D3A46"  th:text="${csQna.status}"></p>
@@ -259,10 +277,38 @@
                                     <p  style="font-size: 16px; color: #4CAF50 "  th:text="${csQna.status}"></p>
                                 </th:block>
                             </td>
-
                         </tr>
+                        </table>
                     </th:block>
-                </table>
+
+                <br>
+                <br>
+                <div class="paging" style="text-align: center" >
+                    <span class="prev" th:if="${adminCsQna.prev}">
+                    <a
+                       th:href="@{/admin/cs/qna/list(pg=${adminCsQna.start - 1}, group=${adminCsQna.getGruop()} )}"
+                       >이전</a></span>
+                    <th:block th:each="num:${#numbers.sequence(adminCsQna.start, adminCsQna.end)}">
+                        <span class="num">
+                        <th:block th:if="${num == adminCsQna.pg}">
+                            <a th:href="@{/admin/cs/qna/list( pg=${num } , group=${adminCsQna.getGruop()} )}"
+                               style="color: blue">[[${num}]]</a>
+                        </th:block>
+                            </span>
+                        <span class="num">
+                        <th:block th:if="${num != adminCsQna.pg}">
+                            <a th:href="@{/admin/cs/qna/list( pg=${num } , group=${adminCsQna.getGruop()} )}">[[${num}]]</a>
+                        </th:block>
+                              </span>
+                    </th:block>
+                    <span  th:if="${adminCsQna.next}"     class="next">
+                    <a
+                       th:href="@{/admin/cs/qna/list( pg=${adminCsQna.end+1},group=${adminCsQna.getGruop()})}"
+                       class="next">다음</a>
+                        </span>
+                </div>
+
+
             </article>
         </div>
     </section>

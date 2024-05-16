@@ -95,7 +95,26 @@
                         </td>
                     </tr>
                 </table>
+                <div class="paging">
+                        <span class="prev" th:if="${adminProdQna.prev}">
+                            <a th:href="@{/admin/cs/faq/sellerList(pg=${adminProdQna.start -1}, cate=${adminProdQna.getCate()})}"><&nbsp;이전</a>
+                        </span>
+                    <span class="num" th:each="num:${#numbers.sequence(adminProdQna.start, adminProdQna.end)}">
+                            <th:block th:if="${num == adminProdQna.pg}">
+                                 <a th:href="@{/admin/cs/faq/sellerList( pg=${num} , cate=${adminProdQna.getCate()})}" class="on">[[${num}]]</a>
+                            </th:block>
+
+                            <th:block th:if="${num != adminProdQna.pg}">
+                                 <a th:href="@{/admin/cs/faq/sellerList( pg=${num} , cate=${adminProdQna.getCate()})}" >[[${num}]]</a>
+                            </th:block>
+
+                        </span>
+                    <span class="next" th:if="${adminProdQna.next}">
+                            <a th:href="@{/admin/cs/faq/sellerList( pg=${adminProdQna.end+1} , cate=${adminProdQna.getCate()} )}">다음&nbsp;></a>
+                        </span>
+                </div>
             </div>
+
         </div>
     </section>
 </section>

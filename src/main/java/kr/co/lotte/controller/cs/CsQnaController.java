@@ -58,11 +58,19 @@ public class CsQnaController {
 
     // admin.cs.qna 전체 출력
     @GetMapping("/admin/cs/qna/list")
-    public String adminQnaList(Model model, CsFaqPageRequestDTO requestDTO){
-        CsFaqPageResponseDTO pageResponseDTO = csQnaService.getQnaCate1andCate2(requestDTO);
-        CsFaqPageResponseDTO pageResponseDTO1 = productQnaService.getProdQnaCate(requestDTO);
-        model.addAttribute("adminProdQna", pageResponseDTO1);
-        model.addAttribute("adminCsQna", pageResponseDTO);
+    public String adminQnaList(Model model, CsFaqPageRequestDTO requestDTO, CsQnaDTO csQnaDTO, ProductQnaDTO productQnaDTO){
+
+        CsFaqPageResponseDTO pageResponseDTO = null;
+
+        if(requestDTO.getGroup() == null || requestDTO.getGroup() == ""){
+            requestDTO.setGroup("qna");
+            pageResponseDTO = csQnaService.getQnaCate1andCate2(requestDTO);
+        }else{
+            requestDTO.setGroup("product");
+            pageResponseDTO = productQnaService.getProdQnaCate(requestDTO);
+        }
+        model.addAttribute("adminQna", pageResponseDTO);
+
         return "/admin/cs/qna/list";
     }
 

@@ -218,7 +218,7 @@ public class MemberController {
     //판매자 회원가입 페이지 매핑
     @GetMapping("/member/registerseller")
     public String registerSeller() {
-        return "/member/registerseller";
+        return "/member/registerSeller";
     }
 
     @PostMapping("/member/registerseller")

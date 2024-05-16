@@ -56,7 +56,7 @@ public class AdminController {
     private MemberService memberService;
 
     @GetMapping(value = {"/admin/index", "/admin"})
-    public String adminIndex(Authentication authentication, Model model) {
+    public String adminIndex(Authentication authentication, Model model, HttpSession session) {
 
         model.addAttribute("csNotice", csNoticeService.noticeList());
         model.addAttribute("csQna", csQnaService.qnaList());
@@ -64,7 +64,7 @@ public class AdminController {
         try {
             //여기는 관리자
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-            Map<String, Integer> map = adminService.Formain();
+            Map<String, Integer> map = adminService.Formain(session);
             int count = map.get("count");
             int total = map.get("total");
             int user = map.get("user");
@@ -84,6 +84,9 @@ public class AdminController {
             model.addAttribute("delete", delete);
             model.addAttribute("allDelete", allDelete);
             model.addAttribute("visitor", visitor);
+
+
+
             return "/admin/index";
 
         } catch (Exception e) {

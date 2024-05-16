@@ -1,12 +1,19 @@
 package kr.co.lotte.service;
 
 import com.querydsl.core.Tuple;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import jakarta.transaction.Transactional;
 import kr.co.lotte.repository.ProductsRepository;
 import kr.co.lotte.dto.*;
 import kr.co.lotte.entity.*;
 import kr.co.lotte.mapper.TermsMapper;
 import kr.co.lotte.repository.*;
+import kr.co.lotte.repository.cs.CsQnaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -69,11 +76,13 @@ public class AdminService {
     @Autowired
     private TermsMapper termsMapper;
     @Autowired
+    private CsQnaRepository csQnaRepository;
+    @Autowired
     private ProductQnaRepository productQnaRepository;
 
 
     //mainPage 띄우자
-    public Map<String, Integer> Formain() {
+    public Map<String, Integer> Formain(HttpSession session) {
         Map<String, Integer> map = new HashMap<>();
         //주문업무
         int ready = 0;
@@ -116,7 +125,13 @@ public class AdminService {
         String formattedDate = currentDate.format(formatter);
         int visitors = visitorRepository.findById(formattedDate).get().getVisitCount();
 
-        //신규게시물 (미완)
+        //신규게시물 (건수)
+        int article = 0;
+        int totalCsQna = csQnaRepository.findAll().size();
+        totalCsQna += productQnaRepository.findAll().size();
+
+        session.setAttribute("adminArticle", totalCsQna);
+
         //고객 문의 (미완)
 
         //주문업무현황

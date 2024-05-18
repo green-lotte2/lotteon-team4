@@ -8,6 +8,9 @@
  5) 배포주소 : http://43.200.184.246:8080/lotteshop/index
  6) 팀 구성 : 이가희(조장) , 오아람 , 정원구 , 송상도
 
+    기능 시현 영상 : https://www.youtube.com/watch?v=2U5d2RnTh78
+    
+
 ### 프로젝트 버전 업데이트 내역
 0.0.1-SNAPSHOT
 

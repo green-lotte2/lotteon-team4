@@ -1,6 +1,6 @@
 spring:
     application:
-        name: lotteshop
+        name: lotteshop1
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: Password1!
